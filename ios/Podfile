@@ -28,6 +28,10 @@ target 'partyq' do
   pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/glog.podspec'
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
 
+  pod 'RNEventEmitter', :path => '../node_modules/react-native-events'
+
+  pod 'RNSpotify', :path => '../node_modules/rn-spotify-sdk'
+
   target 'partyqTests' do
     inherit! :search_paths
     # Pods for testing
