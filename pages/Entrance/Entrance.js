@@ -19,7 +19,7 @@ class Entrance extends React.Component {
     render() {
         return (
             <ImageBackground
-                source={require('../../assets/initial_wallpaper.gif')}
+                source={require('../../assets/img/initial_wallpaper.gif')}
                 style={{ flex: 1, flexDirection: 'column' }}
             >
 
