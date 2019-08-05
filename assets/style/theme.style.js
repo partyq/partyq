@@ -10,6 +10,7 @@ export default {
     FONT_WEIGHT_LIGHT: 'normal',
     FONT_WEIGHT_MEDIUM: '600',
     FONT_WEIGHT_BOLD: 'bold',
+    LETTER_SPACING: 1.1,
 
     // COLOR
     PRIMARY_COLOR: '#D81B60',

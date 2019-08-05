@@ -2,10 +2,6 @@ import {StyleSheet} from 'react-native'
 import theme from '../../assets/style/theme.style';
 
 export default StyleSheet.create({
-    container: {
-        flex: 1,
-        flexDirection: 'column'
-    },
     titleContainer: {
         flex: 2,
         justifyContent: 'center',
