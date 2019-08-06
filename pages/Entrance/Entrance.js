@@ -3,6 +3,7 @@ import { ImageBackground } from 'react-native'
 
 import Home from '../../components/Home/Home'
 import SelectProvider from '../../components/SelectProvider/SelectProvider'
+import EnterPartyCode from '../../components/EnterPartyCode/EnterPartyCode'
 
 import {ENTRANCE_VIEWS} from '../../Utility/Constants'
 
@@ -25,6 +26,7 @@ class Entrance extends React.Component {
 
                 {this.state.currentView === ENTRANCE_VIEWS.HOME && <Home changeView={this.handleChangeView} />}
                 {this.state.currentView === ENTRANCE_VIEWS.START && <SelectProvider changeView={this.handleChangeView}/>}
+                {this.state.currentView === ENTRANCE_VIEWS.ENTER_CODE && <EnterPartyCode changeView={this.handleChangeView}/>}
 
             </ImageBackground>
         );

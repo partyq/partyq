@@ -25,7 +25,7 @@ export default Home = (props) => {
                 <TouchableOpacity
                     style={styles.button}
                     activeOpacity={.5}
-                    onPress={() => props.changeView(ENTRANCE_VIEWS.JOIN)}
+                    onPress={() => props.changeView(ENTRANCE_VIEWS.ENTER_CODE)}
                 >
                     <Text style={styles.buttonText}>Join a Party</Text>
                 </TouchableOpacity>

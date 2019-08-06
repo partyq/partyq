@@ -23,7 +23,7 @@ export default StyleSheet.create({
     button: {
         backgroundColor: theme.COLOR_WHITE,
         borderRadius: theme.BORDER_ROUND,
-        width: '75%',
+        width: '90%',
         paddingTop: theme.SPACE_SMALL,
         paddingBottom: theme.SPACE_SMALL
     },

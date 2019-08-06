@@ -10,6 +10,7 @@
   "dependencies": {
     "react": "16.8.6",
     "react-native": "0.60.4",
+    "react-native-smooth-pincode-input": "^1.0.7",
     "react-native-text-gradient": "^0.1.6"
   },
   "devDependencies": {

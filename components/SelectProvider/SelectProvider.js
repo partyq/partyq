@@ -8,9 +8,14 @@ import { LinearTextGradient } from "react-native-text-gradient";
 export default SelectProvider = (props) => {
     return (
         <View style={styles.container}>
-            <View style={styles.backContainer}>
+            
+            <TouchableOpacity
+                style={styles.backContainer}
+                activeOpacity={.5}
+                onPress={() => props.changeView(ENTRANCE_VIEWS.HOME)}
+            >
                 <Text style={styles.text}>Back</Text>
-            </View>
+            </TouchableOpacity>
 
             <View style={styles.paragraphContainer}>
                 <Text style={styles.text}>You must connect one of the following services</Text>
