@@ -1,16 +1,21 @@
 import React from 'react'
 import { Text, View, TouchableOpacity, Image, ImageBackground } from 'react-native';
 import styles from './SelectProvider.style'
-import { ENTRANCE_VIEWS } from '../../Utility/Constants'
+import { HOME_VIEWS } from '../../Utility/Constants'
 import { LinearTextGradient } from "react-native-text-gradient";
 
 
 export default SelectProvider = (props) => {
     return (
         <View style={styles.container}>
-            <View style={styles.backContainer}>
+            
+            <TouchableOpacity
+                style={styles.backContainer}
+                activeOpacity={.5}
+                onPress={() => props.changeView(HOME_VIEWS.HOME)}
+            >
                 <Text style={styles.text}>Back</Text>
-            </View>
+            </TouchableOpacity>
 
             <View style={styles.paragraphContainer}>
                 <Text style={styles.text}>You must connect one of the following services</Text>
@@ -20,7 +25,7 @@ export default SelectProvider = (props) => {
                 <TouchableOpacity
                     style={[styles.spotifyButton, styles.serviceButton]}
                     activeOpacity={.5}
-                    onPress={() => props.changeView(ENTRANCE_VIEWS.START)}
+                    onPress={() => props.changeView(HOME_VIEWS.START)}
                 >
                     <Image
                         source={require('../../assets/img/Spotify_Icon_RGB_White.png')}
@@ -33,7 +38,7 @@ export default SelectProvider = (props) => {
                 <TouchableOpacity
                     style={[styles.appleMusicButton, styles.serviceButton]}
                     activeOpacity={.5}
-                    onPress={() => props.changeView(ENTRANCE_VIEWS.START)}
+                    onPress={() => props.changeView(HOME_VIEWS.START)}
                 >
                     <Image
                         source={require('../../assets/img/Apple_Music_Icon.png')}
