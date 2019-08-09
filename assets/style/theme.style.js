@@ -2,7 +2,9 @@ import {Dimensions} from 'react-native';
 
 export default {
     // FONT
-    FONT_FAMILY: 'sans-serif',
+    FONT_FAMILY_REGULAR: 'Comfortaa-Regular',
+    FONT_FAMILY_MEDIUM: 'Comfortaa-Medium',
+    FONT_FAMILY_BOLD: 'Comfortaa-Bold',
     FONT_SIZE_EXTRA_SMALL: 18,
     FONT_SIZE_SMALL: 24,
     FONT_SIZE_MEDIUM: 32,

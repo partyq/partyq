@@ -11,7 +11,6 @@ export default StyleSheet.create({
     text: {
         color: theme.COLOR_WHITE,
         fontSize: 150,
-        fontWeight: 'bold',
-        fontFamily: 'arial'
+        fontFamily: theme.FONT_FAMILY_BOLD
     }
 });

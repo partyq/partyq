@@ -1,22 +1,30 @@
 import React from 'react'
-import { Text, View, TouchableOpacity } from 'react-native';
-import styles from './EnterPartyCode.style'
+import { Text, View, TouchableOpacity, TextInput } from 'react-native';
+import styles from './EnterPartyInfo.style'
 import { HOME_VIEWS } from '../../Utility/Constants'
 import SmoothPinCodeInput from 'react-native-smooth-pincode-input'
 
 class EnterPartyCode extends React.Component {
 
-    state ={
-        code: ''
+    state = {
+        code: '',
+        name: '',
+        isCodeValide: false,
+        isNameEntered: false,
     }
 
-    // componentDidUpdate = (prevProps, prevState) => {
-    //     if(this.state.code.length === 5) this.checkCode();
-    // }
+    pinInput = React.createRef();
 
-    checkCode = () => {
-        alert(this.state.code)
+    checkCode = (code) => {
+        if (code != '12345') {
+            this.pinInput.current.shake()
+                .then(() => this.setState({ code: '' }));
+        }
+        else {
+            this.setState({isCodeValide: true});
+        }
     }
+
 
     render() {
         return (
@@ -34,11 +42,18 @@ class EnterPartyCode extends React.Component {
                     <View style={styles.wrappingContainer}>
                         <Text style={[styles.title, styles.text]}>Enter a party code</Text>
 
-                        <SmoothPinCodeInput
+                       {this.state.isCodeValide ? 
+                            <TextInput
+                                style={styles.textInput}
+                                placeholder="Type a funny name :)"
+                                onChangeText={(name) => this.setState({name})}
+                                value={this.state.name}
+                            />
+                        : <SmoothPinCodeInput
                             ref={this.pinInput}
                             value={this.state.code}
                             onTextChange={code => this.setState({ code })}
-                            onFulfill={this._checkCode}
+                            onFulfill={this.checkCode}
                             codeLength={5}
                             cellSpacing={6}
                             cellSize={40}
@@ -46,7 +61,7 @@ class EnterPartyCode extends React.Component {
                             cellStyle={styles.cellStyle}
                             textStyle={styles.textStyle}
                             textStyleFocused={styles.textStyleFocused}
-                        />
+                        />}
 
                         <TouchableOpacity
                             style={styles.button}

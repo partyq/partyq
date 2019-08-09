@@ -1,10 +1,10 @@
 import React from 'react'
 import Wrapper from '../../hoc/Wrapper'
 import { Text, View, TouchableOpacity } from 'react-native';
-import styles from './Home.style'
+import styles from './Entrance.style'
 import {HOME_VIEWS} from '../../Utility/Constants'
 
-export default Home = (props) => {
+export default Entrance = (props) => {
     return (
         <Wrapper>
 

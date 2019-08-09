@@ -3,10 +3,21 @@ import theme from '../../assets/style/theme.style';
 
 export default StyleSheet.create({
     text: {
-        fontFamily: theme.FONT_FAMILY,
-        fontWeight: theme.FONT_WEIGHT_BOLD,
+        fontFamily: theme.FONT_FAMILY_MEDIUM,
         textAlign: 'center',
         letterSpacing: theme.LETTER_SPACING
+    },
+    textInput: {
+        backgroundColor: theme.COLOR_WHITE,
+        width: "80%",
+        paddingTop: theme.SPACE_SMALL,
+        paddingBottom: theme.SPACE_SMALL,
+        paddingLeft: theme.SPACE_MEDIUM,
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        borderRadius: theme.BORDER_ROUND,
+        letterSpacing: theme.LETTER_SPACING,
+        fontFamily: theme.FONT_FAMILY_MEDIUM
     },
     title: {
         fontSize: theme.FONT_SIZE_SMALL,

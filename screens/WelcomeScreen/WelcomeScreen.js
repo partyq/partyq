@@ -6,7 +6,7 @@ import styles from './WelcomeScreen.style'
 export default class WelcomeScreen extends React.Component {
 
     componentDidMount = () => {
-        setTimeout(this.handleChangeScreen, 1500);
+        setTimeout(this.handleChangeScreen, 1000);
     }
 
     handleChangeScreen = () => {

@@ -1,12 +1,11 @@
 import React from 'react'
 import { ImageBackground } from 'react-native'
 
-import Home from '../../components/Home/Home'
+import Entrance from '../../components/Entrance/Entrance';
 import SelectProvider from '../../components/SelectProvider/SelectProvider'
-import EnterPartyCode from '../../components/EnterPartyCode/EnterPartyCode'
+import EnterPartyCode from '../../components/EnterPartyInfo/EnterPartyInfo'
 
 import {HOME_VIEWS} from '../../Utility/Constants'
-
 
 class HomeScreen extends React.Component {
 
@@ -24,7 +23,7 @@ class HomeScreen extends React.Component {
                 source={require('../../assets/img/initial_wallpaper.gif')}
                 style={{ flex: 1, flexDirection: 'column' }}
             >                
-                {this.state.currentView === HOME_VIEWS.HOME && <Home changeView={this.handleChangeView} />}
+                {this.state.currentView === HOME_VIEWS.HOME && <Entrance changeView={this.handleChangeView} />}
                 {this.state.currentView === HOME_VIEWS.START && <SelectProvider changeView={this.handleChangeView}/>}
                 {this.state.currentView === HOME_VIEWS.ENTER_CODE && <EnterPartyCode changeView={this.handleChangeView}/>}
 
