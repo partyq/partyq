@@ -1,4 +1,4 @@
-export const ENTRANCE_VIEWS = {
+export const HOME_VIEWS = {
     HOME: 1,
     START: 2,
     JOIN: 3,

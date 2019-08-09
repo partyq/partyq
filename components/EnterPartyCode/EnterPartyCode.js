@@ -1,9 +1,8 @@
 import React from 'react'
 import { Text, View, TouchableOpacity } from 'react-native';
 import styles from './EnterPartyCode.style'
-import { ENTRANCE_VIEWS } from '../../Utility/Constants'
+import { HOME_VIEWS } from '../../Utility/Constants'
 import SmoothPinCodeInput from 'react-native-smooth-pincode-input'
-import Entrance from '../../pages/Entrance/Entrance';
 
 class EnterPartyCode extends React.Component {
 
@@ -26,7 +25,7 @@ class EnterPartyCode extends React.Component {
                 <TouchableOpacity
                     style={styles.backContainer}
                     activeOpacity={.5}
-                    onPress={() => props.changeView(ENTRANCE_VIEWS.HOME)}
+                    onPress={() => props.changeView(HOME_VIEWS.HOME)}
                 >
                     <Text style={[styles.title, styles.text]}>Back</Text>
                 </TouchableOpacity>
@@ -52,7 +51,7 @@ class EnterPartyCode extends React.Component {
                         <TouchableOpacity
                             style={styles.button}
                             activeOpacity={.5}
-                            onPress={() => props.changeView(ENTRANCE_VIEWS.HOME)}
+                            onPress={() => props.changeView(HOME_VIEWS.HOME)}
                         >
                             <Text style={[styles.buttonText, styles.text]}>Join Party</Text>
                         </TouchableOpacity>

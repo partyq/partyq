@@ -5,12 +5,13 @@ import Home from '../../components/Home/Home'
 import SelectProvider from '../../components/SelectProvider/SelectProvider'
 import EnterPartyCode from '../../components/EnterPartyCode/EnterPartyCode'
 
-import {ENTRANCE_VIEWS} from '../../Utility/Constants'
+import {HOME_VIEWS} from '../../Utility/Constants'
 
-class Entrance extends React.Component {
+
+class HomeScreen extends React.Component {
 
     state = {
-        currentView: ENTRANCE_VIEWS.HOME
+        currentView: HOME_VIEWS.HOME
     }
 
     handleChangeView = (view) => {
@@ -22,15 +23,14 @@ class Entrance extends React.Component {
             <ImageBackground
                 source={require('../../assets/img/initial_wallpaper.gif')}
                 style={{ flex: 1, flexDirection: 'column' }}
-            >
-
-                {this.state.currentView === ENTRANCE_VIEWS.HOME && <Home changeView={this.handleChangeView} />}
-                {this.state.currentView === ENTRANCE_VIEWS.START && <SelectProvider changeView={this.handleChangeView}/>}
-                {this.state.currentView === ENTRANCE_VIEWS.ENTER_CODE && <EnterPartyCode changeView={this.handleChangeView}/>}
+            >                
+                {this.state.currentView === HOME_VIEWS.HOME && <Home changeView={this.handleChangeView} />}
+                {this.state.currentView === HOME_VIEWS.START && <SelectProvider changeView={this.handleChangeView}/>}
+                {this.state.currentView === HOME_VIEWS.ENTER_CODE && <EnterPartyCode changeView={this.handleChangeView}/>}
 
             </ImageBackground>
         );
     }
 }
 
-export default Entrance;
+export default HomeScreen;

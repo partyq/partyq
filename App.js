@@ -1,21 +1,26 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow
- */
+import React from 'react'
+import { createAppContainer, createStackNavigator } from 'react-navigation'
+import HomeScreen from './screens/HomeScreen/HomeScreen'
+import WelcomeScreen from './screens/WelcomeScreen/WelcomeScreen'
 
-import React from 'react';
-import Wrapper from './hoc/Wrapper';
-import Entrance from './pages/Entrance/Entrance.js'
+const RootStack = createStackNavigator(
+    {
+        Welcome: { screen: WelcomeScreen },
+        Home: { screen: HomeScreen }
+    },
+    {
+        initialRouteKey: 'Welcome',
+        headerMode: 'none',
+        defaultNavigationOptions: {
+            headerVisible: false,
+        }
+    }
+)
 
-const App = () => {
-    return (
-        <Wrapper>
-            <Entrance/>
-        </Wrapper>
-    );
-};
+const AppContainer = createAppContainer(RootStack);
 
-export default App;
+export default class App extends React.Component {
+    render() {
+        return <AppContainer />;
+    }
+}
