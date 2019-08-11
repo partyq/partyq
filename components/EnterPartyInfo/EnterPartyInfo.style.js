@@ -34,7 +34,7 @@ export default StyleSheet.create({
     },
     backContainer: {
         alignItems: 'flex-start',
-        justifyContent: 'center'
+        justifyContent: 'flex-start'
     },
     wrappingContainer: {
         flex: 2,

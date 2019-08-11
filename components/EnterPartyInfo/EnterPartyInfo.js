@@ -33,7 +33,7 @@ class EnterPartyCode extends React.Component {
                 <TouchableOpacity
                     style={styles.backContainer}
                     activeOpacity={.5}
-                    onPress={() => props.changeView(HOME_VIEWS.HOME)}
+                    onPress={() => this.props.changeView(HOME_VIEWS.HOME)}
                 >
                     <Text style={[styles.title, styles.text]}>Back</Text>
                 </TouchableOpacity>
