@@ -25,7 +25,7 @@ export default SelectProvider = (props) => {
                 <TouchableOpacity
                     style={[styles.spotifyButton, styles.serviceButton]}
                     activeOpacity={.5}
-                    onPress={() => props.changeView(HOME_VIEWS.START)}
+                    onPress={() => props.navigate('SelectDefaultPlaylist')}
                 >
                     <Image
                         source={require('../../assets/img/Spotify_Icon_RGB_White.png')}
@@ -38,7 +38,7 @@ export default SelectProvider = (props) => {
                 <TouchableOpacity
                     style={[styles.appleMusicButton, styles.serviceButton]}
                     activeOpacity={.5}
-                    onPress={() => props.changeView(HOME_VIEWS.START)}
+                    onPress={() => props.navigate('SelectDefaultPlaylist')}
                 >
                     <Image
                         source={require('../../assets/img/Apple_Music_Icon.png')}
