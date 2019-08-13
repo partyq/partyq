@@ -184,24 +184,31 @@ android {
         pickFirst '**/x86_64/libc++_shared.so'
         pickFirst '**/x86/libjsc.so'
         pickFirst '**/armeabi-v7a/libjsc.so'
+        pickFirst 'lib/armeabi-v7a/libgnustl_shared.so'
+        pickFirst 'lib/x86/libgnustl_shared.so'
+        exclude 'lib/arm64-v8a/libgnustl_shared.so'
+        exclude 'lib/x86_64/libgnustl_shared.so'
     }
 }
 
 dependencies {
+    implementation project(":rn-spotify-sdk")
+    implementation project(':react-native-events')
+    implementation project(':react-native-linear-gradient')
     implementation project(':react-native-vector-icons')
     implementation project(':react-native-gesture-handler')
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.facebook.react:react-native:+"  // From node_modules
- 
+
+
+    implementation 'com.facebook.fresco:fresco:1.+'
+
     // For animated GIF support
-    implementation 'com.facebook.fresco:animated-gif:1.12.0'
+    implementation 'com.facebook.fresco:animated-gif:1.+'
 
     // For WebP support, including animated WebP
-    implementation 'com.facebook.fresco:animated-webp:1.10.0'
-    implementation 'com.facebook.fresco:webpsupport:1.10.0'
-
-    // For WebP support, without animations
-    implementation 'com.facebook.fresco:webpsupport:1.10.0'
+    implementation 'com.facebook.fresco:animated-webp:1.+'
+    implementation 'com.facebook.fresco:webpsupport:1.+' 
  
     if (enableHermes) {
       def hermesPath = "../../node_modules/hermesvm/android/";

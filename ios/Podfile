@@ -33,6 +33,12 @@ target 'partyq' do
 
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 
+  pod 'BVLinearGradient', :path => '../node_modules/react-native-linear-gradient'
+
+
+
+  pod 'RNEventEmitter', :path => '../node_modules/react-native-events'
+
   target 'partyqTests' do
     inherit! :search_paths
     # Pods for testing

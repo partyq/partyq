@@ -66,7 +66,7 @@ class EnterPartyCode extends React.Component {
                         <TouchableOpacity
                             style={styles.button}
                             activeOpacity={.5}
-                            onPress={() => props.changeView(HOME_VIEWS.HOME)}
+                            onPress={() => this.props.navigate('Party')}
                         >
                             <Text style={[styles.buttonText, styles.text]}>Join Party</Text>
                         </TouchableOpacity>
