@@ -52,7 +52,7 @@ export default SelectProvider = (props) => {
                         start={{ x: 0, y: 0 }}
                         end={{ x: 1, y: 0 }}
                     >
-                        <Text style={[styles.text]}>Link Spotify</Text>
+                        <Text style={[styles.text]}>Link Apple Music</Text>
                     </LinearTextGradient>
                     <Text></Text>
                 </TouchableOpacity>
