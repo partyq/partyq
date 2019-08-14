@@ -17,9 +17,9 @@ export default PlayListItem = (props) => {
                 style={styles.image}
             />
 
-            <View style={styles.descriptionContainer}>
-                <Text style={styles.title}>{props.title}</Text>
-                <Text style={styles.description}>{props.description}</Text>
+            <View style={styles.descriptionContainer} >
+                <Text style={styles.title} >{props.title}</Text>
+                <Text style={styles.description} >{props.description}</Text>
             </View>
         </TouchableOpacity>
     );

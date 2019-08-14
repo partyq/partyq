@@ -1,14 +1,19 @@
 import React from 'react'
-import { Text, View, TouchableOpacity, Image, ImageBackground } from 'react-native';
+import { Text, View, TouchableOpacity, Image } from 'react-native';
 import styles from './SelectProvider.style'
 import { HOME_VIEWS } from '../../Utility/Constants'
 import { LinearTextGradient } from "react-native-text-gradient";
-
+import * as Spotify from '../../Utility/MusicServices/SpotifyMusicHelper'
 
 export default SelectProvider = (props) => {
+
+    function handleAuth() {
+        props.navigate('SelectDefaultPlaylist')
+    }
+
     return (
         <View style={styles.container}>
-            
+
             <TouchableOpacity
                 style={styles.backContainer}
                 activeOpacity={.5}
@@ -25,7 +30,7 @@ export default SelectProvider = (props) => {
                 <TouchableOpacity
                     style={[styles.spotifyButton, styles.serviceButton]}
                     activeOpacity={.5}
-                    onPress={() => props.navigate('SelectDefaultPlaylist')}
+                    onPress={handleAuth}
                 >
                     <Image
                         source={require('../../assets/img/Spotify_Icon_RGB_White.png')}

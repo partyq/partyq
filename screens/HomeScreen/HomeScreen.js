@@ -20,7 +20,7 @@ class HomeScreen extends React.Component {
     render() {
         return (
             <ImageBackground
-                source={require('../../assets/img/initial_wallpaper.gif')} style={{ flex: 1}} >                
+                source={require('../../assets/img/tempBackground.jpeg')} style={{ flex: 1}} >                
                 {this.state.currentView === HOME_VIEWS.HOME && <Entrance changeView={this.handleChangeView} />}
                 {this.state.currentView === HOME_VIEWS.START && <SelectProvider changeView={this.handleChangeView} navigate={this.props.navigation.navigate}/>}
                 {this.state.currentView === HOME_VIEWS.ENTER_CODE && <EnterPartyCode changeView={this.handleChangeView} navigate={this.props.navigation.navigate} />}
