@@ -87,6 +87,8 @@ export default SelectDefaultPlaylistScreen = (props) => {
                         }
                     ]}
                     renderItem={({ item, index }) => <PlayListItem image={item.image} title={item.title} description={item.description} key={index} navigate={props.navigation.navigate}/>}
+                    keyExtractor={(item, index) => index}
+
                 />
             </View>
         </View>
