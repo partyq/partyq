@@ -117,7 +117,7 @@ def jscFlavor = 'org.webkit:android-jsc:+'
  * on project.ext.react, JavaScript will not be compiled to Hermes Bytecode
  * and the benefits of using Hermes will therefore be sharply reduced.
  */
-def enableHermes = project.ext.react.get("enableHermes", false);
+def enableHermes = project.ext.react.get("enableHermes", false)
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -193,7 +193,6 @@ android {
 
 dependencies {
     implementation project(':react-native-cardview')
-    implementation project(":rn-spotify-sdk")
     implementation project(':react-native-events')
     implementation project(':react-native-linear-gradient')
     implementation project(':react-native-vector-icons')
@@ -201,22 +200,22 @@ dependencies {
     implementation  project(':react-native-cardview')
 
     implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation "com.facebook.react:react-native:+"  // From node_modules
+    implementation "com.facebook.react:react-native:0.20.1"  // From node_modules
 
 
-    implementation 'com.facebook.fresco:fresco:1.+'
+    implementation 'com.facebook.fresco:fresco:2.0.0'
 
     // For animated GIF support
-    implementation 'com.facebook.fresco:animated-gif:1.+'
+    implementation 'com.facebook.fresco:animated-gif:1.14.2'
 
     // For WebP support, including animated WebP
-    implementation 'com.facebook.fresco:animated-webp:1.+'
-    implementation 'com.facebook.fresco:webpsupport:1.+' 
+    implementation 'com.facebook.fresco:animated-webp:1.14.2'
+    implementation 'com.facebook.fresco:webpsupport:1.14.2'
 
 
  
     if (enableHermes) {
-      def hermesPath = "../../node_modules/hermesvm/android/";
+      def hermesPath = "../../node_modules/hermesvm/android/"
       debugImplementation files(hermesPath + "hermes-debug.aar")
       releaseImplementation files(hermesPath + "hermes-release.aar")
     } else {

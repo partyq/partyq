@@ -2,8 +2,6 @@ import React from 'react'
 import { Text, View, TouchableOpacity, Image } from 'react-native';
 import styles from './SelectProvider.style'
 import { HOME_VIEWS } from '../../Utility/Constants'
-import { LinearTextGradient } from "react-native-text-gradient";
-import * as Spotify from '../../Utility/MusicServices/SpotifyMusicHelper'
 
 export default SelectProvider = (props) => {
 
@@ -49,16 +47,7 @@ export default SelectProvider = (props) => {
                         source={require('../../assets/img/Apple_Music_Icon.png')}
                         style={styles.image}
                     />
-
-                    <LinearTextGradient
-                        style={styles.text}
-                        locations={[0, 0.25, 0.5, 0.75, 1]}
-                        colors={['#906cfe', '#CB5EBD', '#EA5870', '#CD70A2', '#51A1F6']}
-                        start={{ x: 0, y: 0 }}
-                        end={{ x: 1, y: 0 }}
-                    >
                         <Text style={[styles.text]}>Link Apple Music</Text>
-                    </LinearTextGradient>
                     <Text></Text>
                 </TouchableOpacity>
             </View>

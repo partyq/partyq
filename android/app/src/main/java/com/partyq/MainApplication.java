@@ -8,8 +8,6 @@ import com.facebook.hermes.reactexecutor.HermesExecutorFactory;
 import com.facebook.react.bridge.JavaScriptExecutorFactory;
 import com.facebook.react.ReactApplication;
 import com.kishanjvaghela.cardview.RNCardViewPackage;
-import com.lufinkey.react.eventemitter.RNEventEmitterPackage;
-import com.lufinkey.react.spotify.RNSpotifyPackage; // replace with this line
 import com.BV.LinearGradient.LinearGradientPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
@@ -34,7 +32,6 @@ public class MainApplication extends Application implements ReactApplication {
       // Packages that cannot be autolinked yet can be added manually here, for
       // example:
       // packages.add(new MyReactNativePackage());
-      packages.add(new RNSpotifyPackage());
       return packages;
     }
 

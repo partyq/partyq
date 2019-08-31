@@ -1,9 +1,11 @@
-import React from 'react'
-import { createAppContainer, createStackNavigator } from 'react-navigation'
-import HomeScreen from './screens/HomeScreen/HomeScreen'
-import WelcomeScreen from './screens/WelcomeScreen/WelcomeScreen'
-import SelectDefaultPlaylistScreen from './screens/SelectDefaultPlaylistScreen/SelectDefaultPlaylistScreen'
-import PartyScreen from './screens/PartyScreen/PartyScreen'
+import React from 'react';
+import { createAppContainer, createStackNavigator } from 'react-navigation';
+
+import HomeScreen from './screens/HomeScreen/HomeScreen';
+import WelcomeScreen from './screens/WelcomeScreen/WelcomeScreen';
+import SelectDefaultPlaylistScreen from './screens/SelectDefaultPlaylistScreen/SelectDefaultPlaylistScreen';
+import PartyScreen from './screens/PartyScreen/PartyScreen';
+import { AppContextProvider } from './config/AppContextProvider';
 
 const RootStack = createStackNavigator(
     {
@@ -25,6 +27,10 @@ const AppContainer = createAppContainer(RootStack);
 
 export default class App extends React.Component {
     render() {
-        return <AppContainer />;
+        return (
+            <AppContextProvider>
+                <AppContainer/>
+            </AppContextProvider>
+        );
     }
 }
