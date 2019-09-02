@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, Text } from 'react-native';
-import { withTheme } from 'react-native-paper';
 
 import Wrapper from '../../hoc/Wrapper';
 import styles from './WelcomeScreen.style';
@@ -16,7 +15,6 @@ class WelcomeScreen extends React.Component {
     }
 
     render() {
-        alert(JSON.stringify(this.props.theme));
         return (
             <Wrapper>
                 <View style={styles.view}>
@@ -27,4 +25,4 @@ class WelcomeScreen extends React.Component {
     }
 }
 
-export default withTheme(WelcomeScreen);
+export default WelcomeScreen;

@@ -1,35 +1,32 @@
 import React from 'react'
-import Wrapper from '../../hoc/Wrapper'
-import { Text, View, TouchableOpacity } from 'react-native';
-import styles from './Entrance.style'
-import {HOME_VIEWS} from '../../Utility/Constants'
+import { Text, View } from 'react-native';
+import { withTheme } from 'react-native-paper';
+import LinearGradientButton from '../LinearGradientButton/LinearGradientButton';
 
-export default Entrance = (props) => {
+import jsx from './Entrance.style'
+import BackgroundContainer from '../../hoc/BackgroundContainer';
+import {START_A_PARTY, JOIN_A_PARTY} from '../../config/RenderableData';
+
+const  Entrance = (props) => {
+
+    const styles = jsx(props.theme);
+
+    const handleStartNewParty = () => props.navigation.navigate('Services');
+
+    const handleJoinParty = () => props.navigation.navigate('Info');
+
     return (
-        <Wrapper>
-
+        <BackgroundContainer>
             <View style={styles.titleContainer}>
                 <Text style={styles.title}>PartyQ</Text>
             </View>
 
             <View style={styles.buttonContainer}>
-
-                <TouchableOpacity
-                    style={styles.button}
-                    activeOpacity={.5}
-                    onPress={() => props.changeView(HOME_VIEWS.START)}
-                >
-                    <Text style={styles.buttonText}>Start a Party</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                    style={styles.button}
-                    activeOpacity={.5}
-                    onPress={() => props.changeView(HOME_VIEWS.ENTER_CODE)}
-                >
-                    <Text style={styles.buttonText}>Join a Party</Text>
-                </TouchableOpacity>
+                <LinearGradientButton onPress={handleStartNewParty} >{START_A_PARTY}</LinearGradientButton>
+                <LinearGradientButton onPress={handleJoinParty} >{JOIN_A_PARTY}</LinearGradientButton>
             </View>
-        </Wrapper>
+        </BackgroundContainer>
     );
 }
+
+export default withTheme(Entrance);

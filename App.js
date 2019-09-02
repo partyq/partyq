@@ -1,29 +1,10 @@
 import React from 'react';
-import { createAppContainer, createStackNavigator } from 'react-navigation';
+import { createAppContainer } from 'react-navigation';
 
-import HomeScreen from './screens/HomeScreen/HomeScreen';
-import WelcomeScreen from './screens/WelcomeScreen/WelcomeScreen';
-import SelectDefaultPlaylistScreen from './screens/SelectDefaultPlaylistScreen/SelectDefaultPlaylistScreen';
-import PartyScreen from './screens/PartyScreen/PartyScreen';
 import { AppContextProvider } from './config/AppContextProvider';
+import {Stack} from './config/AppNavigator';
 
-const RootStack = createStackNavigator(
-    {
-        Welcome: { screen: WelcomeScreen },
-        Home: { screen: HomeScreen },
-        SelectDefaultPlaylist: { screen: SelectDefaultPlaylistScreen },
-        Party: { screen: PartyScreen }
-    },
-    {
-        initialRouteKey: 'Welcome',
-        headerMode: 'none',
-        defaultNavigationOptions: {
-            headerVisible: false,
-        }
-    }
-)
-
-const AppContainer = createAppContainer(RootStack);
+const AppContainer = createAppContainer(Stack);
 
 export default class App extends React.Component {
     render() {

@@ -1,9 +1,8 @@
-import React, { useState } from 'react'
-import { View, Text, FlatList } from 'react-native'
-import styles from './SelectDefaultPlaylistScreen.style'
-import { SearchBar } from 'react-native-elements'
+import React, { useState } from 'react';
+import { View, Text, FlatList } from 'react-native';
+import styles from './SelectDefaultPlaylistScreen.style';
+import { SearchBar } from 'react-native-elements';
 import PlayListItem from '../../components/PlayListItem/PlayListItem';
-import { isMetaProperty } from '@babel/types';
 
 export default SelectDefaultPlaylistScreen = (props) => {
     const [playListToSearch, setPlayListToSearch] = useState('')
