@@ -1,67 +1,57 @@
 import React from 'react'
 import { Text, View, TouchableOpacity, Image } from 'react-native';
-import styles from './SelectProvider.style'
-import { HOME_VIEWS } from '../../Utility/Constants'
-import { LinearTextGradient } from "react-native-text-gradient";
-import * as Spotify from '../../Utility/MusicServices/SpotifyMusicHelper'
+import { withTheme } from 'react-native-paper';
 
-export default SelectProvider = (props) => {
+import jsx from './SelectProvider.style';
+import BackgroundContainer from '../../hoc/BackgroundContainer';
+import { Services } from '../../config/RenderableData';
+import LinearGradientButton from '../LinearGradientButton/LinearGradientButton';
 
-    function handleAuth() {
-        props.navigate('SelectDefaultPlaylist')
+const SelectProvider = (props) => {
+
+    const styles = jsx(props.theme);
+
+    const handleAuth = () => {
+        alert('hi')
+        // props.navigation.navigate('SelectDefaultPlaylist')
     }
 
-    return (
-        <View style={styles.container}>
+    const handleSelected = (name) => {
+        alert(name)
+    }
 
-            <TouchableOpacity
-                style={styles.backContainer}
-                activeOpacity={.5}
-                onPress={() => props.changeView(HOME_VIEWS.HOME)}
-            >
-                <Text style={styles.text}>Back</Text>
-            </TouchableOpacity>
-
-            <View style={styles.paragraphContainer}>
-                <Text style={styles.text}>You must connect one of the following services</Text>
-            </View>
-
-            <View style={styles.servicesContainer}>
+    const renderService = () => (
+        <View style={styles.services}>
+            {Services.services.map((item, i) => (
                 <TouchableOpacity
-                    style={[styles.spotifyButton, styles.serviceButton]}
+                    key={i}
                     activeOpacity={.5}
-                    onPress={handleAuth}
+                    onPress={() => handleSelected(item.name)}
+                    style={styles.button}
                 >
                     <Image
-                        source={require('../../assets/img/Spotify_Icon_RGB_White.png')}
+                        source={item.img}
                         style={styles.image}
+                        key={i}
+                        width={props.theme.fonts.medium}
+                        height={props.theme.fonts.medium}
                     />
-                    <Text style={styles.text}>Link Spotify</Text>
-                    <Text></Text>
+                    <Text style={styles.buttonText} key={i}>{item.name}</Text>
                 </TouchableOpacity>
-
-                <TouchableOpacity
-                    style={[styles.appleMusicButton, styles.serviceButton]}
-                    activeOpacity={.5}
-                    onPress={() => props.navigate('SelectDefaultPlaylist')}
-                >
-                    <Image
-                        source={require('../../assets/img/Apple_Music_Icon.png')}
-                        style={styles.image}
-                    />
-
-                    <LinearTextGradient
-                        style={styles.text}
-                        locations={[0, 0.25, 0.5, 0.75, 1]}
-                        colors={['#906cfe', '#CB5EBD', '#EA5870', '#CD70A2', '#51A1F6']}
-                        start={{ x: 0, y: 0 }}
-                        end={{ x: 1, y: 0 }}
-                    >
-                        <Text style={[styles.text]}>Link Apple Music</Text>
-                    </LinearTextGradient>
-                    <Text></Text>
-                </TouchableOpacity>
-            </View>
+            ))}
         </View>
     );
+
+    return (
+        <BackgroundContainer style={styles.container}>
+            <View style={styles.header}>
+                <Text style={styles.title}>{Services.title}</Text>
+                <Text style={styles.paragraph}>{Services.paragraph}</Text>
+            </View>
+            {renderService()}
+            <LinearGradientButton onPress={handleAuth}>Finish</LinearGradientButton>
+        </BackgroundContainer>
+    );
 }
+
+export default withTheme(SelectProvider);

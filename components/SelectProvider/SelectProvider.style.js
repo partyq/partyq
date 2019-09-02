@@ -1,52 +1,48 @@
 import { StyleSheet } from 'react-native'
-import theme from '../../assets/style/theme.style';
 
-export default StyleSheet.create({
-    text: {
-        fontFamily: theme.FONT_FAMILY,
-        fontSize: theme.FONT_SIZE_SMALL,
-        fontWeight: theme.FONT_WEIGHT_BOLD,
-        color: theme.COLOR_WHITE,
-        textAlign: 'center',
-        letterSpacing: theme.LETTER_SPACING
-    },
+export default (theme) => StyleSheet.create({
     container: {
         flex: 1,
-        padding: theme.CONTAINER_PADDING,
-        flexDirection: 'column'
-    },
-    backContainer: {
-        alignItems: 'flex-start',
-        justifyContent: 'center'
-    },
-    paragraphContainer: {
-        flex: 2,
-        justifyContent: 'center',
+        flexDirection: 'column',
         alignItems: 'center',
-        paddingTop: '15%'
+        padding: theme.fonts.large    },
+    header: {
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'space-evenly',
     },
-    servicesContainer: {
-        flex: 2,
-        justifyContent: 'flex-start',
-        alignItems: 'center'
+    services: {
+        flex: 1,
+        flexDirection: 'column',
+        alignSelf: 'flex-start',
+        justifyContent: 'flex-start'
     },
-    serviceButton: {
-        borderRadius: theme.BORDER_ROUND,
-        width: '90%',
-        paddingTop: theme.SPACE_SMALL,
-        paddingBottom: theme.SPACE_SMALL,
+    title: {
+        fontFamily: theme.fonts.family,
+        fontSize: theme.fonts.medium,
+        fontWeight: 'bold',
+        color: theme.fonts.color,
+        textAlign: 'center'
+    },
+    paragraph: {
+        fontFamily: theme.fonts.family,
+        fontSize: theme.fonts.small,
+        color: theme.fonts.disabled,
+        textAlign: 'center'
+    },
+    button: {
         flexDirection: 'row',
-        justifyContent: 'space-around',
-        marginBottom: theme.SPACE_LARGE
+        justifyContent: 'flex-start',
+        marginBottom: theme.fonts.regular
     },
-    spotifyButton: {
-        backgroundColor: '#1ed760',
+    buttonText: {
+        fontFamily: theme.fonts.family,
+        fontSize: theme.fonts.regular,
+        color: theme.fonts.color,
+        fontWeight: 'bold',
+        textAlign: 'center'
     },
     image: {
-        width: 35,
-        height: 35
-    },
-    appleMusicButton: {
-        backgroundColor: theme.COLOR_WHITE,
+        marginRight: theme.fonts.regular
     }
 });

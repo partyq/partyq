@@ -1,9 +1,10 @@
-import React from 'react'
-import Wrapper from '../../hoc/Wrapper'
-import { View, Text } from 'react-native'
-import styles from './WelcomeScreen.style'
+import React from 'react';
+import { View, Text } from 'react-native';
 
-export default class WelcomeScreen extends React.Component {
+import Wrapper from '../../hoc/Wrapper';
+import styles from './WelcomeScreen.style';
+
+class WelcomeScreen extends React.Component {
 
     componentDidMount = () => {
         setTimeout(this.handleChangeScreen, 1000);
@@ -23,3 +24,5 @@ export default class WelcomeScreen extends React.Component {
         );
     }
 }
+
+export default WelcomeScreen;

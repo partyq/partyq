@@ -1,11 +1,11 @@
-import React from 'react'
-import { ImageBackground } from 'react-native'
+import React from 'react';
 
 import Entrance from '../../components/Entrance/Entrance';
-import SelectProvider from '../../components/SelectProvider/SelectProvider'
-import EnterPartyCode from '../../components/EnterPartyInfo/EnterPartyInfo'
-
-import {HOME_VIEWS} from '../../Utility/Constants'
+import SelectProvider from '../../components/SelectProvider/SelectProvider';
+import EnterPartyCode from '../../components/EnterPartyInfo/EnterPartyInfo';
+import { HOME_VIEWS } from '../../Utility/Constants';
+import BackgroundContainer from '../../hoc/BackgroundContainer';
+import {withTheme} from 'react-native-paper';
 
 class HomeScreen extends React.Component {
 
@@ -14,19 +14,18 @@ class HomeScreen extends React.Component {
     }
 
     handleChangeView = (view) => {
-        this.setState({currentView: view});
+        this.setState({ currentView: view });
     }
 
     render() {
         return (
-            <ImageBackground
-                source={require('../../assets/img/tempBackground.jpeg')} style={{ flex: 1}} >                
+            <BackgroundContainer theme={this.props.theme}>
                 {this.state.currentView === HOME_VIEWS.HOME && <Entrance changeView={this.handleChangeView} />}
-                {this.state.currentView === HOME_VIEWS.START && <SelectProvider changeView={this.handleChangeView} navigate={this.props.navigation.navigate}/>}
+                {this.state.currentView === HOME_VIEWS.START && <SelectProvider changeView={this.handleChangeView} navigate={this.props.navigation.navigate} />}
                 {this.state.currentView === HOME_VIEWS.ENTER_CODE && <EnterPartyCode changeView={this.handleChangeView} navigate={this.props.navigation.navigate} />}
-            </ImageBackground>
+            </BackgroundContainer>
         );
     }
 }
 
-export default HomeScreen;
+export default withTheme(HomeScreen);
