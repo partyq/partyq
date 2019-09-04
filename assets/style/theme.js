@@ -8,6 +8,7 @@ export const Dark = {
         // background colors
         backgroundDark: '#263652',
         backgroundLight: '#080B10',
+        background: '#FFFFFF',
 
         // accent
         primaryAccent: '#DB486D',
@@ -16,6 +17,7 @@ export const Dark = {
     fonts: {
         family: 'sans-serif',
         color: '#FFFFFF',
+        dark: '#555',
         disabled: '#dfe6e9',
         small: 14,
         regular: 18,

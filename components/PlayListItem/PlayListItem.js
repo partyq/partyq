@@ -1,8 +1,12 @@
 import React from 'react'
 import { View, Image, Text, TouchableOpacity } from 'react-native'
-import styles from './PlayListItem.style'
+import { withTheme } from 'react-native-paper';
 
-export default PlayListItem = (props) => {
+import jsx from './PlayListItem.style'
+
+const PlayListItem = (props) => {
+
+    const styles = jsx(props.theme);
 
     return (
         <TouchableOpacity
@@ -24,3 +28,5 @@ export default PlayListItem = (props) => {
         </TouchableOpacity>
     );
 }
+
+export default withTheme(PlayListItem);

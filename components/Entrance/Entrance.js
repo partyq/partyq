@@ -7,7 +7,10 @@ import jsx from './Entrance.style'
 import BackgroundContainer from '../../hoc/BackgroundContainer';
 import {START_A_PARTY, JOIN_A_PARTY} from '../../config/RenderableData';
 
-const  Entrance = (props) => {
+const Entrance = (props) => {
+
+    
+    
 
     const styles = jsx(props.theme);
 
@@ -16,7 +19,7 @@ const  Entrance = (props) => {
     const handleJoinParty = () => props.navigation.navigate('Info');
 
     return (
-        <BackgroundContainer>
+        <BackgroundContainer disableBack={true} >
             <View style={styles.titleContainer}>
                 <Text style={styles.title}>PartyQ</Text>
             </View>
@@ -28,5 +31,9 @@ const  Entrance = (props) => {
         </BackgroundContainer>
     );
 }
+
+Entrance.navigationOptions = {
+    tabBarVisible: false
+};
 
 export default withTheme(Entrance);

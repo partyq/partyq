@@ -11,13 +11,8 @@ const SelectProvider = (props) => {
 
     const styles = jsx(props.theme);
 
-    const handleAuth = () => {
-        alert('hi')
-        // props.navigation.navigate('SelectDefaultPlaylist')
-    }
-
     const handleSelected = (name) => {
-        alert(name)
+        props.navigation.navigate('SelectDefaultPlayList')
     }
 
     const renderService = () => (
@@ -43,13 +38,13 @@ const SelectProvider = (props) => {
     );
 
     return (
-        <BackgroundContainer style={styles.container}>
+        <BackgroundContainer style={styles.container} navigation={props.navigation}>
             <View style={styles.header}>
                 <Text style={styles.title}>{Services.title}</Text>
                 <Text style={styles.paragraph}>{Services.paragraph}</Text>
             </View>
             {renderService()}
-            <LinearGradientButton onPress={handleAuth}>Finish</LinearGradientButton>
+            {/* <LinearGradientButton onPress={handleAuth}>Finish</LinearGradientButton> */}
         </BackgroundContainer>
     );
 }

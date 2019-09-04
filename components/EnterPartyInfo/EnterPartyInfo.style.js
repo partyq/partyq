@@ -1,73 +1,56 @@
-import { StyleSheet } from 'react-native'
-import theme from '../../assets/style/theme.style';
+import { StyleSheet, Dimensions } from 'react-native'
 
-export default StyleSheet.create({
+export default (theme) => StyleSheet.create({
     text: {
-        fontFamily: theme.FONT_FAMILY_MEDIUM,
-        textAlign: 'center',
-        letterSpacing: theme.LETTER_SPACING
+        fontFamily: theme.fonts.family,
+        fontSize: theme.fonts.medium,
+        color: theme.fonts.color,
+        textAlign: 'center'
     },
     textInput: {
-        backgroundColor: theme.COLOR_WHITE,
-        width: "80%",
-        paddingTop: theme.SPACE_SMALL,
-        paddingBottom: theme.SPACE_SMALL,
-        paddingLeft: theme.SPACE_MEDIUM,
+        backgroundColor: theme.colors.background,
+        width: Dimensions.get('window').width * .8,
+        paddingTop: theme.fonts.small,
+        paddingBottom: theme.fonts.small,
+        paddingLeft: theme.fonts.small,
         flexDirection: 'row',
         justifyContent: 'flex-start',
-        borderRadius: theme.BORDER_ROUND,
-        letterSpacing: theme.LETTER_SPACING,
-        fontFamily: theme.FONT_FAMILY_MEDIUM
-    },
-    title: {
-        fontSize: theme.FONT_SIZE_SMALL,
-        color: theme.COLOR_WHITE
-    },
-    buttonText: {
-        fontSize: theme.FONT_SIZE_EXTRA_SMALL,
-        color: theme.PRIMARY_COLOR
+        borderRadius: theme.roundness,
+        fontFamily: theme.fonts.family
     },
     container: {
         flex: 1,
-        padding: theme.CONTAINER_PADDING,
-        flexDirection: 'column'
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     backContainer: {
         alignItems: 'flex-start',
         justifyContent: 'flex-start'
     },
     wrappingContainer: {
-        flex: 2,
+        flex: 1,
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'space-around',
-        maxHeight: '40%',
-    },
-    button: {
-        backgroundColor: theme.COLOR_WHITE,
-        borderRadius: theme.BORDER_ROUND,
-        width: '90%',
-        paddingTop: theme.SPACE_SMALL,
-        paddingBottom: theme.SPACE_SMALL,
-        flexDirection: 'row',
-        justifyContent: 'center'
+        maxHeight: '50%',
     },
     cellStyleFocused: {
-        borderColor: theme.PRIMARY_COLOR,
+        borderColor: theme.colors.primaryAccent,
         borderWidth: 2,
         borderRadius: 10
     },
     cellStyle : {
-        borderColor: theme.COLOR_WHITE,
+        borderColor: theme.fonts.color,
         borderWidth: 2,
         borderRadius: 10    
     },
     textStyle: {
-        fontSize: theme.FONT_SIZE_EXTRA_SMALL,
-        color: theme.COLOR_WHITE
+        fontSize: theme.fonts.small,
+        color: theme.fonts.color
     },
     textStyleFocused: {
-        fontSize: theme.FONT_SIZE_EXTRA_SMALL,
-        color: theme.PRIMARY_COLOR
+        fontSize: theme.fonts.small,
+        color: theme.colors.primaryAccent
     }
 });

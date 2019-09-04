@@ -7,7 +7,7 @@ import PlayerView from '../../components/PlayerView/PlayerView'
 import { Icon } from 'react-native-elements'
 
 
-export default class PartyScreen extends React.Component {
+class PartyScreen extends React.Component {
 
     render() {
         return (
@@ -34,3 +34,6 @@ export default class PartyScreen extends React.Component {
         );
     }
 }
+
+
+export default PartyScreen;

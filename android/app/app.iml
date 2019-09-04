@@ -140,10 +140,10 @@
     <orderEntry type="library" name="Gradle: com.facebook.fresco:animated-webp:1.14.2@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.facebook.fresco:webpsupport:1.14.2@aar" level="project" />
     <orderEntry type="library" name="Gradle: org.webkit:android-jsc:r245459@aar" level="project" />
-    <orderEntry type="module" module-name="android-react-native-cardview" />
-    <orderEntry type="module" module-name="android-react-native-events" />
-    <orderEntry type="module" module-name="android-react-native-linear-gradient" />
-    <orderEntry type="module" module-name="android-react-native-vector-icons" />
-    <orderEntry type="module" module-name="react-native-gesture-handler-android-react-native-gesture-handler" />
+    <orderEntry type="module" module-name="react-native-cardview-android-react-native-cardview" />
+    <orderEntry type="module" module-name="react-native-events-android-react-native-events" />
+    <orderEntry type="module" module-name="react-native-linear-gradient-android-react-native-linear-gradient" />
+    <orderEntry type="module" module-name="react-native-vector-icons-android-react-native-vector-icons" />
+    <orderEntry type="module" module-name="node_modules-react-native-gesture-handler-android-react-native-gesture-handler" />
   </component>
 </module>
