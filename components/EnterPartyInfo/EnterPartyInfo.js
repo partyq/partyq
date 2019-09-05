@@ -1,81 +1,64 @@
-import React from 'react'
-import { Text, View, TouchableOpacity, TextInput } from 'react-native';
-import styles from './EnterPartyInfo.style'
-import { HOME_VIEWS } from '../../Utility/Constants'
+import React, { useState } from 'react'
+import { Text, View, TextInput } from 'react-native';
+import { withTheme } from 'react-native-paper';
 import SmoothPinCodeInput from 'react-native-smooth-pincode-input'
 
-class EnterPartyCode extends React.Component {
+import jsx from './EnterPartyInfo.style'
+import BackgroundContainer from '../../hoc/BackgroundContainer';
+import LinearGradientButton from '../LinearGradientButton/LinearGradientButton';
 
-    state = {
-        code: '',
-        name: '',
-        isCodeValide: false,
-        isNameEntered: false,
-    }
+const EnterPartyCode = (props) => {
 
+    const styles = jsx(props.theme);
+
+    const [code, setCode] = useState('');
+    const [name, setName] = useState('');
+    const [isCodeValide, setIsCodeValide] = useState(false);
+    const [disableButton, setDisableButton] = useState(true);
     pinInput = React.createRef();
 
-    checkCode = (code) => {
+    const checkCode = (code) => {
         if (code != '12345') {
-            this.pinInput.current.shake()
-                .then(() => this.setState({ code: '' }));
+            pinInput.current.shake().then(() => setCode(''));
         }
         else {
-            this.setState({isCodeValide: true});
+            setDisableButton(false);
+            setIsCodeValide(true);
         }
     }
 
+    const handleNavigation = () => props.navigation.navigate('Party');
 
-    render() {
-        return (
-            <View style={styles.container}>
+    return (
+        <BackgroundContainer style={styles.container} navigation={props.navigation} >
+            <View style={styles.wrappingContainer}>
+                <Text style={styles.text}>Enter a party code</Text>
 
-                <TouchableOpacity
-                    style={styles.backContainer}
-                    activeOpacity={.5}
-                    onPress={() => this.props.changeView(HOME_VIEWS.HOME)}
-                >
-                    <Text style={[styles.title, styles.text]}>Back</Text>
-                </TouchableOpacity>
+                {isCodeValide ?
+                    <TextInput
+                        style={styles.textInput}
+                        placeholder="Type a funny name :)"
+                        onChangeText={(name) => setName(name)}
+                        value={name}
+                    />
+                    : <SmoothPinCodeInput
+                        ref={pinInput}
+                        value={code}
+                        onTextChange={code => setCode(code)}
+                        onFulfill={checkCode}
+                        codeLength={5}
+                        cellSpacing={6}
+                        cellSize={40}
+                        cellStyleFocused={styles.cellStyleFocused}
+                        cellStyle={styles.cellStyle}
+                        textStyle={styles.textStyle}
+                        textStyleFocused={styles.textStyleFocused}
+                    />}
 
-                <View style={{ justifyContent: 'center', flexDirection: 'column', flex: 1 }}>
-                    <View style={styles.wrappingContainer}>
-                        <Text style={[styles.title, styles.text]}>Enter a party code</Text>
-
-                       {this.state.isCodeValide ? 
-                            <TextInput
-                                style={styles.textInput}
-                                placeholder="Type a funny name :)"
-                                onChangeText={(name) => this.setState({name})}
-                                value={this.state.name}
-                            />
-                        : <SmoothPinCodeInput
-                            ref={this.pinInput}
-                            value={this.state.code}
-                            onTextChange={code => this.setState({ code })}
-                            onFulfill={this.checkCode}
-                            codeLength={5}
-                            cellSpacing={6}
-                            cellSize={40}
-                            cellStyleFocused={styles.cellStyleFocused}
-                            cellStyle={styles.cellStyle}
-                            textStyle={styles.textStyle}
-                            textStyleFocused={styles.textStyleFocused}
-                        />}
-
-                        <TouchableOpacity
-                            style={styles.button}
-                            activeOpacity={.5}
-                            onPress={() => this.props.navigate('Party')}
-                        >
-                            <Text style={[styles.buttonText, styles.text]}>Join Party</Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-
+                <LinearGradientButton disabled={disableButton} onPress={handleNavigation}>Join the Party!</LinearGradientButton>
             </View>
-        );
-    }
+        </BackgroundContainer>
+    );
 }
 
-export default EnterPartyCode;
+export default withTheme(EnterPartyCode);

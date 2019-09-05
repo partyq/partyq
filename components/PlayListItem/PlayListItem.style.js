@@ -1,39 +1,40 @@
 import { StyleSheet } from 'react-native'
-import theme from '../../assets/style/theme.style';
 
-export default StyleSheet.create({
+export default (theme) => StyleSheet.create({
     container: {
-        height: 100,
+        height: 75,
         width: '95%',
         justifyContent: 'flex-start',
         alignItems: 'center',
         alignSelf: 'center',
         flexDirection: 'row',
-        borderBottomWidth: 1,
+        borderBottomWidth: 0.5,
         borderBottomColor: '#b2bec3',
-        paddingLeft: theme.SPACE_SMALL,
-        paddingBottom: theme.SPACE_SMALL,
-        paddingTop: theme.SPACE_SMALL
+        paddingLeft: theme.fonts.small,
+        paddingBottom: theme.fonts.small,
+        paddingTop: theme.fonts.small
     },
     descriptionContainer: {
         flexDirection: 'column',
         alignItems: 'flex-start',
         justifyContent: 'space-between',
         alignSelf: 'baseline',
-        marginLeft: theme.SPACE_MEDIUM
+        marginLeft: theme.fonts.medium
     },
     image: {
-        height: 75,
-        width: 75
+        height: 50,
+        width: 50
     },
     title: {
-        fontFamily: theme.FONT_FAMILY_MEDIUM,
-        fontSize: 14,
-        color: 'black'
+        fontFamily: theme.fonts.family,
+        fontSize: theme.fonts.small,
+        color: theme.fonts.color,
+        fontWeight: 'bold'
     },
     description: {
-        fontFamily: theme.FONT_FAMILY_MEDIUM,
-        fontSize: 14,
-        color: 'grey'
+        fontFamily: theme.fonts.family,
+        fontSize: theme.fonts.small,
+        color: 'grey',
+        fontWeight: 'bold'
     }
 });

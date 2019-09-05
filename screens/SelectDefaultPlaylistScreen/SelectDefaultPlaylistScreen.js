@@ -1,95 +1,82 @@
 import React, { useState } from 'react';
-import { View, Text, FlatList } from 'react-native';
-import styles from './SelectDefaultPlaylistScreen.style';
+import { View, Text, FlatList, Dimensions } from 'react-native';
 import { SearchBar } from 'react-native-elements';
-import PlayListItem from '../../components/PlayListItem/PlayListItem';
+import { withTheme } from 'react-native-paper';
 
-export default SelectDefaultPlaylistScreen = (props) => {
-    const [playListToSearch, setPlayListToSearch] = useState('')
+import jsx from './SelectDefaultPlaylistScreen.style';
+import { TEST_SERVICE_DATA, TEST_LIBRARY_DATA } from '../../config/RenderableData';
+import PlayListItem from '../../components/PlayListItem/PlayListItem';
+import BackgroundContainer from '../../hoc/BackgroundContainer';
+import LinearGradientButton from '../../components/LinearGradientButton/LinearGradientButton';
+
+const SelectDefaultPlaylistScreen = (props) => {
+    const styles = jsx(props.theme);
+    const buttonWidth = Dimensions.get('window').width * 0.4;
+
+    const [playListToSearch, setPlayListToSearch] = useState(TEST_SERVICE_DATA);
+    const [unselectButton, setUnselectedButton] = useState({
+        service: false,
+        library: true
+    });
+
+    const handleButton = (id) => {
+        if (id === 'service') {
+            setUnselectedButton({service: false, library: true});
+            setPlayListToSearch(TEST_SERVICE_DATA);
+        }
+        else if(id === 'library') {
+            setUnselectedButton({service: true, library: false});
+            setPlayListToSearch(TEST_LIBRARY_DATA);
+        }
+    }
+
+
     return (
-        <View style={styles.container}>
-            <View style={styles.searchContainer}>
+        <BackgroundContainer style={styles.container} navigation={props.navigation}
+            title={
                 <Text style={styles.headingText}>Select a Playlist</Text>
+            }
+        >
+            <View style={styles.searchContainer}>
                 <SearchBar
-                    placeHolder="Search for a playlist..."
+                    placeholder='Search'
                     round={true}
                     lightTheme={true}
-                    placeHolderTextColor={styles.placeHolderTextColor}
                     onChangeText={(playListToSearch) => setPlayListToSearch(playListToSearch)}
                     value={playListToSearch}
                     containerStyle={styles.searchBarContainer}
                     inputContainerStyle={styles.searchBarInputContainer}
+                    inputStyle={styles.inputText}
                 />
+            </View>
+            <View style={styles.buttonsContainer}>
+
+                <LinearGradientButton
+                    width={buttonWidth}
+                    unselected={unselectButton.service}
+                    onPress={() => handleButton('service')}
+                >
+                    Sound Cloud
+                </LinearGradientButton>
+
+                <LinearGradientButton
+                    width={buttonWidth}
+                    unselected={unselectButton.library}
+                    onPress={() => handleButton('library')}
+                >
+                    Your Library
+                </LinearGradientButton>
+
             </View>
             <View style={styles.listContainer}>
                 <FlatList
-                    data={[
-                        {
-                            image: 'https://pl.scdn.co/images/pl/default/f4ac4cbdcfdfbab7626e26bbd636b30316a51bea',
-                            title: 'Sommarhits 2019',
-                            description: '87'
-                        },
-                        {
-                            image: 'https://pl.scdn.co/images/pl/default/48c6e95fc874b29f6ede109928bcb35ac7168139',
-                            title: 'Det svenska NollNolltalet',
-                            description: '50'
-                        },
-                        {
-                            image: 'https://pl.scdn.co/images/pl/default/4b76c7fbb446c5cd5e9aab2afc4055fb213fdcee',
-                            title: 'Liiit',
-                            description: '95'
-                        },
-                        {
-                            image: 'https://pl.scdn.co/images/pl/default/f4ac4cbdcfdfbab7626e26bbd636b30316a51bea',
-                            title: 'Sommarhits 2019',
-                            description: '87'
-                        },
-                        {
-                            image: 'https://pl.scdn.co/images/pl/default/48c6e95fc874b29f6ede109928bcb35ac7168139',
-                            title: 'Det svenska NollNolltalet',
-                            description: '50'
-                        },
-                        {
-                            image: 'https://pl.scdn.co/images/pl/default/4b76c7fbb446c5cd5e9aab2afc4055fb213fdcee',
-                            title: 'Liiit',
-                            description: '95'
-                        },
-                        {
-                            image: 'https://pl.scdn.co/images/pl/default/f4ac4cbdcfdfbab7626e26bbd636b30316a51bea',
-                            title: 'Sommarhits 2019',
-                            description: '87'
-                        },
-                        {
-                            image: 'https://pl.scdn.co/images/pl/default/48c6e95fc874b29f6ede109928bcb35ac7168139',
-                            title: 'Det svenska NollNolltalet',
-                            description: '50'
-                        },
-                        {
-                            image: 'https://pl.scdn.co/images/pl/default/4b76c7fbb446c5cd5e9aab2afc4055fb213fdcee',
-                            title: 'Liiit',
-                            description: '95'
-                        },
-                        {
-                            image: 'https://pl.scdn.co/images/pl/default/f4ac4cbdcfdfbab7626e26bbd636b30316a51bea',
-                            title: 'Sommarhits 2019',
-                            description: '87'
-                        },
-                        {
-                            image: 'https://pl.scdn.co/images/pl/default/48c6e95fc874b29f6ede109928bcb35ac7168139',
-                            title: 'Det svenska NollNolltalet',
-                            description: '50'
-                        },
-                        {
-                            image: 'https://pl.scdn.co/images/pl/default/4b76c7fbb446c5cd5e9aab2afc4055fb213fdcee',
-                            title: 'Liiit',
-                            description: '95'
-                        }
-                    ]}
-                    renderItem={({ item, index }) => <PlayListItem image={item.image} title={item.title} description={item.description} key={index} navigate={props.navigation.navigate}/>}
+                    data={playListToSearch}
+                    renderItem={({ item, index }) => <PlayListItem image={item.image} title={item.title} description={item.description} key={index} navigate={props.navigation.navigate} />}
                     keyExtractor={(item, index) => index}
-
                 />
             </View>
-        </View>
+        </BackgroundContainer>
     )
 }
+
+export default withTheme(SelectDefaultPlaylistScreen);

@@ -1,51 +1,54 @@
-import { StyleSheet } from 'react-native'
-import theme from '../../assets/style/theme.style';
+import { StyleSheet } from 'react-native';
 
-export default StyleSheet.create({
+export default (theme) => StyleSheet.create({
     container: {
         flex: 1
     },
     searchContainer: {
-        flex: 1,
         flexDirection: 'column',
-        justifyContent: 'space-around',
         alignItems: 'center',
-        backgroundColor: theme.PRIMARY_COLOR,
         borderWidth: 0
     },
     searchBarContainer: {
         width: '95%',
+        height: theme.fonts.large,
         backgroundColor: 'transparent',
         borderTopWidth: 0,
         borderBottomWidth: 0,
-        marginTop: theme.SPACE_SMALL,
-        marginBottom: theme.SPACE_SMALL
+        marginBottom: theme.fonts.medium,
     },
     searchBarInputContainer: {
-        borderRadius: theme.BORDER_ROUND,
+        borderRadius: theme.roundness,
+        backgroundColor: theme.colors.backgroundLight
+    },
+    buttonsContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        paddingBottom: theme.fonts.small
     },
     listContainer: {
         flex: 6
     },
-    placeHolderTextColor: {
-        color: '#b2bec3'
-    },
     headingText: {
-        color: theme.COLOR_WHITE,
-        fontSize: theme.FONT_SIZE_EXTRA_SMALL,
-        fontFamily: theme.FONT_FAMILY_BOLD,
-        marginTop: theme.SPACE_SMALL,
-        marginBottom: theme.SPACE_SMALL
+        color: theme.fonts.color,
+        fontSize: theme.fonts.regular,
+        fontFamily: theme.fonts.family,
+        textAlignVertical: 'center'
+    },
+    inputText: {
+        fontSize: theme.fonts.small,
+        fontFamily: theme.fonts.family,
+        textAlignVertical: 'center'
     },
     item: {
         width: '95%',
         borderBottomWidth: 1,
         borderBottomColor: '#b2bec3',
-        marginLeft: theme.SPACE_EXTRA_SMALL,
-        marginRight: theme.SPACE_EXTRA_SMALL,
-        paddingLeft: theme.SPACE_EXTRA_SMALL,
-        paddingBottom: theme.SPACE_EXTRA_SMALL,
-        paddingTop: theme.SPACE_EXTRA_SMALL,
+        marginLeft: theme.fonts.small,
+        marginRight: theme.fonts.small,
+        paddingLeft: theme.fonts.small,
+        paddingBottom: theme.fonts.small,
+        paddingTop: theme.fonts.small,
         flexDirection: 'row',
         justifyContent: 'center',
         alignSelf: 'center'

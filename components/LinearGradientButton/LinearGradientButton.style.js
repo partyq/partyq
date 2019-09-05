@@ -1,20 +1,26 @@
 import { StyleSheet } from 'react-native';
 import { Dimensions } from 'react-native';
 
-export default jsx = (theme) =>  StyleSheet.create({
+export default jsx = (theme, width) =>  StyleSheet.create({
     container: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        width: Dimensions.get('window').width * 0.75
+        width: width,
+        backgroundColor: 'transparent'
     },
     button: {
         borderRadius: theme.roundness,
         flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-        width: '100%',
+        width: width,
         paddingTop: theme.fonts.regular/2,
-        paddingBottom: theme.fonts.regular/2
+        paddingBottom: theme.fonts.regular/2,
+        backgroundColor: 'transparent'
+    },
+    unselected: {
+        borderRadius: theme.roundness,
+        flexDirection: 'row',
+        width: width,
+        paddingTop: theme.fonts.regular/2,
+        paddingBottom: theme.fonts.regular/2,
+        backgroundColor: theme.colors.secondaryAccent
     },
     text: {
         fontFamily: theme.fonts.family,
