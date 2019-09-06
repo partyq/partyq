@@ -1,18 +1,23 @@
 import React from 'react';
 import { createAppContainer } from 'react-navigation';
 
-import { AppContextProvider } from './config/AppContextProvider';
-import { Stack } from './config/AppNavigator';
+// eslint-disable-next-line no-unused-vars
+import { AppContextProvider } from './src/config/AppContextProvider';
+import { Stack } from './src/config/AppNavigator';
 
+// eslint-disable-next-line no-console
+console.disableYellowBox = true;
 
+// eslint-disable-next-line no-unused-vars
 const AppContainer = createAppContainer(Stack);
 
 export default class App extends React.Component {
-    render() {
-        return (
-            <AppContextProvider>
-                <AppContainer />
-            </AppContextProvider>
-        );
-    }
+  // eslint-disable-next-line class-methods-use-this
+  render() {
+    return (
+      <AppContextProvider>
+        <AppContainer />
+      </AppContextProvider>
+    );
+  }
 }
