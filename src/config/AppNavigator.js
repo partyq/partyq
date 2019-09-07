@@ -4,6 +4,7 @@ import { createStackNavigator, createMaterialTopTabNavigator } from 'react-navig
 import { Icon } from 'react-native-elements';
 
 // StackNavigation Screens
+import SplashScreen from '../screens/LoginScreens/SplashScreen/SplashScreen';
 import Entrance from '../screens/HomeScreens/Entrance/Entrance';
 import SelectProvider from '../screens/HomeScreens/SelectProvider/SelectProvider';
 import EnterPartyCode from '../screens/HomeScreens/EnterPartyInfo/EnterPartyInfo';
@@ -11,6 +12,8 @@ import PartyScreen from '../screens/PartyRoomScreens/PartyScreen/PartyScreen';
 import SettingScreen from '../screens/PartyRoomScreens/SettingScreen/SettingScreen';
 import SelectDefaultPlaylistScreen from '../screens/HomeScreens/SelectDefaultPlaylistScreen/SelectDefaultPlaylistScreen';
 import { Dark } from '../assets/style/theme';
+import SigninScreen from '../screens/LoginScreens/SigninScreen/SigninScreen';
+import CreateAccountScreen from '../screens/LoginScreens/CreateAccountScreen/CreateAccountScreen';
 
 
 export const Tabs = createMaterialTopTabNavigator(
@@ -60,6 +63,9 @@ export const Tabs = createMaterialTopTabNavigator(
 
 export const Stack = createStackNavigator(
   {
+    Splash: { screen: SplashScreen },
+    Signin: { screen: SigninScreen },
+    CreateAccount: { screen: CreateAccountScreen },
     Entrance: { screen: Entrance },
     Services: { screen: SelectProvider },
     SelectDefaultPlayList: { screen: SelectDefaultPlaylistScreen },
