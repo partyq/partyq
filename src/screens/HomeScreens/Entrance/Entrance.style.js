@@ -19,4 +19,11 @@ export default (theme) => StyleSheet.create({
     justifyContent: 'space-around',
     marginBottom: '20%',
   },
+  profileContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'flex-end',
+    paddingRight: theme.fonts.medium,
+    paddingTop: theme.fonts.regular,
+  },
 });

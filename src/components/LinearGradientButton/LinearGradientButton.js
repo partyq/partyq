@@ -15,7 +15,11 @@ const LinearGradientButton = (props) => {
       {props.unselected
         ? <Button
           title={props.children}
-          titleStyle={styles.text}
+          titleStyle={[
+            styles.text,
+            props.underline ? { textDecorationLine: 'underline', textDecorationColor: props.theme.fonts.color } : {},
+            props.smallFont ? { fontSize: props.theme.fonts.small } : {},
+          ]}
           raised
           type={'clear'}
           disabled={props.disabled}
@@ -25,14 +29,17 @@ const LinearGradientButton = (props) => {
         />
         : <Button
           title={props.children}
-          titleStyle={styles.text}
+          titleStyle={[
+            styles.text,
+            props.underline ? { textDecorationLine: 'underline', textDecorationColor: props.theme.fonts.color } : {},
+            props.smallFont ? { fontSize: props.theme.fonts.small } : {},
+          ]}
           raised
           type={'solid'}
           disabled={props.disabled}
           containerStyle={styles.container}
           buttonStyle={styles.button}
           onPress={props.onPress}
-
           ViewComponent={LinearGradient}
           linearGradientProps={{
             colors: [styles.colorBegin.color, styles.colorEnd.color],

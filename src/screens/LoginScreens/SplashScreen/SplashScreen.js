@@ -5,7 +5,6 @@ import {
   View,
   Text,
   StyleSheet,
-  ActivityIndicator,
 } from 'react-native';
 import { withTheme } from 'react-native-paper';
 import firebase from 'react-native-firebase';
@@ -30,10 +29,16 @@ const jsx = (theme) => StyleSheet.create({
 const SplashScreen = (props) => {
   const styles = jsx(props.theme);
 
-  React.useEffect(() => {
+  const handleLoggedIn = () => {
     firebase.auth().onAuthStateChanged((user) => {
-      this.props.navigation.navigate(user ? 'Entrance' : 'Entrance');
+      props.navigation.navigate(user ? 'Entrance' : 'Signin');
     });
+  };
+
+  React.useEffect(() => {
+    setTimeout(() => {
+      handleLoggedIn();
+    }, 1000);
   });
 
   return (

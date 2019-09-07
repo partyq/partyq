@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>partyq</string>
+	<string>Hello App Display Name</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -55,12 +55,6 @@
 	<false/>
 	<key>UIAppFonts</key>
 	<array>
-		<string>Comfortaa-Bold.ttf</string>
-		<string>Comfortaa-Light.ttf</string>
-		<string>Comfortaa-Medium.ttf</string>
-		<string>Comfortaa-Regular.ttf</string>
-		<string>Comfortaa-SemiBold.ttf</string>
-		<string>Comfortaa-VariableFont:wght.ttf</string>
 		<string>AntDesign.ttf</string>
 		<string>Entypo.ttf</string>
 		<string>EvilIcons.ttf</string>
