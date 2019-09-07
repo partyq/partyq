@@ -192,6 +192,7 @@ android {
 }
 
 dependencies {
+    implementation project(':react-native-firebase')
     implementation project(':react-native-cardview')
     implementation project(':react-native-events')
     implementation project(':react-native-linear-gradient')
@@ -212,7 +213,9 @@ dependencies {
     implementation 'com.facebook.fresco:animated-webp:1.14.2'
     implementation 'com.facebook.fresco:webpsupport:1.14.2'
 
-
+    // Firebase dependencies
+    implementation "com.google.android.gms:play-services-base:16.1.0"
+    implementation "com.google.firebase:firebase-core:16.0.9"
  
     if (enableHermes) {
       def hermesPath = "../../node_modules/hermesvm/android/"
@@ -231,3 +234,5 @@ task copyDownloadableDepsToLibs(type: Copy) {
 }
 
 apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)
+
+apply plugin: 'com.google.gms.google-services';

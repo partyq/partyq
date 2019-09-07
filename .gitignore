@@ -11,3 +11,6 @@
 
 #build
 /android/app/build
+
+#firebase
+/android/app/google-services.json

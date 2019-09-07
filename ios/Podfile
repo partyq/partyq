@@ -39,6 +39,8 @@ target 'partyq' do
 
   pod 'RNEventEmitter', :path => '../node_modules/react-native-events'
 
+  pod 'RNFirebase', :path => '../node_modules/react-native-firebase'
+
   target 'partyqTests' do
     inherit! :search_paths
     # Pods for testing
