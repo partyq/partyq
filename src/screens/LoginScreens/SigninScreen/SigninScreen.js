@@ -93,7 +93,9 @@ const SigninScreen = (props) => {
       />
       <LinearGradientButton onPress={handleCheckSignin}>Sign in</LinearGradientButton>
       <LinearGradientButton smallFont underline onPress={() => props.navigation.navigate('CreateAccount')} unselected>Create Account</LinearGradientButton>
-      <LinearGradientButton smallFont underline onPress={ForgotPassword} unselected>Forgot Password?</LinearGradientButton>
+      <LinearGradientButton smallFont underline onPress={ForgotPassword} unselected>
+        Forgot Password?
+      </LinearGradientButton>
 
     </BackgroundContainer>
   );
