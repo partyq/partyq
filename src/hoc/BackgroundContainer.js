@@ -4,13 +4,16 @@ import { withTheme } from 'react-native-paper';
 import { SafeAreaView } from 'react-navigation';
 import { Icon, Button } from 'react-native-elements';
 import { View } from 'react-native';
-
 import LinearGradient from 'react-native-linear-gradient';
+
+import InternetStatus from '../components/InternetStatus/InternetStatus';
 
 const BackgroundContainer = (props) => {
   const { theme } = props;
 
-  const handleNavigate = () => props.navigation.goBack();
+  const handleNavigate = () => {
+    props.navigation.goBack();
+  };
 
   return (
     <LinearGradient
@@ -18,6 +21,8 @@ const BackgroundContainer = (props) => {
       end={{ x: 0, y: 1 }}
       colors={[theme.colors.backgroundLight, theme.colors.backgroundDark]}
       style={{ flex: 1 }}>
+
+      <InternetStatus />
 
       {props.disableBack ? null
 

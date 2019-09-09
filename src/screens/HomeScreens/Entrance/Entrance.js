@@ -24,7 +24,7 @@ const Entrance = (props) => {
   const handleJoinParty = () => props.navigation.navigate('Info');
 
   return (
-    <BackgroundContainer disableBack={true} >
+    <BackgroundContainer disableBack >
       <View style={styles.profileContainer}>
         <Icon
           name='person'

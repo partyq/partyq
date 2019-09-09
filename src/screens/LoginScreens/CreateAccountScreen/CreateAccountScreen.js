@@ -21,20 +21,13 @@ const CreateAccountScreen = (props) => {
       .auth()
       .createUserWithEmailAndPassword(email, password)
       .then(() => this.props.navigation.navigate('Entrance'))
-      .catch(error => this.setState({ errorMessage: error.message }));
+      .catch((error) => this.setState({ errorMessage: error.message }));
   };
 
   return (
-    <BackgroundContainer disableBack style={styles.container}>
+    <BackgroundContainer style={styles.container} navigation={props.navigation}>
         <Input
           placeholder='Email'
-          leftIcon={
-            <Icon
-              name='email'
-              size={24}
-              color='white'
-            />
-          }
           placeholderTextColor={props.theme.fonts.color}
           onChangeText={(text) => setEmail(text)}
           inputStyle={styles.inputText}
@@ -43,13 +36,6 @@ const CreateAccountScreen = (props) => {
         />
         <Input
           placeholder='Password'
-          leftIcon={
-            <Icon
-              name='lock'
-              size={24}
-              color='white'
-            />
-          }
           value={password}
           onChangeText={(text) => setPassword(text)}
           placeholderTextColor={props.theme.fonts.color}
@@ -57,7 +43,6 @@ const CreateAccountScreen = (props) => {
           inputContainerStyle={styles.input}
         />
         <LinearGradientButton onPress={handleCreateAccount}>Create Account</LinearGradientButton>
-        {/* <LinearGradientButton smallFont underline onPress={() => props.navigation.navigate('Signup')} unselected>Forgot Password?</LinearGradientButton> */}
 
     </BackgroundContainer>
   );
