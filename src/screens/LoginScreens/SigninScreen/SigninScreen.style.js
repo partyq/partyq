@@ -6,11 +6,10 @@ export default (theme) => StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
+    padding: 20,
   },
-  input: {
-    marginBottom: theme.fonts.large,
-    width: '80%',
-    alignSelf: 'center',
+  inputComponentContainer: {
+    marginBottom: theme.fonts.regular,
   },
   inputText: {
     color: theme.fonts.color,

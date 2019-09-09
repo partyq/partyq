@@ -42,7 +42,7 @@ const SplashScreen = (props) => {
   });
 
   return (
-    <View disableBack style={styles.container}>
+    <View style={styles.container}>
       <Text style={styles.text}>Q</Text>
     </View>
   );

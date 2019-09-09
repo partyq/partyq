@@ -8,6 +8,8 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@react-native-community/netinfo": "^4.2.1",
+    "email-verify": "^0.2.1",
     "react": "16.8.6",
     "react-native": "0.60.5",
     "react-native-cardview": "^2.0.3",
