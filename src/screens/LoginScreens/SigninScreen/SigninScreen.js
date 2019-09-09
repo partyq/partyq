@@ -1,9 +1,10 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
 import { withTheme } from 'react-native-paper';
-import { TextInput } from 'react-native';
+import { Alert } from 'react-native';
 import { Input, Icon } from 'react-native-elements';
 import firebase from 'react-native-firebase';
+import * as EmailValidator from 'email-validator';
 
 import BackgroundContainer from '../../../hoc/BackgroundContainer';
 import LinearGradientButton from '../../../components/LinearGradientButton/LinearGradientButton';
@@ -54,32 +55,45 @@ const SigninScreen = (props) => {
     if (emailValide && passwordValide) handleLogin();
   };
 
+  const ForgotPassword = () => {
+    setEmailError('');
+    if (EmailValidator.validate(email)) {
+      firebase.auth().sendPasswordResetEmail(email)
+        .then(() => Alert.alert('Reset Password', `Reset email has been sent to this email address: ${email}`))
+        .catch(() => Alert.alert('Something went wrong :(', 'Please try again later.'));
+    } else {
+      emailRef.current.shake();
+      emailRef.current.clear();
+      setEmailError(PASSWORD_ERROR_MESSAGE);
+    }
+  };
+
   return (
     <BackgroundContainer disableBack style={styles.container} navigation={props.navigation}>
-        <Input
-          placeholder='Email'
-          errorMessage={emailError}
-          placeholderTextColor={props.theme.fonts.color}
-          onChangeText={(text) => setEmail(text)}
-          inputStyle={styles.inputText}
-          containerStyle={styles.inputComponentContainer}
-          keyboardType='email-address'
-          ref={emailRef}
-        />
-        <Input
-          placeholder='Password'
-          errorMessage={passwordError}
-          value={password}
-          onChangeText={(text) => setPassword(text)}
-          placeholderTextColor={props.theme.fonts.color}
-          inputStyle={styles.inputText}
-          containerStyle={styles.inputComponentContainer}
-          secureTextEntry
-          ref={passwordRef}
-        />
-        <LinearGradientButton onPress={handleCheckSignin}>Sign in</LinearGradientButton>
-        <LinearGradientButton smallFont underline onPress={() => props.navigation.navigate('CreateAccount')} unselected>Create Account</LinearGradientButton>
-        <LinearGradientButton smallFont underline onPress={() => props.navigation.navigate('Signup')} unselected>Forgot Password?</LinearGradientButton>
+      <Input
+        placeholder='Email'
+        errorMessage={emailError}
+        placeholderTextColor={props.theme.fonts.color}
+        onChangeText={(text) => setEmail(text)}
+        inputStyle={styles.inputText}
+        containerStyle={styles.inputComponentContainer}
+        keyboardType='email-address'
+        ref={emailRef}
+      />
+      <Input
+        placeholder='Password'
+        errorMessage={passwordError}
+        value={password}
+        onChangeText={(text) => setPassword(text)}
+        placeholderTextColor={props.theme.fonts.color}
+        inputStyle={styles.inputText}
+        containerStyle={styles.inputComponentContainer}
+        secureTextEntry
+        ref={passwordRef}
+      />
+      <LinearGradientButton onPress={handleCheckSignin}>Sign in</LinearGradientButton>
+      <LinearGradientButton smallFont underline onPress={() => props.navigation.navigate('CreateAccount')} unselected>Create Account</LinearGradientButton>
+      <LinearGradientButton smallFont underline onPress={ForgotPassword} unselected>Forgot Password?</LinearGradientButton>
 
     </BackgroundContainer>
   );

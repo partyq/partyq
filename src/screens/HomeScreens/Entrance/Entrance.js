@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React from 'react';
-import { Text, View } from 'react-native';
+import { Text, View, Alert } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { withTheme } from 'react-native-paper';
 import firebase from 'react-native-firebase';
@@ -16,7 +16,7 @@ const Entrance = (props) => {
   const handleLogout = () => {
     firebase.auth().signOut()
       .then(() => props.navigation.navigate('Signin'))
-      .catch((error) => alert(error.message));
+      .catch((error) => Alert.alert(error.message));
   };
 
   const handleStartNewParty = () => props.navigation.navigate('Services');
