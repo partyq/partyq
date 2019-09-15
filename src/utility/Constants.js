@@ -7,3 +7,6 @@ export const USER_NAME_CRITERIA = 'Username criteria:\n  - alphabet\n  - numbers
 
 // Internet
 export const NO_INTERNET_CONNECTION = 'NO INTERNET CONNECTION';
+
+// IDENTITY
+export const GENDER_IDENTITIES = ['Male', 'Female', 'Non-Binary'];

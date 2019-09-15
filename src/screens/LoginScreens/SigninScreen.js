@@ -69,7 +69,7 @@ const SigninScreen = (props) => {
   };
 
   return (
-    <BackgroundContainer disableBack style={styles.container} navigation={props.navigation}>
+    <BackgroundContainer disableBack style={[styles.container, { justifyContent: 'center' }]} navigation={props.navigation}>
       <View style={styles.textFieldContainer}>
         <Input
           placeholder='Email'
@@ -93,10 +93,12 @@ const SigninScreen = (props) => {
         />
       </View>
       <LinearGradientButton onPress={handleCheckSignin}>Sign in</LinearGradientButton>
-      <LinearGradientButton smallFont underline onPress={() => props.navigation.navigate('GetUserName')} unselected>Create Account</LinearGradientButton>
-      <LinearGradientButton smallFont underline onPress={ForgotPassword} unselected>
-        Forgot Password?
+      <View style={{ marginTop: 15 }}>
+        <LinearGradientButton underline onPress={() => props.navigation.navigate('GetUserName')} unselected>Create Account</LinearGradientButton>
+        <LinearGradientButton underline onPress={ForgotPassword} unselected>
+          Forgot Password?
       </LinearGradientButton>
+      </View>
 
     </BackgroundContainer>
   );

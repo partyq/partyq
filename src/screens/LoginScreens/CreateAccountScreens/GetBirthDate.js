@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
-import { View, Text } from 'react-native';
 import React, { useState } from 'react';
+import { View, Text } from 'react-native';
 import { withTheme } from 'react-native-paper';
 
 import BackgroundContainer from '../../../hoc/BackgroundContainer';
@@ -17,7 +17,7 @@ const GetBirthDate = (props) => {
 
   const handleNavigation = () => {
     props.navigation.navigate(
-      'CreateAccount',
+      'GetGender',
       {
         userName: props.navigation.getParam('userName'),
         birthDate,
@@ -30,14 +30,14 @@ const GetBirthDate = (props) => {
   };
 
   React.useEffect(() => {
-    if (birthDate.length === 8) setDisabled(true);
-    else setDisabled(false);
+    if (birthDate.length === 8) setDisabled(false);
+    else setDisabled(true);
   }, [birthDate]);
 
   return (
-    <BackgroundContainer style={styles.container} navigation={props.navigation}>
+    <BackgroundContainer style={styles.container} navigation={props.navigation} progress={0.4}>
       <View style={styles.textFieldContainer}>
-        <Text style={styles.title}>My Birthday Is</Text>
+        <Text style={styles.title}>{'My\nbirthday is'}</Text>
         <UnderlineInput
           placeHolderChar={'YYYY/MM/DD'}
           binary={'1111011011'}

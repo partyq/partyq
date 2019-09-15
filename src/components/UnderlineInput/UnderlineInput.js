@@ -6,8 +6,8 @@ import CharacterInput from './CharacterInput';
 
 const UnderlineInput = (props) => {
   const placeHolderCharsArray = props.placeHolderChar.split('');
-  const [string, setString] = React.useState([...placeHolderCharsArray]);
-  const binary = `${props.binary}`.split('');
+  const [string, setString] = React.useState(Array(props.length).fill(''));
+  const binary = props.binary.split('');
   const refs = [];
 
   React.useEffect(() => {
@@ -25,7 +25,7 @@ const UnderlineInput = (props) => {
       refs[i].shake();
     } else if (i > 0 && i <= props.length - 1 && binary[i - 1] === '1') {
       refs[i - 1].focus();
-    } else if (i - 1 > 0 && binary[i - 2] === '1') {
+    } else if (i - 1 > 0) {
       goBack(i - 1);
     }
   };
@@ -35,7 +35,7 @@ const UnderlineInput = (props) => {
       refs[i].shake();
     } else if (i >= 0 && i < props.length - 1 && binary[i + 1] === '1') {
       refs[i + 1].focus();
-    } else if (i + 1 < props.length - 1 && binary[i + 2] === '1') {
+    } else if (i + 1 < props.length - 1) {
       goForward(i + 1);
     }
   };
@@ -73,13 +73,14 @@ const UnderlineInput = (props) => {
     >
       {string.map((c, i) => (
         <CharacterInput
+          key={i}
           placeHolder={placeHolderCharsArray[i]}
           onChange={onChange}
           index={i}
           show={binary[i] === '1'}
           setRef={setRef}
           keyboardType={props.keyboardType}
-          value={c}
+          value={string[i]}
           onKeyPress={onKeyPress}
         />
       ))}

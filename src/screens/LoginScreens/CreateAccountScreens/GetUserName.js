@@ -51,16 +51,15 @@ const GetUserName = (props) => {
   };
 
   return (
-    <BackgroundContainer style={styles.container} navigation={props.navigation}>
+    <BackgroundContainer style={styles.container} navigation={props.navigation} progress={0.2}>
       <View style={styles.textFieldContainer}>
-        <Text style={styles.title}>My User Name Is</Text>
+        <Text style={styles.title}>{'My user\nname is'}</Text>
         <Input
           placeholder='User Name'
           errorMessage={userErrorMessage}
           placeholderTextColor={props.theme.fonts.color}
           onChangeText={(text) => setUserName(text)}
           inputStyle={styles.inputText}
-          inputContainerStyle={styles.input}
           ref={userRef}
         />
       </View>
