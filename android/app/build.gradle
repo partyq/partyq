@@ -130,6 +130,7 @@ android {
     defaultConfig {
         applicationId "com.partyq"
         minSdkVersion rootProject.ext.minSdkVersion
+        multiDexEnabled true
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
@@ -191,12 +192,15 @@ dependencies {
     implementation project(':react-native-firebase')
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.facebook.react:react-native:0.20.1"  // From node_modules
+    def multidex_version = "2.0.1"
+    implementation 'androidx.multidex:multidex:$multidex_version'
 
     // Firebase dependencies
     implementation "com.google.firebase:firebase-analytics:17.2.0"
     implementation "com.google.android.gms:play-services-base:17.1.0"
     implementation "com.google.firebase:firebase-core:17.2.0"
     implementation "com.google.firebase:firebase-auth:19.0.0"
+    implementation "com.google.firebase:firebase-firestore:21.1.1"
     implementation "com.google.firebase:firebase-database:19.0.0"
     implementation "com.google.firebase:firebase-storage:19.0.0"
 

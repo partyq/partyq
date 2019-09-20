@@ -4,9 +4,12 @@ import { createStackNavigator, createMaterialTopTabNavigator } from 'react-navig
 import { Icon } from 'react-native-elements';
 
 // StackNavigation Screens
-import SplashScreen from '../screens/LoginScreens/SplashScreen/SplashScreen';
-import SigninScreen from '../screens/LoginScreens/SigninScreen/SigninScreen';
-import CreateAccountScreen from '../screens/LoginScreens/CreateAccountScreen/CreateAccountScreen';
+import SplashScreen from '../screens/LoginScreens/SplashScreen';
+import SigninScreen from '../screens/LoginScreens/SigninScreen';
+import GetUserName from '../screens/LoginScreens/CreateAccountScreens/GetUserName';
+import GetBirthDate from '../screens/LoginScreens/CreateAccountScreens/GetBirthDate';
+import GetGender from '../screens/LoginScreens/CreateAccountScreens/GetGender';
+import CreateAccountScreen from '../screens/LoginScreens/CreateAccountScreens/CreateAccountScreen';
 import Entrance from '../screens/HomeScreens/Entrance/Entrance';
 import SelectProvider from '../screens/HomeScreens/SelectProvider/SelectProvider';
 import EnterPartyCode from '../screens/HomeScreens/EnterPartyInfo/EnterPartyInfo';
@@ -65,6 +68,9 @@ export const Stack = createStackNavigator(
   {
     Splash: { screen: SplashScreen },
     Signin: { screen: SigninScreen },
+    GetUserName: { screen: GetUserName },
+    GetBirthDate: { screen: GetBirthDate },
+    GetGender: { screen: GetGender },
     CreateAccount: { screen: CreateAccountScreen },
     Entrance: { screen: Entrance },
     Services: { screen: SelectProvider },

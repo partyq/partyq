@@ -1,9 +1,9 @@
 /* eslint-disable no-unused-vars */
 import React from 'react';
-import { withTheme } from 'react-native-paper';
+import { withTheme, ProgressBar } from 'react-native-paper';
 import { SafeAreaView } from 'react-navigation';
-import { Icon, Button } from 'react-native-elements';
-import { View } from 'react-native';
+import { Icon, Button, SearchBar } from 'react-native-elements';
+import { View, Dimensions } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
 import InternetStatus from '../components/InternetStatus/InternetStatus';
@@ -22,6 +22,17 @@ const BackgroundContainer = (props) => {
       colors={[theme.colors.backgroundLight, theme.colors.backgroundDark]}
       style={{ flex: 1 }}>
 
+      {
+        props.progress
+          ? <SafeAreaView>
+            <ProgressBar
+              progress={props.progress}
+              color={theme.colors.primaryAccent}
+            />
+          </SafeAreaView>
+          : null
+      }
+
       <InternetStatus />
 
       {props.disableBack ? null
@@ -37,9 +48,9 @@ const BackgroundContainer = (props) => {
           <Button
             icon={
               <Icon
-                name='md-arrow-round-back'
+                name='ios-arrow-back'
                 type='ionicon'
-                color={theme.colors.primaryAccent}
+                color={theme.fonts.color}
                 size={theme.fonts.medium}
               />
             }
