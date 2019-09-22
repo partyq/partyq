@@ -10,7 +10,7 @@ import BackgroundContainer from '../../../hoc/BackgroundContainer';
 import { START_A_PARTY, JOIN_A_PARTY } from '../../../config/RenderableData';
 import LinearGradientButton from '../../../components/LinearGradientButton/LinearGradientButton';
 
-const Entrance = (props) => {
+const Profile = (props) => {
   const styles = jsx(props.theme);
 
   const handleLogout = () => {
@@ -23,14 +23,11 @@ const Entrance = (props) => {
 
   const handleJoinParty = () => props.navigation.navigate('Info');
 
-  const handleProfile = () => props.navigation.openDrawer();
-
   return (
     <BackgroundContainer disableBack >
       <View style={styles.profileContainer}>
         <Icon
-          name='settings'
-          type='feather'
+          name='person'
           size={24}
           color='white'
           onPress={handleLogout}
@@ -48,4 +45,4 @@ const Entrance = (props) => {
   );
 };
 
-export default withTheme(Entrance);
+export default withTheme(Profile);

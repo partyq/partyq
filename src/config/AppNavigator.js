@@ -2,6 +2,7 @@
 import React from 'react';
 import { createStackNavigator, createMaterialTopTabNavigator } from 'react-navigation';
 import { Icon } from 'react-native-elements';
+import { fromRight } from 'react-navigation-transitions';
 
 // StackNavigation Screens
 import SplashScreen from '../screens/LoginScreens/SplashScreen';
@@ -17,7 +18,7 @@ import PartyScreen from '../screens/PartyRoomScreens/PartyScreen/PartyScreen';
 import SettingScreen from '../screens/PartyRoomScreens/SettingScreen/SettingScreen';
 import SelectDefaultPlaylistScreen from '../screens/HomeScreens/SelectDefaultPlaylistScreen/SelectDefaultPlaylistScreen';
 import { Dark } from '../assets/style/theme';
-
+import ProfileScreen from '../screens/HomeScreens/Entrance/ProfileScreen';
 
 export const Tabs = createMaterialTopTabNavigator(
   {
@@ -82,6 +83,7 @@ export const Stack = createStackNavigator(
     initialRouteKey: 'Splash',
     initialRouteName: 'Splash',
     headerMode: 'none',
+    transitionConfig: () => fromRight(),
     defaultNavigationOptions: {
       headerVisible: false,
     },
