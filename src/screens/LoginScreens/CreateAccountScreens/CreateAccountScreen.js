@@ -38,16 +38,11 @@ const CreateAccountScreen = (props) => {
     firebase
       .auth()
       .createUserWithEmailAndPassword(email, password)
-      .then((cred) => {
-        console.log(cred.user.uid);
-        return firebase.firestore().collection('users').doc(cred.user.uid).set({
-          birthDate: props.navigation.getParam('birthDate'),
-          gender: props.navigation.getParam('gender'),
-          userName: props.navigation.getParam('userName'),
-          verified: false,
-        })
-      }
-      )
+      .then((cred) => firebase.firestore().collection('users').doc(cred.user.uid).set({
+        birthDate: props.navigation.getParam('birthDate'),
+        gender: props.navigation.getParam('gender'),
+        displayName: props.navigation.getParam('userName'),
+      }))
       .then(handleNavigation)
       .catch((error) => console.log(error));
   };

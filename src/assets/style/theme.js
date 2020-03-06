@@ -16,7 +16,6 @@ export const Dark = {
     secondaryAccent: '#633895',
   },
   fonts: {
-    family: 'sans-serif',
     color: '#FFFFFF',
     dark: '#555',
     disabled: '#dfe6e9',

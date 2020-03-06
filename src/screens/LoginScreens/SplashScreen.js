@@ -13,7 +13,7 @@ const jsx = (theme) => StyleSheet.create({
   text: {
     color: theme.colors.primaryAccent,
     fontSize: 150,
-    fontFamily: 'Comfortaa-Bold',
+    fontWeight: 'bold',
   },
   container: {
     flex: 1,
@@ -31,7 +31,7 @@ const SplashScreen = (props) => {
 
   const handleLoggedIn = () => {
     firebase.auth().onAuthStateChanged((user) => {
-      props.navigation.navigate(user ? 'Entrance' : 'Signin');
+      props.navigation.navigate('Entrance');
     });
   };
 

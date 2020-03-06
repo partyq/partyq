@@ -2,11 +2,12 @@
 import React, { useState } from 'react';
 import { View, Text } from 'react-native';
 import { withTheme } from 'react-native-paper';
+import CharacterInput from 'react-native-character-input';
 
 import BackgroundContainer from '../../../hoc/BackgroundContainer';
 import LinearGradientButton from '../../../components/LinearGradientButton/LinearGradientButton';
 import jsx from '../LoginScreens.style';
-import UnderlineInput from '../../../components/UnderlineInput/UnderlineInput';
+
 
 const GetBirthDate = (props) => {
   const styles = jsx(props.theme);
@@ -38,11 +39,12 @@ const GetBirthDate = (props) => {
     <BackgroundContainer style={styles.container} navigation={props.navigation} progress={0.4}>
       <View style={styles.textFieldContainer}>
         <Text style={styles.title}>{'My\nbirthday is'}</Text>
-        <UnderlineInput
-          placeHolderChar={'YYYY/MM/DD'}
-          binary={'1111011011'}
-          length={10}
+        <CharacterInput
+          placeHolder='YYYY/MM/DD'
+          showCharBinary='1111011011'
           handleChange={handleChange}
+          inputType='underlined'
+          keyboardType='numeric'
         />
       </View>
       <LinearGradientButton disabled={disabled} onPress={handleNavigation}>

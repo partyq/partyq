@@ -1,7 +1,9 @@
 /* eslint-disable no-unused-vars */
 import React from 'react';
-import { createStackNavigator, createMaterialTopTabNavigator } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation-stack';
+import { createMaterialTopTabNavigator } from 'react-navigation-tabs';
 import { Icon } from 'react-native-elements';
+import { fromRight } from 'react-navigation-transitions';
 
 // StackNavigation Screens
 import SplashScreen from '../screens/LoginScreens/SplashScreen';
@@ -17,7 +19,7 @@ import PartyScreen from '../screens/PartyRoomScreens/PartyScreen/PartyScreen';
 import SettingScreen from '../screens/PartyRoomScreens/SettingScreen/SettingScreen';
 import SelectDefaultPlaylistScreen from '../screens/HomeScreens/SelectDefaultPlaylistScreen/SelectDefaultPlaylistScreen';
 import { Dark } from '../assets/style/theme';
-
+import ProfileScreen from '../screens/HomeScreens/Entrance/ProfileScreen';
 
 export const Tabs = createMaterialTopTabNavigator(
   {
@@ -67,11 +69,11 @@ export const Tabs = createMaterialTopTabNavigator(
 export const Stack = createStackNavigator(
   {
     Splash: { screen: SplashScreen },
-    Signin: { screen: SigninScreen },
-    GetUserName: { screen: GetUserName },
-    GetBirthDate: { screen: GetBirthDate },
-    GetGender: { screen: GetGender },
-    CreateAccount: { screen: CreateAccountScreen },
+    // Signin: { screen: SigninScreen },
+    // GetUserName: { screen: GetUserName },
+    // GetBirthDate: { screen: GetBirthDate },
+    // GetGender: { screen: GetGender },
+    // CreateAccount: { screen: CreateAccountScreen },
     Entrance: { screen: Entrance },
     Services: { screen: SelectProvider },
     SelectDefaultPlayList: { screen: SelectDefaultPlaylistScreen },
@@ -82,6 +84,7 @@ export const Stack = createStackNavigator(
     initialRouteKey: 'Splash',
     initialRouteName: 'Splash',
     headerMode: 'none',
+    transitionConfig: () => fromRight(),
     defaultNavigationOptions: {
       headerVisible: false,
     },
