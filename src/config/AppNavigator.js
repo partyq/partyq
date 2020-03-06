@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React from 'react';
-import { createStackNavigator, createMaterialTopTabNavigator } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation-stack';
+import { createMaterialTopTabNavigator } from 'react-navigation-tabs';
 import { Icon } from 'react-native-elements';
 import { fromRight } from 'react-navigation-transitions';
 
@@ -68,11 +69,11 @@ export const Tabs = createMaterialTopTabNavigator(
 export const Stack = createStackNavigator(
   {
     Splash: { screen: SplashScreen },
-    Signin: { screen: SigninScreen },
-    GetUserName: { screen: GetUserName },
-    GetBirthDate: { screen: GetBirthDate },
-    GetGender: { screen: GetGender },
-    CreateAccount: { screen: CreateAccountScreen },
+    // Signin: { screen: SigninScreen },
+    // GetUserName: { screen: GetUserName },
+    // GetBirthDate: { screen: GetBirthDate },
+    // GetGender: { screen: GetGender },
+    // CreateAccount: { screen: CreateAccountScreen },
     Entrance: { screen: Entrance },
     Services: { screen: SelectProvider },
     SelectDefaultPlayList: { screen: SelectDefaultPlaylistScreen },
