@@ -1,5 +1,7 @@
 .env
 
+GoogleService-Info.plist
+
 # Xcode
 !**/*.xcodeproj
 !**/*.pbxproj

@@ -18,7 +18,7 @@
 		2DCD954D1E0B4F2C00145EB5 /* partyqTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* partyqTests.m */; };
 		70D924A536875B727C17FDD9 /* libPods-partyq.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DE1544ECBBC97F213B684BA /* libPods-partyq.a */; };
 		95C99795CF8931A0B9E67370 /* libPods-partyq-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AD83265104605FCFBF0B6409 /* libPods-partyq-tvOS.a */; };
-		B0279974240B853700D36F29 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B0279973240B853700D36F29 /* GoogleService-Info.plist */; };
+		B069244D2412CB6D0052F9B8 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B069244C2412CB6D0052F9B8 /* GoogleService-Info.plist */; };
 		DA440B49671981EA0B6C5B0B /* libPods-partyqTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D3B2214C734BFD1A364F550 /* libPods-partyqTests.a */; };
 		DE3CBA8C93841464A859838A /* libPods-partyq-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 47A09818B720465858AC65CA /* libPods-partyq-tvOSTests.a */; };
 /* End PBXBuildFile section */
@@ -63,7 +63,7 @@
 		776EDD6CB0CF5DA2CB7CF45F /* Pods-partyq.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-partyq.debug.xcconfig"; path = "Target Support Files/Pods-partyq/Pods-partyq.debug.xcconfig"; sourceTree = "<group>"; };
 		92603290D75B2B88C06172CD /* Pods-partyq-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-partyq-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-partyq-tvOSTests/Pods-partyq-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
 		AD83265104605FCFBF0B6409 /* libPods-partyq-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-partyq-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B0279973240B853700D36F29 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		B069244C2412CB6D0052F9B8 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		BC13ACB54079CD250726F051 /* Pods-partyq.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-partyq.release.xcconfig"; path = "Target Support Files/Pods-partyq/Pods-partyq.release.xcconfig"; sourceTree = "<group>"; };
 		C812A7D9FF21CC316700B9C0 /* Pods-partyq-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-partyq-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-partyq-tvOSTests/Pods-partyq-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
 		E2C2DE2C6CD312145289FC59 /* Pods-partyq-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-partyq-tvOS.release.xcconfig"; path = "Target Support Files/Pods-partyq-tvOS/Pods-partyq-tvOS.release.xcconfig"; sourceTree = "<group>"; };
@@ -127,7 +127,7 @@
 		13B07FAE1A68108700A75B9A /* partyq */ = {
 			isa = PBXGroup;
 			children = (
-				B0279973240B853700D36F29 /* GoogleService-Info.plist */,
+				B069244C2412CB6D0052F9B8 /* GoogleService-Info.plist */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -349,7 +349,7 @@
 			files = (
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
-				B0279974240B853700D36F29 /* GoogleService-Info.plist in Resources */,
+				B069244D2412CB6D0052F9B8 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
