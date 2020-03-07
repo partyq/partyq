@@ -11,10 +11,10 @@ export const Services = {
       name: 'Spotify',
       img: require('../assets/img/Spotify_Icon_RGB_Green.png'),
     },
-    {
-      name: 'Apple Music',
-      img: require('../assets/img/Apple_Music_Icon.png'),
-    },
+    // {
+    //   name: 'Apple Music',
+    //   img: require('../assets/img/Apple_Music_Icon.png'),
+    // },
   ],
 };
 

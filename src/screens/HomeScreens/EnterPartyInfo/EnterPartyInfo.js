@@ -21,7 +21,8 @@ const EnterPartyCode = (props) => {
   const pinInput = React.createRef();
 
   const checkCode = () => {
-    if (code !== '12345') {
+    console.log(code)
+    if (code !== '12345' && code.length === 5) {
       pinInput.current.shake().then(() => setCode(''));
     } else {
       setDisableButton(false);

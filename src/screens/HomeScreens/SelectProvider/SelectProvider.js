@@ -6,16 +6,55 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native';
+
+import {
+  auth as SpotifyAuth,
+  remote as SpotifyRemote,
+  ApiScope,
+} from 'react-native-spotify-remote';
+
+
 import { withTheme } from 'react-native-paper';
 
 import jsx from './SelectProvider.style';
 import BackgroundContainer from '../../../hoc/BackgroundContainer';
 import { Services } from '../../../config/RenderableData';
 
+import { SPOTIFY_CLIENT_ID,
+  SPOTIFY_REDIRECT_URL,
+  TOKEN_REFRESH_URL,
+  TOKEN_SWAP_URL
+} from 'react-native-dotenv'
+
+
+// Api Config object, replace with your own applications client id and urls
+const spotifyConfig = {
+  clientID: SPOTIFY_CLIENT_ID,
+  redirectURL: SPOTIFY_REDIRECT_URL,
+	tokenRefreshURL: TOKEN_REFRESH_URL,
+	tokenSwapURL: TOKEN_SWAP_URL,
+	scope: ApiScope.AppRemoteControlScope | ApiScope.UserFollowReadScope
+};
+
 const SelectProvider = (props) => {
   const styles = jsx(props.theme);
 
-  const handleSelected = (name) => {
+  // Initialize the library and connect the Remote
+  // then play an epic song
+  const playEpicSong = async() => {
+    try {
+      console.log('hi')
+      const token = await SpotifyAuth.initialize(spotifyConfig);
+      console.log(token)
+      await SpotifyRemote.connect(token);
+      await remote.playUri("spotify:track:6IA8E2Q5ttcpbuahIejO74");
+    } catch (err) {
+      console.error("Couldn't authorize with or connect to Spotify", err);
+    }
+  }
+
+  const handleSelected = async(name) => {
+    await playEpicSong();
     props.navigation.navigate('SelectDefaultPlayList');
   };
 
