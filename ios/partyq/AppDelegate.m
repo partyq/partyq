@@ -44,7 +44,6 @@
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)URL options:(NSDictionary<UIApplicationOpenURLOptionsKey, id> *)options
 {
-  NSLog(URL);
   return [[RNSpotifyRemoteAuth sharedInstance] application:application openURL:URL options:options];
 }
 

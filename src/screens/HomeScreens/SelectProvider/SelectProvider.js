@@ -13,8 +13,6 @@ import {
   ApiScope,
 } from 'react-native-spotify-remote';
 
-import axios from 'axios';
-
 import { withTheme } from 'react-native-paper';
 
 import jsx from './SelectProvider.style';
@@ -35,7 +33,7 @@ const spotifyConfig = {
   redirectURL: SPOTIFY_REDIRECT_URL,
 	tokenRefreshURL: TOKEN_REFRESH_URL,
 	tokenSwapURL: TOKEN_SWAP_URL,
-  scope: ApiScope.AppRemoteControlScope | ApiScope.UserFollowReadScope,
+  scope: ApiScope.AppRemoteControlScope | ApiScope.UserFollowReadScope
 };
 
 const SelectProvider = (props) => {
@@ -50,15 +48,18 @@ const SelectProvider = (props) => {
       console.debug('token accquired');
       await SpotifyRemote.connect(token);
       console.debug('connected')
-      await remote.playUri("spotify:track:6IA8E2Q5ttcpbuahIejO74");
     } catch (err) {
       console.error("Couldn't authorize with or connect to Spotify", err);
     }
   }
 
   const handleSelected = async(name) => {
-    await playEpicSong();
-    props.navigation.navigate('SelectDefaultPlayList');
+    try{
+      await playEpicSong();
+      props.navigation.navigate('SelectDefaultPlayList');
+    } catch (err) {
+      console.log(err)
+    }
   };
 
   const renderService = () => (
