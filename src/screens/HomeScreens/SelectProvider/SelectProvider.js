@@ -6,24 +6,22 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native';
-
 import {
   auth as SpotifyAuth,
-  remote as SpotifyRemote,
   ApiScope,
 } from 'react-native-spotify-remote';
-
 import { withTheme } from 'react-native-paper';
+import { connect } from 'react-redux';
 
 import jsx from './SelectProvider.style';
 import BackgroundContainer from '../../../hoc/BackgroundContainer';
 import { Services } from '../../../config/RenderableData';
-
+import { setToken } from '../../../actions';
 import {
   SPOTIFY_CLIENT_ID,
   SPOTIFY_REDIRECT_URL,
-  TOKEN_REFRESH_URL,
-  TOKEN_SWAP_URL
+  IP,
+  PORT
 } from 'react-native-dotenv'
 
 
@@ -31,9 +29,9 @@ import {
 const spotifyConfig = {
   clientID: SPOTIFY_CLIENT_ID,
   redirectURL: SPOTIFY_REDIRECT_URL,
-	tokenRefreshURL: TOKEN_REFRESH_URL,
-	tokenSwapURL: TOKEN_SWAP_URL,
-  scope: ApiScope.AppRemoteControlScope | ApiScope.UserFollowReadScope
+	tokenRefreshURL: `http://${IP}:${PORT}/refresh`,
+	tokenSwapURL: `http://${IP}:${PORT}/swap`,
+  scope: ApiScope.AppRemoteControlScope | ApiScope.PlaylistReadPrivateScope
 };
 
 const SelectProvider = (props) => {
@@ -43,13 +41,10 @@ const SelectProvider = (props) => {
   // then play an epic song
   const playEpicSong = async() => {
     try {
-      console.debug(spotifyConfig)
       const token = await SpotifyAuth.initialize(spotifyConfig);
-      console.debug('token accquired');
-      await SpotifyRemote.connect(token);
-      console.debug('connected')
+      props.setToken(token);
     } catch (err) {
-      console.error("Couldn't authorize with or connect to Spotify", err);
+      console.debug("Couldn't authorize with or connect to Spotify", err);
     }
   }
 
@@ -58,7 +53,7 @@ const SelectProvider = (props) => {
       await playEpicSong();
       props.navigation.navigate('SelectDefaultPlayList');
     } catch (err) {
-      console.log(err)
+      console.debug(err)
     }
   };
 
@@ -96,4 +91,10 @@ const SelectProvider = (props) => {
   );
 };
 
-export default withTheme(SelectProvider);
+const mapDispatchToProps = dispatch => {
+  return {
+    setToken: token => dispatch(setToken(token)),
+  }
+};
+
+export default connect(null, mapDispatchToProps)(withTheme(SelectProvider));

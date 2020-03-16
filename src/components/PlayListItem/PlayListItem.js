@@ -6,6 +6,7 @@ import {
   Text,
   TouchableOpacity,
 } from 'react-native';
+import { Icon } from 'react-native-elements';
 import { withTheme } from 'react-native-paper';
 
 import jsx from './PlayListItem.style';
@@ -19,12 +20,22 @@ const PlayListItem = (props) => {
       activeOpacity={0.5}
       onPress={() => props.navigate('Party')}
     >
-      <Image
-        source={{
-          uri: props.image,
-        }}
-        style={styles.image}
-      />
+
+      {
+        props.image ?
+          <Image
+            source={{
+              uri: props.image,
+            }}
+            style={styles.image}
+          /> :
+          <Icon
+            name='image-off'
+            type='MaterialCommunityIcons'
+            color={props.theme.fonts.color}
+            size={styles.image.height}
+          />
+      }
 
       <View style={styles.descriptionContainer} >
         <Text style={styles.title} >{props.title}</Text>
