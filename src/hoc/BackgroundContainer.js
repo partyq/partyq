@@ -2,8 +2,8 @@
 import React from 'react';
 import { withTheme, ProgressBar } from 'react-native-paper';
 import { SafeAreaView } from 'react-navigation';
-import { Icon, Button, SearchBar } from 'react-native-elements';
-import { View, Dimensions } from 'react-native';
+import { Icon, Button } from 'react-native-elements';
+import { View, StatusBar } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 
 import InternetStatus from '../components/InternetStatus/InternetStatus';
@@ -33,6 +33,7 @@ const BackgroundContainer = (props) => {
           : null
       }
 
+      <StatusBar hidden />
       <InternetStatus />
 
       {props.disableBack ? null

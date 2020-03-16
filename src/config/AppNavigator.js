@@ -84,7 +84,7 @@ export const Stack = createStackNavigator(
     initialRouteKey: 'Splash',
     initialRouteName: 'Splash',
     headerMode: 'none',
-    transitionConfig: () => fromRight(),
+    // transitionConfig: () => fromRight(),
     defaultNavigationOptions: {
       headerVisible: false,
     },
