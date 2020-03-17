@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 
-export default (theme, width) => StyleSheet.create({
+export default (theme: any, width: number) => StyleSheet.create({
   container: {
     width,
     backgroundColor: 'transparent',

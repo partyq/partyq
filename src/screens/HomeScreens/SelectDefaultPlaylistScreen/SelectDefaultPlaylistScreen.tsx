@@ -12,19 +12,31 @@ import { connect } from 'react-redux';
 import axios from 'axios';
 
 import jsx from './SelectDefaultPlaylistScreen.style';
-import { TEST_SERVICE_DATA, TEST_LIBRARY_DATA } from '../../../config/RenderableData';
 import PlayListItem from '../../../components/PlayListItem/PlayListItem';
 import BackgroundContainer from '../../../hoc/BackgroundContainer';
 import LinearGradientButton from '../../../components/LinearGradientButton/LinearGradientButton';
-import { createIconSetFromIcoMoon } from 'react-native-vector-icons';
 
-const SelectDefaultPlaylistScreen = (props) => {
+export interface iSelectDefaultPlayListScreen {
+  theme: any,
+  token: string,
+  navigation: any,
+};
+
+export interface iPlayLists {
+  id: string,
+  uri: string,
+  image: string,
+  title: string,
+  numSongs: string,
+};
+
+const SelectDefaultPlaylistScreen = (props: iSelectDefaultPlayListScreen) => {
   const styles = jsx(props.theme);
   const buttonWidth = Dimensions.get('window').width * 0.4;
 
-  const [featuredPlayList, setFeaturedPlayList] = useState(undefined);
-  const [library, setLibrary] = useState(undefined);
-  const [playListToSearch, setPlayListToSearch] = useState(undefined);
+  const [featuredPlayList, setFeaturedPlayList] = useState<iPlayLists[]|undefined>(undefined);
+  const [library, setLibrary] = useState<iPlayLists[]|undefined>(undefined);
+  const [playListToSearch, setPlayListToSearch] = useState<string|undefined>(undefined);
   const [unselectButton, setUnselectedButton] = useState({
     service: false,
     library: true,
@@ -34,13 +46,13 @@ const SelectDefaultPlaylistScreen = (props) => {
     const URL = 'https://api.spotify.com/v1/browse/featured-playlists'; 
     const config = { headers: { Authorization: `Bearer ${props.token}` } };    
     const result = await axios.get(URL, config);
-    const playLists = [];
+    const playLists: iPlayLists[] = [];
     
-    result.data.playlists.items.forEach(item => {
+    result.data.playlists.items.forEach((item: any) => {
       playLists.push({
         id: item.id,
         uri: item.uri,
-        image: item.images.length ? item.images[0].url : null,
+        image: item.images.length ? item.images[0].url : undefined,
         title: item.name,
         numSongs: item.tracks.total,
       });
@@ -53,9 +65,9 @@ const SelectDefaultPlaylistScreen = (props) => {
     const URL = 'https://api.spotify.com/v1/me/playlists'; 
     const config = { headers: { Authorization: `Bearer ${props.token}` } };    
     const result = await axios.get(URL, config);
-    const playLists = [];
+    const playLists: iPlayLists[] = [];
     
-    result.data.items.forEach(item => {
+    result.data.items.forEach((item: any) => {
       playLists.push({
         id: item.id,
         uri: item.uri,
@@ -68,11 +80,11 @@ const SelectDefaultPlaylistScreen = (props) => {
     setLibrary(playLists);
   };
 
-  useEffect(async () => {
+  useEffect(() => {
     getFeaturedPlayList();
   }, []);
 
-  const handleButton = (id) => {
+  const handleButton = (id: string) => {
     if (id === 'service') {
       setUnselectedButton({ service: false, library: true });
     } else if (id === 'library') {
@@ -130,14 +142,14 @@ const SelectDefaultPlaylistScreen = (props) => {
               navigate={props.navigation.navigate}
             />
           )}
-          keyExtractor={(item, index) => index}
+          keyExtractor={(item: iPlayLists) => item.id}
         />
       </View>
     </BackgroundContainer>
   );
 };
 
-const mapStateToProps = state => {
+const mapStateToProps = (state: any) => {
   return {
     token: state.auth.token,
   }

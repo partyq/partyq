@@ -4,9 +4,16 @@ import CardView from 'react-native-cardview';
 import { View, Image } from 'react-native';
 import { withTheme } from 'react-native-paper';
 
-import styles from './Card.style';
+import jsx from './Card.style';
 
-const Card = (props) => (
+export interface iCard {
+  uri: string,
+  theme: any
+};
+
+const Card = (props: iCard) => {
+  const styles = jsx(props.theme);
+  return (
     <View style={styles.cardView}>
       <CardView
         cardElevation={2}
@@ -21,6 +28,7 @@ const Card = (props) => (
         />
       </CardView>
     </View>
-);
+  );
+};
 
 export default withTheme(Card);

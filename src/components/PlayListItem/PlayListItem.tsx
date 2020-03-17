@@ -11,7 +11,15 @@ import { withTheme } from 'react-native-paper';
 
 import jsx from './PlayListItem.style';
 
-const PlayListItem = (props) => {
+export interface iPlayListItem {
+  theme: any,
+  navigate: any,
+  image: string,
+  title: string,
+  description: string,
+};
+
+const PlayListItem = (props: iPlayListItem) => {
   const styles = jsx(props.theme);
 
   return (

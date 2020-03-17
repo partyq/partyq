@@ -8,7 +8,7 @@ import LinearGradient from 'react-native-linear-gradient';
 
 import InternetStatus from '../components/InternetStatus/InternetStatus';
 
-const BackgroundContainer = (props) => {
+const BackgroundContainer = (props: any) => {
   const { theme } = props;
 
   const handleNavigate = () => {

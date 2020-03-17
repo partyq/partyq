@@ -12,13 +12,18 @@ import jsx from './EnterPartyInfo.style';
 import BackgroundContainer from '../../../hoc/BackgroundContainer';
 import LinearGradientButton from '../../../components/LinearGradientButton/LinearGradientButton';
 
-const EnterPartyCode = (props) => {
+export interface iEnterPartyCode {
+  theme: any,
+  navigation: any
+};
+
+const EnterPartyCode = (props: iEnterPartyCode) => {
   const styles = jsx(props.theme);
   const [code, setCode] = useState('');
   const [name, setName] = useState('');
   const [isCodeValide, setIsCodeValide] = useState(false);
   const [disableButton, setDisableButton] = useState(true);
-  const pinInput = React.createRef();
+  const pinInput: any = React.createRef();
 
   const checkCode = () => {
     console.log(code)
@@ -47,7 +52,7 @@ const EnterPartyCode = (props) => {
           : <SmoothPinCodeInput
             ref={pinInput}
             value={code}
-            onTextChange={(_code) => setCode(_code)}
+            onTextChange={(_code: string) => setCode(_code)}
             onFulfill={checkCode}
             codeLength={5}
             cellSpacing={6}

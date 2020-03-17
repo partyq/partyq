@@ -1,4 +1,6 @@
-module.exports = { 
-  "extends": "airbnb-base",
-  "parser": "babel-eslint",
+module.exports = {
+  root: true,
+  extends: '@react-native-community',
+  parser: '@typescript-eslint/parser',
+  plugins: ['@typescript-eslint'],
 };

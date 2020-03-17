@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 
-export default (theme) => StyleSheet.create({
+export default (theme: any) => StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',

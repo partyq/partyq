@@ -7,7 +7,18 @@ import LinearGradient from 'react-native-linear-gradient';
 
 import jsx from './LinearGradientButton.style';
 
-const LinearGradientButton = (props) => {
+export interface iLinearGradientButton {
+  theme: any,
+  width?: number,
+  unselected?: boolean,
+  children?: any,
+  underline?: boolean,
+  smallFont?: boolean,
+  disabled?: boolean,
+  onPress: () => void;
+}
+
+const LinearGradientButton = (props: iLinearGradientButton) => {
   const styles = jsx(props.theme, props.width ? props.width : Dimensions.get('window').width * 0.75);
 
   return (

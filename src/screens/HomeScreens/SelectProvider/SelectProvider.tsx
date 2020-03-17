@@ -22,7 +22,7 @@ import {
   SPOTIFY_REDIRECT_URL,
   IP,
   PORT
-} from 'react-native-dotenv'
+} from 'react-native-dotenv';
 
 
 // Api Config object, replace with your own applications client id and urls
@@ -34,7 +34,11 @@ const spotifyConfig = {
   scope: ApiScope.AppRemoteControlScope | ApiScope.PlaylistReadPrivateScope
 };
 
-const SelectProvider = (props) => {
+export interface iSelectProvider {
+  theme: any,
+}
+
+const SelectProvider = (props: iSelectProvider) => {
   const styles = jsx(props.theme);
 
   // Initialize the library and connect the Remote
@@ -48,7 +52,7 @@ const SelectProvider = (props) => {
     }
   }
 
-  const handleSelected = async(name) => {
+  const handleSelected = async() => {
     try{
       await playEpicSong();
       props.navigation.navigate('SelectDefaultPlayList');
@@ -91,9 +95,9 @@ const SelectProvider = (props) => {
   );
 };
 
-const mapDispatchToProps = dispatch => {
+const mapDispatchToProps = (dispatch: any) => {
   return {
-    setToken: token => dispatch(setToken(token)),
+    setToken: (token: string) => dispatch(setToken(token)),
   }
 };
 

@@ -10,32 +10,19 @@ import BackgroundContainer from '../../../hoc/BackgroundContainer';
 import { START_A_PARTY, JOIN_A_PARTY } from '../../../config/RenderableData';
 import LinearGradientButton from '../../../components/LinearGradientButton/LinearGradientButton';
 
-const Entrance = (props) => {
+export interface iEntrance {
+  theme: any,
+  navigation: any,
+
+};
+
+const Entrance = (props: iEntrance) => {
   const styles = jsx(props.theme);
-
-  // const handleLogout = () => {
-  //   firebase.auth().signOut()
-  //     .then(() => props.navigation.navigate('Signin'))
-  //     .catch((error) => Alert.alert(error.message));
-  // };
-
   const handleStartNewParty = () => props.navigation.navigate('Services');
-
   const handleJoinParty = () => props.navigation.navigate('Info');
-
-  // const handleProfile = () => props.navigation.openDrawer();
 
   return (
     <BackgroundContainer disableBack >
-      {/* <SafeAreaView style={styles.profileContainer}>
-        <Icon
-          name='settings'
-          type='feather'
-          size={24}
-          color='white'
-          onPress={handleLogout}
-        />
-      </SafeAreaView> */}
       <View style={styles.titleContainer}>
         <Text style={styles.title}>PartyQ</Text>
       </View>

@@ -1,6 +1,6 @@
 import { StyleSheet, Dimensions } from 'react-native';
 
-export default (theme) => StyleSheet.create({
+export default (theme: any) => StyleSheet.create({
   text: {
     fontFamily: theme.fonts.family,
     fontSize: theme.fonts.medium,

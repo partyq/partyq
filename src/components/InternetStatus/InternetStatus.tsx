@@ -31,16 +31,16 @@ const styles = StyleSheet.create({
   },
 });
 
-const StatusBar = (props) => (
+const StatusBar = () => (
   <SafeAreaView style={styles.offlineContainer}>
     <Text style={styles.offlineText}>{NO_INTERNET_CONNECTION}</Text>
   </SafeAreaView>
 );
 
-const InternetStatus = (props) => {
+const InternetStatus = () => {
   const [isConnected, setIsConnected] = useState(true);
 
-  const handleConnectivityChange = (state) => {
+  const handleConnectivityChange = (state: boolean) => {
     setIsConnected(state);
   };
 
