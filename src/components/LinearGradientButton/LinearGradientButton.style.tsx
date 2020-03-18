@@ -1,9 +1,10 @@
 import { StyleSheet } from 'react-native';
 
-export default (theme: any, width: number) => StyleSheet.create({
+export default (theme: any, width: number | string) => StyleSheet.create({
   container: {
     width,
     backgroundColor: 'transparent',
+    borderWidth: 0,
   },
   button: {
     borderRadius: theme.roundness,
@@ -12,6 +13,7 @@ export default (theme: any, width: number) => StyleSheet.create({
     paddingTop: theme.fonts.regular / 2,
     paddingBottom: theme.fonts.regular / 2,
     backgroundColor: 'transparent',
+    borderWidth: 0,
   },
   unselected: {
     borderRadius: theme.roundness,
@@ -24,7 +26,7 @@ export default (theme: any, width: number) => StyleSheet.create({
   text: {
     fontFamily: theme.fonts.family,
     fontSize: theme.fonts.regular,
-    color: theme.fonts.color,
+    color: theme.fonts.light,
     fontWeight: 'bold',
   },
   colorBegin: {

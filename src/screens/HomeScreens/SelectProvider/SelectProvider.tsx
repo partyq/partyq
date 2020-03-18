@@ -1,96 +1,123 @@
 /* eslint-disable no-unused-vars */
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Text,
   View,
   TouchableOpacity,
   Image,
+  Alert,
 } from 'react-native';
-import {
-  auth as SpotifyAuth,
-  ApiScope,
-} from 'react-native-spotify-remote';
 import { withTheme } from 'react-native-paper';
 import { connect } from 'react-redux';
+import { AppInstalledChecker } from 'react-native-check-app-install';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 import jsx from './SelectProvider.style';
 import BackgroundContainer from '../../../hoc/BackgroundContainer';
-import { Services } from '../../../config/RenderableData';
+import { Provider, iProvider } from '../../../config/RenderableData';
 import { setToken } from '../../../actions';
-import {
-  SPOTIFY_CLIENT_ID,
-  SPOTIFY_REDIRECT_URL,
-  IP,
-  PORT
-} from 'react-native-dotenv';
-
-
-// Api Config object, replace with your own applications client id and urls
-const spotifyConfig = {
-  clientID: SPOTIFY_CLIENT_ID,
-  redirectURL: SPOTIFY_REDIRECT_URL,
-	tokenRefreshURL: `http://${IP}:${PORT}/refresh`,
-	tokenSwapURL: `http://${IP}:${PORT}/swap`,
-  scope: ApiScope.AppRemoteControlScope | ApiScope.PlaylistReadPrivateScope
-};
+import LinearGradientButton from '../../../components/LinearGradientButton/LinearGradientButton';
 
 export interface iSelectProvider {
   theme: any,
-}
+  setToken: (token: string) => void,
+  navigation: any,
+};
 
 const SelectProvider = (props: iSelectProvider) => {
   const styles = jsx(props.theme);
+  const [spinner, setSpinner] = useState<boolean>(false);
+  const [providerId, setProviderId] = useState<string>('');
+  const [providers, updateProviders] = useState<iProvider[]>([]);
 
-  // Initialize the library and connect the Remote
-  // then play an epic song
-  const playEpicSong = async() => {
+  useEffect(() => {
+    Provider.providers.forEach((item) => item.selected = false);
+    updateProviders([...Provider.providers]);
+    return () => {
+      updateProviders([]);
+      console.log(providers)
+    }
+  }, []);
+
+  const initService = async () => {
     try {
-      const token = await SpotifyAuth.initialize(spotifyConfig);
-      props.setToken(token);
+      AppInstalledChecker
+        .isAppInstalled('spotify')
+        .then(async (isInstalled: boolean) => {
+          if (isInstalled === true) {
+            // await props.MusicService.authorize();
+            props.navigation.navigate('SelectDefaultPlayList');
+          }
+          else {
+            Alert.alert('Spotify App must be installed to use their services.');
+          }
+        });
     } catch (err) {
       console.debug("Couldn't authorize with or connect to Spotify", err);
     }
+    setSpinner(false);
   }
 
-  const handleSelected = async() => {
-    try{
-      await playEpicSong();
-      props.navigation.navigate('SelectDefaultPlayList');
+  const handleAuth = async (providerId: string) => {
+    try {
+      setSpinner(true);
+      initService();
     } catch (err) {
-      console.debug(err)
+      console.debug(err);
+      setSpinner(false);
     }
   };
 
-  const renderService = () => (
-    <View style={styles.services}>
-      {Services.services.map((item, i) => (
-        <TouchableOpacity
-          key={i}
-          activeOpacity={0.5}
-          onPress={() => handleSelected(item.name)}
-          style={styles.button}
-        >
-          <Image
-            source={item.img}
-            style={styles.image}
-            key={i}
-            width={props.theme.fonts.medium}
-            height={props.theme.fonts.medium}
-          />
-          <Text style={styles.buttonText} key={i}>{item.name}</Text>
-        </TouchableOpacity>
-      ))}
-    </View>
-  );
+  const handleSelect = (newProviderId: string) => {
+    if (!newProviderId || newProviderId === providerId) return;
+
+    const temp = [...providers];
+    temp.forEach((provider, i) => {
+      if (provider.name === newProviderId) {
+        provider.selected = true;
+      }
+      else {
+        provider.selected = false;
+      }
+    });
+
+    updateProviders(temp);
+    setProviderId(newProviderId);
+  };
 
   return (
-    <BackgroundContainer style={styles.container} navigation={props.navigation}>
+    <BackgroundContainer navigation={props.navigation}>
+      <Spinner visible={spinner} />
       <View style={styles.header}>
-        <Text style={styles.title}>{Services.title}</Text>
-        <Text style={styles.paragraph}>{Services.paragraph}</Text>
+        <Text style={styles.title}>{Provider.title}</Text>
+        <Text style={styles.paragraph}>{Provider.paragraph}</Text>
       </View>
-      {renderService()}
-      {/* <LinearGradientButton onPress={handleAuth}>Finish</LinearGradientButton> */}
+      <View style={styles.services}>
+        {providers.map(({ name, img, selected }: iProvider, i) => (
+          <TouchableOpacity
+            key={i}
+            activeOpacity={0.5}
+            onPress={() => handleSelect(name)}
+            style={[
+              styles.button,
+              selected ? {backgroundColor: '#EDEDED'} : null
+            ]}
+          >
+            <Image
+              source={img}
+              style={styles.image}
+              key={i}
+            />
+            <Text style={styles.buttonText} key={i}>{name}</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+      <LinearGradientButton
+        onPress={() => handleAuth(providerId)}
+        disabled={providerId === '' ? true : false}
+      >
+        Next
+      </LinearGradientButton>
     </BackgroundContainer>
   );
 };

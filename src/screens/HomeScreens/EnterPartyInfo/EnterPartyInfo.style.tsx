@@ -1,39 +1,36 @@
 import { StyleSheet, Dimensions } from 'react-native';
 
 export default (theme: any) => StyleSheet.create({
+  header: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'space-evenly',
+    textAlign: 'left',
+  },
+  code: {
+    flex: 3,
+    flexDirection: 'column',
+    alignItems: 'center',
+    width: '100%',
+  },
   text: {
     fontFamily: theme.fonts.family,
-    fontSize: theme.fonts.medium,
+    fontSize: theme.fonts.large,
+    fontWeight: 'bold',
     color: theme.fonts.color,
-    textAlign: 'center',
   },
   textInput: {
     backgroundColor: theme.colors.background,
-    width: Dimensions.get('window').width * 0.8,
+    borderColor: theme.colors.color,
+    borderWidth: 2,
+    width: '100%',
     paddingTop: theme.fonts.small,
     paddingBottom: theme.fonts.small,
     paddingLeft: theme.fonts.small,
     flexDirection: 'row',
-    justifyContent: 'flex-start',
+    justifyContent: 'center',
     borderRadius: theme.roundness,
     fontFamily: theme.fonts.family,
-  },
-  container: {
-    flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  backContainer: {
-    alignItems: 'flex-start',
-    justifyContent: 'flex-start',
-  },
-  wrappingContainer: {
-    flex: 1,
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'space-around',
-    maxHeight: '50%',
   },
   cellStyleFocused: {
     borderColor: theme.colors.primaryAccent,

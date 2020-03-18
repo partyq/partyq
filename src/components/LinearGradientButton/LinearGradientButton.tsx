@@ -15,49 +15,43 @@ export interface iLinearGradientButton {
   underline?: boolean,
   smallFont?: boolean,
   disabled?: boolean,
+  type?: "solid" | "clear" | "outline" | undefined,
   onPress: () => void;
 }
 
 const LinearGradientButton = (props: iLinearGradientButton) => {
-  const styles = jsx(props.theme, props.width ? props.width : Dimensions.get('window').width * 0.75);
+  const styles = jsx(props.theme, props.width ? props.width : '100%');
 
   return (
     <>
-      {props.unselected
-        ? <Button
-          title={props.children}
-          titleStyle={[
-            styles.text,
-            props.underline ? { textDecorationLine: 'underline', textDecorationColor: props.theme.fonts.color } : {},
-            props.smallFont ? { fontSize: props.theme.fonts.small } : {},
-          ]}
-          raised
-          type={'clear'}
-          disabled={props.disabled}
-          containerStyle={styles.container}
-          buttonStyle={styles.button}
-          onPress={props.onPress}
-        />
-        : <Button
-          title={props.children}
-          titleStyle={[
-            styles.text,
-            props.underline ? { textDecorationLine: 'underline', textDecorationColor: props.theme.fonts.color } : {},
-            props.smallFont ? { fontSize: props.theme.fonts.small } : {},
-          ]}
-          raised
-          type={'solid'}
-          disabled={props.disabled}
-          containerStyle={styles.container}
-          buttonStyle={styles.button}
-          onPress={props.onPress}
-          ViewComponent={LinearGradient}
-          linearGradientProps={{
-            colors: [styles.colorBegin.color, styles.colorEnd.color],
-            start: { x: 0, y: 0 },
-            end: { x: 1, y: 0 },
-          }}
-        />}
+      <Button
+        title={props.children}
+        titleStyle={[
+          styles.text,
+          props.type === 'outline' || props.type === 'clear' ? {
+            color: props.theme.colors.primary
+          } : {},
+          props.underline ? { textDecorationLine: 'underline', textDecorationColor: props.theme.fonts.color } : {},
+          props.smallFont ? { fontSize: props.theme.fonts.small } : {},
+        ]}
+        type={props.type}
+        disabled={props.disabled}
+        containerStyle={styles.container}
+        buttonStyle={[
+          styles.button,
+          props.type === 'outline' ? {
+            borderColor: props.theme.colors.primary,
+            borderWidth: 3,
+          } : {},
+        ]}
+        onPress={props.onPress}
+        ViewComponent={(props.unselected || props.type === 'outline' || props.type === 'clear') ? undefined : LinearGradient}
+        linearGradientProps={(props.unselected || props.type === 'outline' || props.type === 'clear') ? undefined : {
+          colors: [styles.colorBegin.color, styles.colorEnd.color],
+          start: { x: 0, y: 0 },
+          end: { x: 1, y: 0 },
+        }}
+      />
     </>
   );
 };
