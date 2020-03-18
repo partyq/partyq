@@ -1,8 +1,8 @@
-import { 
-	auth as SpotifyAuth, 
-	remote as SpotifyRemote, 
-	ApiScope, 
-	ApiConfig
+import {
+  auth as SpotifyAuth,
+  remote as SpotifyRemote,
+  ApiScope,
+  ApiConfig
 } from 'react-native-spotify-remote';
 
 import {
@@ -23,7 +23,6 @@ class SpotifyService implements iSpotifyService {
   private _spotifyConfig: ApiConfig;
 
   constructor() {
-    this._token = '';
     this._spotifyConfig = {
       clientID: SPOTIFY_CLIENT_ID,
       redirectURL: SPOTIFY_REDIRECT_URL,
@@ -31,16 +30,17 @@ class SpotifyService implements iSpotifyService {
       tokenSwapURL: `http://${IP}:${PORT}/swap`,
       scope: ApiScope.AppRemoteControlScope | ApiScope.PlaylistReadPrivateScope
     };
-  }
+  };
 
   static getInstance = () => {
     if (!SpotifyService.instance) {
       SpotifyService.instance = new SpotifyService();
+      SpotifyService.instance._token = '';
     }
     return SpotifyService.instance;
   }
 
-  authorize = async() => {
+  authorize = async () => {
     console.log('authorize')
     this._token = await SpotifyAuth.initialize(this._spotifyConfig);
   }

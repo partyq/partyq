@@ -21,10 +21,10 @@ export const Provider = {
       img: require('../assets/img/Spotify_Icon_RGB_Green.png'),
       selected: false,
     },
-    {
-      name: 'Apple Music',
-      img: require('../assets/img/Apple_Music_Icon.png'),
-      selected: false
-    },
+    // {
+    //   name: 'Apple Music',
+    //   img: require('../assets/img/Apple_Music_Icon.png'),
+    //   selected: false
+    // },
   ],
 };

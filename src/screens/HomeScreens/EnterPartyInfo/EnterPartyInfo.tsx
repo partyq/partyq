@@ -40,7 +40,7 @@ const EnterPartyCode = (props: iEnterPartyCode) => {
   return (
     <BackgroundContainer navigation={props.navigation} >
       <View style={styles.header}>
-        <Text style={styles.text}>Enter a party code</Text>
+        <Text style={styles.text}>Enter Party Code</Text>
       </View>
       <View style={styles.code}>
         {isCodeValide
