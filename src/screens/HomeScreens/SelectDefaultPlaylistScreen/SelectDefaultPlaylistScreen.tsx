@@ -151,7 +151,7 @@ const SelectDefaultPlaylistScreen = (props: iSelectDefaultPlayListScreen) => {
 
 const mapStateToProps = (state: any) => {
   return {
-    token: state.auth.token,
+    providerId: state.reducer.providerId,
   }
 };
 

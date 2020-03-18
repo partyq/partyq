@@ -15,19 +15,20 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import jsx from './SelectProvider.style';
 import BackgroundContainer from '../../../hoc/BackgroundContainer';
 import { Provider, iProvider } from '../../../config/RenderableData';
-import { setToken } from '../../../actions';
+import { setProviderId, getProviderInstance } from '../../../actions';
 import LinearGradientButton from '../../../components/LinearGradientButton/LinearGradientButton';
 
 export interface iSelectProvider {
   theme: any,
-  setToken: (token: string) => void,
+  setProviderId: (providerId: string) => void,
+  getProviderInstance: () => any,
+  providerId: string,
   navigation: any,
 };
 
 const SelectProvider = (props: iSelectProvider) => {
   const styles = jsx(props.theme);
   const [spinner, setSpinner] = useState<boolean>(false);
-  const [providerId, setProviderId] = useState<string>('');
   const [providers, updateProviders] = useState<iProvider[]>([]);
 
   useEffect(() => {
@@ -35,7 +36,6 @@ const SelectProvider = (props: iSelectProvider) => {
     updateProviders([...Provider.providers]);
     return () => {
       updateProviders([]);
-      console.log(providers)
     }
   }, []);
 
@@ -45,7 +45,9 @@ const SelectProvider = (props: iSelectProvider) => {
         .isAppInstalled('spotify')
         .then(async (isInstalled: boolean) => {
           if (isInstalled === true) {
-            // await props.MusicService.authorize();
+            const serviceInstsance = props.getProviderInstance();
+            console.log('serviceInstance',serviceInstsance);
+            serviceInstsance.authorize();
             props.navigation.navigate('SelectDefaultPlayList');
           }
           else {
@@ -55,21 +57,20 @@ const SelectProvider = (props: iSelectProvider) => {
     } catch (err) {
       console.debug("Couldn't authorize with or connect to Spotify", err);
     }
-    setSpinner(false);
   }
 
-  const handleAuth = async (providerId: string) => {
+  const handleAuth = async () => {
+    setSpinner(true);
     try {
-      setSpinner(true);
-      initService();
+      await initService();
     } catch (err) {
       console.debug(err);
-      setSpinner(false);
     }
+    setSpinner(false);
   };
 
   const handleSelect = (newProviderId: string) => {
-    if (!newProviderId || newProviderId === providerId) return;
+    if (!newProviderId || newProviderId === props.providerId) return;
 
     const temp = [...providers];
     temp.forEach((provider, i) => {
@@ -82,7 +83,7 @@ const SelectProvider = (props: iSelectProvider) => {
     });
 
     updateProviders(temp);
-    setProviderId(newProviderId);
+    props.setProviderId(newProviderId);
   };
 
   return (
@@ -113,8 +114,8 @@ const SelectProvider = (props: iSelectProvider) => {
         ))}
       </View>
       <LinearGradientButton
-        onPress={() => handleAuth(providerId)}
-        disabled={providerId === '' ? true : false}
+        onPress={() => handleAuth(props.providerId)}
+        disabled={props.providerId === '' ? true : false}
       >
         Next
       </LinearGradientButton>
@@ -122,10 +123,18 @@ const SelectProvider = (props: iSelectProvider) => {
   );
 };
 
-const mapDispatchToProps = (dispatch: any) => {
+
+const mapStateToProps = (state: any) => {
   return {
-    setToken: (token: string) => dispatch(setToken(token)),
+    providerId: state.reducer.providerId,
   }
 };
 
-export default connect(null, mapDispatchToProps)(withTheme(SelectProvider));
+const mapDispatchToProps = (dispatch: any) => {
+  return {
+    setProviderId: (providerId: string) => dispatch(setProviderId(providerId)),
+    getProviderInstance: () => dispatch(getProviderInstance()),
+  }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(withTheme(SelectProvider));
