@@ -1,40 +1,38 @@
 import { StyleSheet } from 'react-native';
 
 export default (theme: any) => StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: 'column',
-    alignItems: 'center',
-    padding: theme.fonts.large,
-  },
   header: {
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'space-evenly',
+    textAlign: 'left',
   },
   services: {
-    flex: 1,
+    flex: 3,
     flexDirection: 'column',
     alignSelf: 'flex-start',
     justifyContent: 'flex-start',
+    width: '100%'
   },
   title: {
     fontFamily: theme.fonts.family,
-    fontSize: theme.fonts.medium,
+    fontSize: theme.fonts.large,
     fontWeight: 'bold',
     color: theme.fonts.color,
-    textAlign: 'center',
   },
   paragraph: {
     fontFamily: theme.fonts.family,
     fontSize: theme.fonts.small,
-    color: theme.fonts.disabled,
-    textAlign: 'center',
+    color: theme.fonts.color,
   },
   button: {
     flexDirection: 'row',
     justifyContent: 'flex-start',
+    alignItems: 'center',
     marginBottom: theme.fonts.regular,
+    width: '100%',
+    padding: 10,
+    borderRadius: 5,
   },
   buttonText: {
     fontFamily: theme.fonts.family,
@@ -45,5 +43,7 @@ export default (theme: any) => StyleSheet.create({
   },
   image: {
     marginRight: theme.fonts.regular,
+    width: theme.fonts.large,
+    height: theme.fonts.large,
   },
 });

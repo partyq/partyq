@@ -1,9 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React from 'react';
-import { Text, View, Alert, SafeAreaView } from 'react-native';
-import { Icon } from 'react-native-elements';
+import { View, Image } from 'react-native';
 import { withTheme } from 'react-native-paper';
-import firebase from 'react-native-firebase';
 
 import jsx from './Entrance.style';
 import BackgroundContainer from '../../../hoc/BackgroundContainer';
@@ -22,14 +20,29 @@ const Entrance = (props: iEntrance) => {
   const handleJoinParty = () => props.navigation.navigate('Info');
 
   return (
-    <BackgroundContainer disableBack >
+    <BackgroundContainer disableBack>
       <View style={styles.titleContainer}>
-        <Text style={styles.title}>PartyQ</Text>
+        <Image
+          source={require('../../../assets/img/PartyQ-Logo.png')}
+          style={{
+            height: 300,
+            width: 300
+          }}
+        />
       </View>
 
       <View style={styles.buttonContainer}>
-        <LinearGradientButton onPress={handleStartNewParty} >{START_A_PARTY}</LinearGradientButton>
-        <LinearGradientButton onPress={handleJoinParty} >{JOIN_A_PARTY}</LinearGradientButton>
+        <LinearGradientButton
+          onPress={handleStartNewParty}
+        >
+          {START_A_PARTY}
+        </LinearGradientButton>
+        <LinearGradientButton
+          onPress={handleJoinParty}
+          type='outline'
+        >
+            {JOIN_A_PARTY}
+        </LinearGradientButton>
       </View>
     </BackgroundContainer>
   );

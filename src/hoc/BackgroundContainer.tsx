@@ -72,7 +72,15 @@ const BackgroundContainer = (props: any) => {
           {props.children}
         </View>
         : <>
-          {props.children}
+          <View style={{
+            flex: 1,
+            flexDirection: 'column',
+            alignItems: 'center',
+            width: '100%',
+            padding: 25
+          }}>
+            {props.children}
+          </View>
         </>
       }
 

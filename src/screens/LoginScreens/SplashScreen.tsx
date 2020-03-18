@@ -3,13 +3,13 @@
 import React from 'react';
 import {
   View,
-  Text,
+  Image,
   StyleSheet,
 } from 'react-native';
 import { withTheme } from 'react-native-paper';
 import firebase from 'react-native-firebase';
 
-const jsx = (theme) => StyleSheet.create({
+const jsx = (theme: any) => StyleSheet.create({
   text: {
     color: theme.colors.primaryAccent,
     fontSize: 150,
@@ -26,7 +26,12 @@ const jsx = (theme) => StyleSheet.create({
   },
 });
 
-const SplashScreen = (props) => {
+export interface iSplashScreen {
+  theme: any,
+  navigation: any,
+};
+
+const SplashScreen = (props: iSplashScreen) => {
   const styles = jsx(props.theme);
 
   const handleLoggedIn = () => {
@@ -43,7 +48,13 @@ const SplashScreen = (props) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Q</Text>
+      <Image
+        source={require('../../assets/img/PartyQ-Logo.png')}
+        style={{
+          height: 300,
+          width: 300
+        }}
+      />
     </View>
   );
 };

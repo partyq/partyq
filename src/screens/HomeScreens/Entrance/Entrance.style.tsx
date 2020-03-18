@@ -5,12 +5,7 @@ export default (theme: any) => StyleSheet.create({
     flex: 2,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  title: {
-    fontFamily: theme.fonts.family,
-    fontWeight: 'bold',
-    fontSize: theme.fonts.large,
-    color: theme.fonts.color,
+    width: '100%'
   },
   buttonContainer: {
     flex: 1,
@@ -18,12 +13,6 @@ export default (theme: any) => StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-around',
     marginBottom: '20%',
-  },
-  profileContainer: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'flex-end',
-    paddingRight: theme.fonts.medium,
-    paddingTop: theme.fonts.regular,
+    width: '100%'
   },
 });

@@ -38,10 +38,11 @@ const EnterPartyCode = (props: iEnterPartyCode) => {
   const handleNavigation = () => props.navigation.navigate('Party');
 
   return (
-    <BackgroundContainer style={styles.container} navigation={props.navigation} >
-      <View style={styles.wrappingContainer}>
+    <BackgroundContainer navigation={props.navigation} >
+      <View style={styles.header}>
         <Text style={styles.text}>Enter a party code</Text>
-
+      </View>
+      <View style={styles.code}>
         {isCodeValide
           ? <TextInput
             style={styles.textInput}
@@ -61,15 +62,15 @@ const EnterPartyCode = (props: iEnterPartyCode) => {
             cellStyle={styles.cellStyle}
             textStyle={styles.textStyle}
             textStyleFocused={styles.textStyleFocused}
-          />}
-
-        <LinearGradientButton
-          disabled={disableButton}
-          onPress={handleNavigation}
-        >
-          Join the Party!
-        </LinearGradientButton>
+          />
+        }
       </View>
+      <LinearGradientButton
+        disabled={disableButton}
+        onPress={handleNavigation}
+      >
+        Join the Party!
+      </LinearGradientButton>
     </BackgroundContainer>
   );
 };
