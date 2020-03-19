@@ -15,13 +15,14 @@ import PlayListItem from '../../../components/PlayListItem/PlayListItem';
 import BackgroundContainer from '../../../hoc/BackgroundContainer';
 import LinearGradientButton from '../../../components/LinearGradientButton/LinearGradientButton';
 import { iPlayLists } from '../../../utility/MusicServices/SpotifyService';
-import { getProviderInstance } from '../../../actions';
+import { getProviderInstance, setProviderId } from '../../../actions';
 
 export interface iSelectDefaultPlayListScreen {
   theme: any,
   token: string,
   navigation: any,
   getProviderInstance: () => any,
+  setProviderId: (providerId: string) => void,
 };
 
 const SelectDefaultPlaylistScreen = (props: iSelectDefaultPlayListScreen) => {
@@ -81,8 +82,14 @@ const SelectDefaultPlaylistScreen = (props: iSelectDefaultPlayListScreen) => {
     }
   };
 
+  const beforeBack = async() => {
+    props.setProviderId('');
+  };
+
   return (
-    <BackgroundContainer navigation={props.navigation}
+    <BackgroundContainer
+      navigation={props.navigation}
+      beforeBack={beforeBack}
       title={
         <Text style={styles.headingText}>Select a Playlist</Text>
       }
@@ -142,6 +149,7 @@ const SelectDefaultPlaylistScreen = (props: iSelectDefaultPlayListScreen) => {
 const mapDispatchToProps = (dispatch: any) => {
   return {
     getProviderInstance: () => dispatch(getProviderInstance()),
+    setProviderId: (providerId: string) => dispatch(setProviderId(providerId)),
   }
 };
 

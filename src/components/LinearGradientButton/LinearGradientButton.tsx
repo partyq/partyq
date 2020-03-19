@@ -6,6 +6,7 @@ import { Button } from 'react-native-elements';
 import LinearGradient from 'react-native-linear-gradient';
 
 import jsx from './LinearGradientButton.style';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export interface iLinearGradientButton {
   theme: any,
@@ -23,7 +24,7 @@ const LinearGradientButton = (props: iLinearGradientButton) => {
   const styles = jsx(props.theme, props.width ? props.width : '100%');
 
   return (
-    <>
+    <SafeAreaView style={{width: props.width ? props.width : '100%'}}>
       <Button
         title={props.children}
         titleStyle={[
@@ -52,7 +53,7 @@ const LinearGradientButton = (props: iLinearGradientButton) => {
           end: { x: 1, y: 0 },
         }}
       />
-    </>
+    </SafeAreaView>
   );
 };
 

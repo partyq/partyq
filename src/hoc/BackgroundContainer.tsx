@@ -11,7 +11,10 @@ import InternetStatus from '../components/InternetStatus/InternetStatus';
 const BackgroundContainer = (props: any) => {
   const { theme } = props;
 
-  const handleNavigate = () => {
+  const handleNavigate = async(): Promise<void> => {
+    if (props.beforeBack) 
+      await props.beforeBack();
+      
     props.navigation.goBack();
   };
 
@@ -43,8 +46,8 @@ const BackgroundContainer = (props: any) => {
             flexDirection: 'row',
             alignItems: 'center',
             backgroundColor: 'transparent',
-            paddingTop: theme.fonts.small,
-            paddingLeft: theme.fonts.small,
+            paddingTop: 14,
+            paddingLeft: 14,
           }}>
           <Button
             icon={
@@ -77,7 +80,7 @@ const BackgroundContainer = (props: any) => {
             flexDirection: 'column',
             alignItems: 'center',
             width: '100%',
-            padding: 25
+            padding: 14
           }}>
             {props.children}
           </View>

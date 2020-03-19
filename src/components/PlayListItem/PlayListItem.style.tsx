@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 export default (theme: any) => StyleSheet.create({
   container: {
     height: 75,
-    width: '95%',
+    width: '100%',
     justifyContent: 'flex-start',
     alignItems: 'center',
     alignSelf: 'center',
@@ -35,6 +35,5 @@ export default (theme: any) => StyleSheet.create({
     fontFamily: theme.fonts.family,
     fontSize: theme.fonts.small,
     color: 'grey',
-    fontWeight: 'bold',
   },
 });
