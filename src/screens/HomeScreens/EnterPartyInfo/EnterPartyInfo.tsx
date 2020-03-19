@@ -26,7 +26,6 @@ const EnterPartyCode = (props: iEnterPartyCode) => {
   const pinInput: any = React.createRef();
 
   const checkCode = () => {
-    console.log(code)
     if (code !== '12345' && code.length === 5) {
       pinInput.current.shake().then(() => setCode(''));
     } else {

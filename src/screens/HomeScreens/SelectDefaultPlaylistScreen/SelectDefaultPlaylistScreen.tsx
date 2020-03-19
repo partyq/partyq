@@ -9,92 +9,80 @@ import {
 import { SearchBar } from 'react-native-elements';
 import { withTheme } from 'react-native-paper';
 import { connect } from 'react-redux';
-import axios from 'axios';
 
 import jsx from './SelectDefaultPlaylistScreen.style';
 import PlayListItem from '../../../components/PlayListItem/PlayListItem';
 import BackgroundContainer from '../../../hoc/BackgroundContainer';
 import LinearGradientButton from '../../../components/LinearGradientButton/LinearGradientButton';
+import { iPlayLists } from '../../../utility/MusicServices/SpotifyService';
+import { getProviderInstance } from '../../../actions';
 
 export interface iSelectDefaultPlayListScreen {
   theme: any,
   token: string,
   navigation: any,
-};
-
-export interface iPlayLists {
-  id: string,
-  uri: string,
-  image: string,
-  title: string,
-  numSongs: string,
+  getProviderInstance: () => any,
 };
 
 const SelectDefaultPlaylistScreen = (props: iSelectDefaultPlayListScreen) => {
   const styles = jsx(props.theme);
   const buttonWidth = Dimensions.get('window').width * 0.4;
 
-  const [featuredPlayList, setFeaturedPlayList] = useState<iPlayLists[]|undefined>(undefined);
-  const [library, setLibrary] = useState<iPlayLists[]|undefined>(undefined);
-  const [playListToSearch, setPlayListToSearch] = useState<string|undefined>(undefined);
+  const [featuredPlayList, setFeaturedPlayList] = useState<iPlayLists[] | undefined>(undefined);
+  const [library, setLibrary] = useState<iPlayLists[] | undefined>(undefined);
+  const [playListToSearch, setPlayListToSearch] = useState<string | undefined>(undefined);
   const [unselectButton, setUnselectedButton] = useState({
     service: false,
     library: true,
   });
 
-  const getFeaturedPlayList = async() => {
-    const URL = 'https://api.spotify.com/v1/browse/featured-playlists'; 
-    const config = { headers: { Authorization: `Bearer ${props.token}` } };    
-    const result = await axios.get(URL, config);
-    const playLists: iPlayLists[] = [];
-    
-    result.data.playlists.items.forEach((item: any) => {
-      playLists.push({
-        id: item.id,
-        uri: item.uri,
-        image: item.images.length ? item.images[0].url : undefined,
-        title: item.name,
-        numSongs: item.tracks.total,
-      });
-    });
-
-    setFeaturedPlayList(playLists);
-  };
-
-  const getLibrary = async() => {
-    const URL = 'https://api.spotify.com/v1/me/playlists'; 
-    const config = { headers: { Authorization: `Bearer ${props.token}` } };    
-    const result = await axios.get(URL, config);
-    const playLists: iPlayLists[] = [];
-    
-    result.data.items.forEach((item: any) => {
-      playLists.push({
-        id: item.id,
-        uri: item.uri,
-        image: item.images.length ? item.images[0].url : null,
-        title: item.name,
-        numSongs: item.tracks.total,
-      });
-    });
-
-    setLibrary(playLists);
-  };
-
   useEffect(() => {
-    getFeaturedPlayList();
+    getFeaturedPLayLists();
   }, []);
+
+  const getFeaturedPLayLists = async(): Promise<void> => {
+    try {
+      const instance = props.getProviderInstance();
+      if (instance !== undefined) {
+        const data = await instance.getFeaturedPlayLists();
+        setFeaturedPlayList(data);
+      }
+      else {
+        setFeaturedPlayList(undefined);
+      }
+    }
+    catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getLibraryPLaylists = async(): Promise<void> => {
+    try {
+      const instance = props.getProviderInstance();
+      if (instance !== undefined) {
+        const data = await instance.getLibraryPlayLists();
+        setLibrary(data);
+      }
+      else {
+        setLibrary(undefined);
+      }
+    }
+    catch (error) {
+      console.log(error);
+    }
+  };
 
   const handleButton = (id: string) => {
     if (id === 'service') {
       setUnselectedButton({ service: false, library: true });
     } else if (id === 'library') {
       setUnselectedButton({ service: true, library: false });
-      getLibrary();
+      getLibraryPLaylists();
     }
   };
 
   return (
-    <BackgroundContainer style={styles.container} navigation={props.navigation}
+    <BackgroundContainer navigation={props.navigation}
       title={
         <Text style={styles.headingText}>Select a Playlist</Text>
       }
@@ -116,6 +104,7 @@ const SelectDefaultPlaylistScreen = (props: iSelectDefaultPlayListScreen) => {
         <LinearGradientButton
           width={buttonWidth}
           unselected={unselectButton.service}
+          type={unselectButton.service ? 'clear' : 'solid'}
           onPress={() => handleButton('service')}
         >
           Spotify
@@ -124,6 +113,7 @@ const SelectDefaultPlaylistScreen = (props: iSelectDefaultPlayListScreen) => {
         <LinearGradientButton
           width={buttonWidth}
           unselected={unselectButton.library}
+          type={unselectButton.library ? 'clear' : 'solid'}
           onPress={() => handleButton('library')}
         >
           Your Library
@@ -149,10 +139,10 @@ const SelectDefaultPlaylistScreen = (props: iSelectDefaultPlayListScreen) => {
   );
 };
 
-const mapStateToProps = (state: any) => {
+const mapDispatchToProps = (dispatch: any) => {
   return {
-    providerId: state.reducer.providerId,
+    getProviderInstance: () => dispatch(getProviderInstance()),
   }
 };
 
-export default connect(mapStateToProps, null)(withTheme(SelectDefaultPlaylistScreen));
+export default connect(null, mapDispatchToProps)(withTheme(SelectDefaultPlaylistScreen));

@@ -46,8 +46,7 @@ const SelectProvider = (props: iSelectProvider) => {
         .then(async (isInstalled: boolean) => {
           if (isInstalled === true) {
             const serviceInstsance = props.getProviderInstance();
-            console.log('serviceInstance',serviceInstsance);
-            serviceInstsance.authorize();
+            await serviceInstsance.authorize();
             props.navigation.navigate('SelectDefaultPlayList');
           }
           else {
@@ -114,7 +113,7 @@ const SelectProvider = (props: iSelectProvider) => {
         ))}
       </View>
       <LinearGradientButton
-        onPress={() => handleAuth(props.providerId)}
+        onPress={() => handleAuth()}
         disabled={props.providerId === '' ? true : false}
       >
         Next
