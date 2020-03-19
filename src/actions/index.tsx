@@ -1,5 +1,5 @@
 import store from '../store/store';
-import SpotifyService from '../utility/MusicServices/SpotifyService';
+import SpotifyService, { iSpotifyService } from '../utility/MusicServices/SpotifyService';
 
 export const setProviderId = (providerId: string) => ({
   type: 'SET_PROVIDER_ID',
