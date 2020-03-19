@@ -31,12 +31,13 @@ const SelectProvider = (props: iSelectProvider) => {
   const [spinner, setSpinner] = useState<boolean>(false);
   const [providers, updateProviders] = useState<iProvider[]>([]);
 
-  useEffect(() => {
+  const reset = () => {
     Provider.providers.forEach((item) => item.selected = false);
     updateProviders([...Provider.providers]);
-    return () => {
-      updateProviders([]);
-    }
+  };
+
+  useEffect(() => {
+    reset();
   }, []);
 
   const initService = async () => {
@@ -47,6 +48,7 @@ const SelectProvider = (props: iSelectProvider) => {
           if (isInstalled === true) {
             const serviceInstsance = props.getProviderInstance();
             await serviceInstsance.authorize();
+            reset();
             props.navigation.navigate('SelectDefaultPlayList');
           }
           else {
@@ -58,14 +60,16 @@ const SelectProvider = (props: iSelectProvider) => {
     }
   }
 
-  const handleAuth = async () => {
+  const handleAuth = () => {
     setSpinner(true);
-    try {
-      await initService();
-    } catch (err) {
-      console.debug(err);
-    }
-    setSpinner(false);
+    setTimeout(async() => {
+      try {
+        await initService();
+      } catch (err) {
+        console.debug(err);
+      }
+      setSpinner(false);
+    }, 500);
   };
 
   const handleSelect = (newProviderId: string) => {

@@ -1,9 +1,6 @@
 import { StyleSheet } from 'react-native';
 
 export default (theme: any) => StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   searchContainer: {
     flexDirection: 'column',
     alignItems: 'center',
@@ -24,12 +21,13 @@ export default (theme: any) => StyleSheet.create({
     backgroundColor: theme.colors.backgroundDark,
     borderColor: theme.colors.dark,
     borderWidth: 1,
-    borderBottomWidth: 1
+    borderBottomWidth: 1,
   },
   buttonsContainer: {
     width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-between',
+    flex: 1,
   },
   listContainer: {
     width: '100%',

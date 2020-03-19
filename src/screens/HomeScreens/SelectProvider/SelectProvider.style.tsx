@@ -32,7 +32,7 @@ export default (theme: any) => StyleSheet.create({
     marginBottom: theme.fonts.regular,
     width: '100%',
     padding: 10,
-    borderRadius: 5,
+    borderRadius: 10,
   },
   buttonText: {
     fontFamily: theme.fonts.family,
