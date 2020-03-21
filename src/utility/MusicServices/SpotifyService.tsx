@@ -15,7 +15,7 @@ import {
 import axios from 'axios';
 
 
-export interface iPlayLists {
+export interface iPlayList {
   id: string,
   uri: string,
   image: string,
@@ -27,9 +27,9 @@ export enum SearchType { PLAYLIST = 'playlist', TRACK = 'track' };
 
 export interface iSpotifyService {
   authorize: () => void,
-  getPartyPlayLists: () => Promise<iPlayLists[]>,
-  getLibraryPlayLists: () => Promise<iPlayLists[]>,
-  getSearchResults: (query: string, type: SearchType) => Promise<iPlayLists[]>,
+  getPartyPlayLists: () => Promise<iPlayList[]>,
+  getLibraryPlayLists: () => Promise<iPlayList[]>,
+  getSearchResults: (query: string, type: SearchType) => Promise<iPlayList[]>,
 };
 
 class SpotifyService implements iSpotifyService {
@@ -64,8 +64,8 @@ class SpotifyService implements iSpotifyService {
   /**
    * Get featured spotify playlists. Defaults to USA UTC time.
    */
-  getPartyPlayLists = async(): Promise<iPlayLists[]> => {
-    const playLists: iPlayLists[] = [];
+  getPartyPlayLists = async(): Promise<iPlayList[]> => {
+    const playLists: iPlayList[] = [];
     const URL = 'https://api.spotify.com/v1/browse/categories/party/playlists';
     const config = { headers: { Authorization: `Bearer ${this._token}` } };
     const result = await axios.get(URL, config);
@@ -86,8 +86,8 @@ class SpotifyService implements iSpotifyService {
   /**
    * Get users library playlists.
    */
-  getLibraryPlayLists = async(): Promise<iPlayLists[]> => {
-    const playLists: iPlayLists[] = [];
+  getLibraryPlayLists = async(): Promise<iPlayList[]> => {
+    const playLists: iPlayList[] = [];
     const URL = 'https://api.spotify.com/v1/me/playlists';
     const config = { headers: { Authorization: `Bearer ${this._token}` } };
     const result = await axios.get(URL, config);
@@ -108,8 +108,8 @@ class SpotifyService implements iSpotifyService {
   /**
    * Search playlists.
    */
-  getSearchResults = async(query: string, type: SearchType): Promise<iPlayLists[]> => {
-    const playLists: iPlayLists[] = [];
+  getSearchResults = async(query: string, type: SearchType): Promise<iPlayList[]> => {
+    const playLists: iPlayList[] = [];
     const URL = 'https://api.spotify.com/v1/search';
     const config = { 
       params: { q: query, type }, 

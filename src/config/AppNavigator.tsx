@@ -9,6 +9,7 @@ import SelectProvider from '../screens/HomeScreens/SelectProvider/SelectProvider
 import EnterPartyCode from '../screens/HomeScreens/EnterPartyInfo/EnterPartyInfo';
 import SelectDefaultPlaylistScreen from '../screens/HomeScreens/SelectDefaultPlaylistScreen/SelectDefaultPlaylistScreen';
 import PartyMainScreen from '../screens/PartyScreens/Main/PartyMainScreen';
+import PreviewPlayListScreen from '../screens/HomeScreens/PreviewPlayListScreen/PreviewPlayListScreen';
 
 export const Stack = createStackNavigator(
   {
@@ -16,6 +17,7 @@ export const Stack = createStackNavigator(
     Entrance: { screen: Entrance },
     Services: { screen: SelectProvider },
     SelectDefaultPlayList: { screen: SelectDefaultPlaylistScreen },
+    PreviewPlayList: { screen: PreviewPlayListScreen },
     Info: { screen: EnterPartyCode },
     PartyMain: { screen: PartyMainScreen }
   },
