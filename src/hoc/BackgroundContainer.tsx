@@ -12,8 +12,8 @@ const BackgroundContainer = (props: any) => {
   const { theme } = props;
 
   const handleNavigate = async(): Promise<void> => {
-    if (props.beforeBack) 
-      await props.beforeBack();
+    if (props.onBeforeBack) 
+      await props.onBeforeBack();
       
     props.navigation.goBack();
   };

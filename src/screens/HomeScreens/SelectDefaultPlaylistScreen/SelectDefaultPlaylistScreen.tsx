@@ -14,7 +14,7 @@ import jsx from './SelectDefaultPlaylistScreen.style';
 import PlayListItem from '../../../components/PlayListItem/PlayListItem';
 import BackgroundContainer from '../../../hoc/BackgroundContainer';
 import LinearGradientButton from '../../../components/LinearGradientButton/LinearGradientButton';
-import { iPlayLists } from '../../../utility/MusicServices/SpotifyService';
+import { iPlayLists, SearchType } from '../../../utility/MusicServices/SpotifyService';
 import { getProviderInstance, setProviderId } from '../../../actions';
 
 export interface iSelectDefaultPlayListScreen {
@@ -29,27 +29,28 @@ const SelectDefaultPlaylistScreen = (props: iSelectDefaultPlayListScreen) => {
   const styles = jsx(props.theme);
   const buttonWidth = Dimensions.get('window').width * 0.4;
 
-  const [featuredPlayList, setFeaturedPlayList] = useState<iPlayLists[] | undefined>(undefined);
+  const [partyPlayList, setPartyPlayList] = useState<iPlayLists[] | undefined>(undefined);
   const [library, setLibrary] = useState<iPlayLists[] | undefined>(undefined);
-  const [playListToSearch, setPlayListToSearch] = useState<string | undefined>(undefined);
+  const [playListQuery, setPlayListQuery] = useState<string | undefined>(undefined);
+  const [searchResults, setSearchResults] = useState<iPlayLists[] | undefined>(undefined);
   const [unselectButton, setUnselectedButton] = useState({
     service: false,
     library: true,
   });
 
   useEffect(() => {
-    getFeaturedPLayLists();
+    getPartyPlayLists();
   }, []);
 
-  const getFeaturedPLayLists = async(): Promise<void> => {
+  const getPartyPlayLists = async(): Promise<void> => {
     try {
       const instance = props.getProviderInstance();
       if (instance !== undefined) {
-        const data = await instance.getFeaturedPlayLists();
-        setFeaturedPlayList(data);
+        const data = await instance.getPartyPlayLists();
+        setPartyPlayList(data);
       }
       else {
-        setFeaturedPlayList(undefined);
+        setPartyPlayList(undefined);
       }
     }
     catch (error) {
@@ -73,7 +74,10 @@ const SelectDefaultPlaylistScreen = (props: iSelectDefaultPlayListScreen) => {
     }
   };
 
-  const handleButton = (id: string) => {
+  const handleButton = (id: string): void => {
+    setSearchResults(undefined);
+    setPlayListQuery(undefined);
+    
     if (id === 'service') {
       setUnselectedButton({ service: false, library: true });
     } else if (id === 'library') {
@@ -82,14 +86,36 @@ const SelectDefaultPlaylistScreen = (props: iSelectDefaultPlayListScreen) => {
     }
   };
 
-  const beforeBack = async() => {
+  const handlePlayListQuery = (query: string): void => {
+    if (query) setPlayListQuery(query);
+    else setPlayListQuery(undefined);
+  };
+
+  const handleSearchPlayList = async(): Promise<void> => {
+    if (!playListQuery) return;
+    try {
+      const instance = props.getProviderInstance();
+      if (instance !== undefined) {
+        const data = await instance.getSearchResults(playListQuery, SearchType.PLAYLIST);
+        setSearchResults(data);
+      }
+      else {
+        setSearchResults(undefined);
+      }
+    }
+    catch (error) {
+      console.log(error);
+    }
+  };
+
+  const onBeforeBack = async(): Promise<void> => {
     props.setProviderId('');
   };
 
   return (
     <BackgroundContainer
       navigation={props.navigation}
-      beforeBack={beforeBack}
+      onBeforeBack={onBeforeBack}
       title={
         <Text style={styles.headingText}>Select a Playlist</Text>
       }
@@ -99,8 +125,9 @@ const SelectDefaultPlaylistScreen = (props: iSelectDefaultPlayListScreen) => {
           placeholder='Search'
           round={true}
           lightTheme={true}
-          onChangeText={(_playListToSearch) => setPlayListToSearch(_playListToSearch)}
-          value={playListToSearch}
+          onChangeText={(query) => handlePlayListQuery(query)}
+          onEndEditing={handleSearchPlayList}
+          value={playListQuery}
           containerStyle={styles.searchBarContainer}
           inputContainerStyle={styles.searchBarInputContainer}
           inputStyle={styles.inputText}
@@ -129,7 +156,7 @@ const SelectDefaultPlaylistScreen = (props: iSelectDefaultPlayListScreen) => {
       </View>
       <View style={styles.listContainer}>
         <FlatList
-          data={unselectButton.service === false ? featuredPlayList : library}
+          data={searchResults ? searchResults : unselectButton.service === false ? partyPlayList : library}
           renderItem={({ item, index }) => (
             <PlayListItem
               image={item.image}
