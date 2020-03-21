@@ -8,6 +8,7 @@ import Entrance from '../screens/HomeScreens/Entrance/Entrance';
 import SelectProvider from '../screens/HomeScreens/SelectProvider/SelectProvider';
 import EnterPartyCode from '../screens/HomeScreens/EnterPartyInfo/EnterPartyInfo';
 import SelectDefaultPlaylistScreen from '../screens/HomeScreens/SelectDefaultPlaylistScreen/SelectDefaultPlaylistScreen';
+import PartyMainScreen from '../screens/PartyScreens/Main/PartyMainScreen';
 
 export const Stack = createStackNavigator(
   {
@@ -16,6 +17,7 @@ export const Stack = createStackNavigator(
     Services: { screen: SelectProvider },
     SelectDefaultPlayList: { screen: SelectDefaultPlaylistScreen },
     Info: { screen: EnterPartyCode },
+    PartyMain: { screen: PartyMainScreen }
   },
   {
     initialRouteKey: 'Splash',
