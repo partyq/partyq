@@ -38,6 +38,9 @@ const SelectProvider = (props: iSelectProvider) => {
 
   useEffect(() => {
     reset();
+    return () => {
+      reset();
+    }
   }, []);
 
   const initService = async () => {
@@ -89,8 +92,15 @@ const SelectProvider = (props: iSelectProvider) => {
     props.setProviderId(newProviderId);
   };
 
+  const onBeforeBack = () => {
+    props.setProviderId('');
+  };
+
   return (
-    <BackgroundContainer navigation={props.navigation}>
+    <BackgroundContainer
+      navigation={props.navigation}
+      onBeforeBack={onBeforeBack}
+    >
       <Spinner visible={spinner} />
       <View style={styles.header}>
         <Text style={styles.title}>{Provider.title}</Text>

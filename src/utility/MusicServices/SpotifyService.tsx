@@ -23,10 +23,13 @@ export interface iPlayLists {
   numSongs: string,
 };
 
+export enum SearchType { PLAYLIST = 'playlist', TRACK = 'track' };
+
 export interface iSpotifyService {
   authorize: () => void,
-  getFeaturedPlayLists: () => Promise<iPlayLists[]>,
+  getPartyPlayLists: () => Promise<iPlayLists[]>,
   getLibraryPlayLists: () => Promise<iPlayLists[]>,
+  getSearchResults: (query: string, type: SearchType) => Promise<iPlayLists[]>,
 };
 
 class SpotifyService implements iSpotifyService {
@@ -61,9 +64,9 @@ class SpotifyService implements iSpotifyService {
   /**
    * Get featured spotify playlists. Defaults to USA UTC time.
    */
-  getFeaturedPlayLists = async(): Promise<iPlayLists[]> => {
+  getPartyPlayLists = async(): Promise<iPlayLists[]> => {
     const playLists: iPlayLists[] = [];
-    const URL = 'https://api.spotify.com/v1/browse/featured-playlists';
+    const URL = 'https://api.spotify.com/v1/browse/categories/party/playlists';
     const config = { headers: { Authorization: `Bearer ${this._token}` } };
     const result = await axios.get(URL, config);
 
@@ -80,6 +83,9 @@ class SpotifyService implements iSpotifyService {
     return playLists;
   };
 
+  /**
+   * Get users library playlists.
+   */
   getLibraryPlayLists = async(): Promise<iPlayLists[]> => {
     const playLists: iPlayLists[] = [];
     const URL = 'https://api.spotify.com/v1/me/playlists';
@@ -87,6 +93,31 @@ class SpotifyService implements iSpotifyService {
     const result = await axios.get(URL, config);
 
     result.data.items.forEach((item: any) => {
+      playLists.push({
+        id: item.id,
+        uri: item.uri,
+        image: item.images.length ? item.images[0].url : null,
+        title: item.name,
+        numSongs: item.tracks.total,
+      });
+    });
+
+    return playLists;
+  }
+
+  /**
+   * Search playlists.
+   */
+  getSearchResults = async(query: string, type: SearchType): Promise<iPlayLists[]> => {
+    const playLists: iPlayLists[] = [];
+    const URL = 'https://api.spotify.com/v1/search';
+    const config = { 
+      params: { q: query, type }, 
+      headers: { Authorization: `Bearer ${this._token}` },
+    };
+    const result = await axios.get(URL, config);
+
+    result.data.playlists.items.forEach((item: any) => {
       playLists.push({
         id: item.id,
         uri: item.uri,
