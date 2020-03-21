@@ -18,15 +18,13 @@ const SearchView = (props: iSearchView) => {
   return (
     <View style={styles.searchContainer}>
       <SearchBar
+        {...props}
         placeholder='Search'
         round={true}
         lightTheme={true}
         containerStyle={styles.searchBarContainer}
         inputContainerStyle={styles.searchBarInputContainer}
         inputStyle={styles.inputText}
-        onChangeText={props.onChangeText}
-        onEndEditing={props.onEndEditing}
-        value={props.value}
       />
     </View>
   );
