@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React from 'react';
 import { withTheme, ProgressBar } from 'react-native-paper';
-import { SafeAreaView } from 'react-navigation';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Icon, Button } from 'react-native-elements';
 import { View, StatusBar } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';

@@ -5,15 +5,23 @@ import {
     View,
     Image,
     Dimensions,
-    Animated
+    Animated,
+    ScrollView
 } from 'react-native';
 import {
     Text,
     IconButton,
     ProgressBar,
     Button,
+    List,
     withTheme
 } from 'react-native-paper';
+import { 
+    NavigationContainer
+} from '@react-navigation/native';
+import { 
+    createStackNavigator 
+} from '@react-navigation/stack';
 import Carousel from 'react-native-snap-carousel';
 
 import jsx from './PartyMainScreen.style';
@@ -33,6 +41,10 @@ enum PartyOverlayType {
     RequestASong
 }
 
+interface PartyMember {
+    name: string
+}
+
 const TRACKS: Track[] = [
     {
         imageUri: 'https://upload.wikimedia.org/wikipedia/en/7/72/Stoneyalbum.jpg'
@@ -43,18 +55,205 @@ const TRACKS: Track[] = [
     {
         imageUri: 'https://upload.wikimedia.org/wikipedia/en/7/72/Stoneyalbum.jpg'
     }
+];
+
+const PARTY_MEMBERS: PartyMember[] = [
+    {
+        name: 'John'
+    },
+    {
+        name: 'Joey'
+    },
+    {
+        name: 'Chandler'
+    },
+    {
+        name: 'Ross'
+    },
+    {
+        name: 'Monica'
+    },
+    {
+        name: 'Rachel'
+    },
+    {
+        name: 'Pheobe'
+    },
+    {
+        name: 'Leonard'
+    },
+    {
+        name: 'Charlie'
+    },
+    {
+        name: 'Sheldon'
+    },
+    {
+        name: 'John'
+    },
+    {
+        name: 'Joey'
+    },
+    {
+        name: 'Chandler'
+    },
+    {
+        name: 'Ross'
+    },
+    {
+        name: 'Monica'
+    },
+    {
+        name: 'Rachel'
+    },
+    {
+        name: 'Pheobe'
+    },
+    {
+        name: 'Leonard'
+    },
+    {
+        name: 'Charlie'
+    },
+    {
+        name: 'Sheldon'
+    },
+    {
+        name: 'John'
+    },
+    {
+        name: 'Joey'
+    },
+    {
+        name: 'Chandler'
+    },
+    {
+        name: 'Ross'
+    },
+    {
+        name: 'Monica'
+    },
+    {
+        name: 'Rachel'
+    },
+    {
+        name: 'Pheobe'
+    },
+    {
+        name: 'Leonard'
+    },
+    {
+        name: 'Charlie'
+    },
+    {
+        name: 'Sheldon'
+    }
+]
+
+const SETTING_MENUS: iSettingsMenuItem[] = [
+    {
+        title: 'Default Playlist',
+        icon: 'playlist-music',
+        screenName: 'DefaultPlaylist'
+    }
 ]
 
 const IS_PARTY_HOST = true;
 
 interface PartyOverlayProps {
     title: string,
-    children: React.ReactElement
+    children: React.ReactElement[] | React.ReactElement
 }
 
 const TOP_SLIDER_HEIGHT = 130;
 const BOTTOM_SLIDER_HEIGHT = 160;
 const SLIDER_ANIMATION_DURATION = 500;
+
+interface iSettingsMenuItem {
+    title: string,
+    icon: string,
+    screenName: string
+}
+
+interface SettingsMenuItemProps {
+    title: string,
+    icon: string,
+    onPress: () => null | null | undefined
+}
+
+interface SettingsScreenProps {
+    navigation: any,
+    theme: any
+}
+
+const SettingsMainScreen = (props: SettingsScreenProps) => {
+    return (
+        <ScrollView>
+            <List.Section>
+                {SETTING_MENUS.map((menu: iSettingsMenuItem, i: number) => (
+                    <SettingsMenuItem
+                        key={i}
+                        title={menu.title}
+                        icon={menu.icon}
+                        onPress={() => props.navigation.navigate(menu.screenName)}
+                    />
+                ))}
+            </List.Section>
+            <List.Section>
+                <Button
+                    mode='contained'
+                    onPress={() => null}
+                >
+                    <Text>End Party</Text>
+                </Button>
+            </List.Section>
+        </ScrollView>
+    );
+}
+
+const DefaultPlaylistScreen = () => {
+    return <></>
+}
+
+const SettingsStack = createStackNavigator();
+
+const SettingsNavigationContainer = () => {
+    return (
+        <NavigationContainer
+            independent={true}
+        >
+            <SettingsStack.Navigator
+                initialRouteName='Main'
+                headerMode='none'
+                screenOptions={{
+                    cardStyle: {
+                        backgroundColor: 'white'
+                    }
+                }}
+            >
+                <SettingsStack.Screen 
+                    name='Main' 
+                    component={SettingsMainScreen} 
+                />
+                <SettingsStack.Screen 
+                    name='DefaultPlaylist' 
+                    component={DefaultPlaylistScreen} 
+                />
+            </SettingsStack.Navigator>
+        </NavigationContainer>
+    )
+}
+
+const SettingsMenuItem = (props: SettingsMenuItemProps) => {
+    return (
+        <List.Item
+            title={props.title}
+            left={() => <List.Icon icon={props.icon} />}
+            right={() => <List.Icon icon='chevron-right' />}
+            onPress={props.onPress}
+        />
+    );
+}
 
 const PartyMainScreen = (props: PartyMainScreenProps) => {
     const [partyOverlayType, setPartyOverlayTypePage] = useState<PartyOverlayType | null>(null);
@@ -116,12 +315,7 @@ const PartyMainScreen = (props: PartyMainScreenProps) => {
     const PartyOverlay = (props: PartyOverlayProps) => {
         return (
             <>
-                <View style={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    alignItems: 'center'
-                }}>
+                <View style={styles.overlayView}>
                     <IconButton
                         icon='close'
                         onPress={closeOverlay}
@@ -145,7 +339,7 @@ const PartyMainScreen = (props: PartyMainScreenProps) => {
             <PartyOverlay
                 title='Party Settings'
             >
-                <></>
+                <SettingsNavigationContainer />
             </PartyOverlay>
         )
     }
@@ -155,7 +349,21 @@ const PartyMainScreen = (props: PartyMainScreenProps) => {
             <PartyOverlay
                 title='Party Members'
             >
-                <></>
+                <Text 
+                    style={styles.partyMembersCount}
+                >
+                    Total Members: {PARTY_MEMBERS.length}
+                </Text>
+                <ScrollView>
+                    <List.Section>
+                        {PARTY_MEMBERS.map((member: PartyMember, i: number) => (
+                            <List.Item
+                                key={i}
+                                title={member.name}
+                            />
+                        ))}
+                    </List.Section>
+                </ScrollView>
             </PartyOverlay>
         )
     }
