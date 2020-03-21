@@ -13,10 +13,10 @@ import jsx from './PlayListItem.style';
 
 export interface iPlayListItem {
   theme: any,
-  navigate: any,
   image: string,
   title: string,
   description: string,
+  onPress?: () => void,
 };
 
 const PlayListItem = (props: iPlayListItem) => {
@@ -26,7 +26,7 @@ const PlayListItem = (props: iPlayListItem) => {
     <TouchableOpacity
       style={styles.container}
       activeOpacity={0.5}
-      onPress={() => props.navigate('Party')}
+      onPress={() => props.onPress()}
     >
 
       {
