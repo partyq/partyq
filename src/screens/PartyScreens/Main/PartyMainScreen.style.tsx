@@ -97,5 +97,17 @@ export default (theme: any) => StyleSheet.create({
     },
     sliderExpanded: {
         height: '95%'
+    },
+    overlayView: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 10
+    },
+    partyMembersCount: {
+        opacity: 0.3,
+        marginBottom: 10,
+        textAlign: 'center'
     }
 });
