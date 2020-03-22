@@ -17,7 +17,7 @@ export interface iLinearGradientButton {
   smallFont?: boolean,
   disabled?: boolean,
   type?: "solid" | "clear" | "outline" | undefined,
-  onPress: () => void;
+  onPress?: () => void;
 }
 
 const LinearGradientButton = (props: iLinearGradientButton) => {
