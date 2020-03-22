@@ -20,6 +20,7 @@ export default (theme: any) => StyleSheet.create({
     justifyContent: 'space-between',
     alignSelf: 'baseline',
     marginLeft: theme.fonts.medium,
+    width: '45%'
   },
   image: {
     height: 50,

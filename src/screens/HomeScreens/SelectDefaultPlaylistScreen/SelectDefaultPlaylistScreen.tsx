@@ -118,7 +118,7 @@ const SelectDefaultPlaylistScreen = (props: iSelectDefaultPlayListScreen) => {
 
   const onPlayListPress = async(playlist: iPlayList): Promise<void> => {
     console.log(playlist);
-    props.navigation.navigate('PreviewPlayList');
+    props.navigation.navigate('PreviewPlayList', playlist);
   };
 
   return (
