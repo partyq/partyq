@@ -26,20 +26,14 @@ export default (theme: any) => StyleSheet.create({
     color: theme.fonts.color,
   },
   button: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    marginBottom: theme.fonts.regular,
-    width: '100%',
-    padding: 10,
     borderRadius: 10,
+    backgroundColor: '#EDEDED',
   },
   buttonText: {
     fontFamily: theme.fonts.family,
     fontSize: theme.fonts.regular,
     color: theme.fonts.color,
     fontWeight: 'bold',
-    textAlign: 'center',
   },
   image: {
     marginRight: theme.fonts.regular,
