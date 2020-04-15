@@ -7,7 +7,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import { withTheme } from 'react-native-paper';
-import firebase from 'react-native-firebase';
+import auth from '@react-native-firebase/auth';
 
 const jsx = (theme: any) => StyleSheet.create({
   text: {
@@ -34,16 +34,13 @@ export interface iSplashScreen {
 const SplashScreen = (props: iSplashScreen) => {
   const styles = jsx(props.theme);
 
-  const handleLoggedIn = () => {
-    firebase.auth().onAuthStateChanged((user) => {
-      props.navigation.navigate('Entrance');
-    });
-  };
-
   React.useEffect(() => {
-    setTimeout(() => {
-      handleLoggedIn();
-    }, 1000);
+    auth().signInAnonymously()
+      .then(
+        () => {
+          props.navigation.navigate('Entrance');
+        }
+      );
   });
 
   return (
