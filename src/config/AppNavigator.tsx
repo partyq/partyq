@@ -8,7 +8,7 @@ import SplashScreen from '../screens/LoginScreens/SplashScreen';
 import Entrance from '../screens/HomeScreens/Entrance/Entrance';
 import SelectProvider from '../screens/HomeScreens/SelectProvider/SelectProvider';
 import EnterPartyCode from '../screens/HomeScreens/EnterPartyInfo/EnterPartyInfo';
-import SelectDefaultPlayListScreen from '../screens/HomeScreens/SelectDefaultPlayListScreen/SelectDefaultPlayListScreen';
+import SelectDefaultPlaylistScreen from '../screens/HomeScreens/SelectDefaultPlaylistScreen/SelectDefaultPlaylistScreen';
 import PartyMainScreen from '../screens/PartyScreens/Main/PartyMainScreen';
 import PreviewPlayListScreen from '../screens/HomeScreens/PreviewPlayListScreen/PreviewPlayListScreen';
 
@@ -35,10 +35,10 @@ const AppNavigator = () => {
                 />
                 <Stack.Screen 
                     name='SelectDefaultPlayList' 
-                    component={SelectDefaultPlayListScreen} 
+                    component={SelectDefaultPlaylistScreen} 
                 />
                 <Stack.Screen 
-                    name='PreviewPlayList' 
+                    name='PreviewPlaylist' 
                     component={PreviewPlayListScreen} 
                 />
                 <Stack.Screen 

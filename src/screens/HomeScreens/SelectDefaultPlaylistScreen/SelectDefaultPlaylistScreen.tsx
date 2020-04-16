@@ -9,7 +9,7 @@ import {
 import { withTheme } from 'react-native-paper';
 import { connect } from 'react-redux';
 
-import jsx from './SelectDefaultPlayListScreen.style';
+import jsx from './SelectDefaultPlaylistScreen.style';
 import PlayListItem from '../../../components/PlayListItem/PlayListItem';
 import SearchView from '../../../components/SearchView/SearchView';
 import BackgroundContainer from '../../../hoc/BackgroundContainer';
@@ -24,7 +24,7 @@ export interface iSelectDefaultPlayListScreen {
   setProviderId: (providerId: string) => void,
 };
 
-const SelectDefaultPlayListScreen = (props: iSelectDefaultPlayListScreen) => {
+const SelectDefaultPlaylistScreen = (props: iSelectDefaultPlayListScreen) => {
   const styles = jsx(props.theme);
   const buttonWidth = Dimensions.get('window').width * 0.4;
 
@@ -116,8 +116,9 @@ const SelectDefaultPlayListScreen = (props: iSelectDefaultPlayListScreen) => {
     props.setProviderId('');
   };
 
-  const onPlayListPress = async(playListId: string): Promise<void> => {
-    props.navigation.navigate('PreviewPlayList', { playListId });
+  const onPlayListPress = async(playlist: iPlayList): Promise<void> => {
+    console.log(playlist);
+    props.navigation.navigate('PreviewPlayList', playlist);
   };
 
   return (
@@ -162,7 +163,7 @@ const SelectDefaultPlayListScreen = (props: iSelectDefaultPlayListScreen) => {
               title={item.title}
               description={`${item.numSongs} Songs`}
               key={index}
-              onPress={() => onPlayListPress(item.id)}
+              onPress={() => onPlayListPress(item)}
             />
           )}
           keyExtractor={(item: iPlayList) => item.id}
@@ -179,4 +180,4 @@ const mapDispatchToProps = (dispatch: any) => {
   }
 };
 
-export default connect(null, mapDispatchToProps)(withTheme(SelectDefaultPlayListScreen));
+export default connect(null, mapDispatchToProps)(withTheme(SelectDefaultPlaylistScreen));
