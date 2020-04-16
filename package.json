@@ -35,7 +35,6 @@
     "react-native-dotenv": "^0.2.0",
     "react-native-elements": "^1.2.7",
     "react-native-gesture-handler": "^1.6.0",
-    "react-native-linear-gradient": "^2.5.6",
     "react-native-loading-spinner-overlay": "^1.1.0",
     "react-native-paper": "^3.6.0",
     "react-native-reanimated": "^1.7.0",
