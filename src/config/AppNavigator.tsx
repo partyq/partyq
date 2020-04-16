@@ -38,7 +38,7 @@ const AppNavigator = () => {
                     component={SelectDefaultPlaylistScreen} 
                 />
                 <Stack.Screen 
-                    name='PreviewPlaylist' 
+                    name='PreviewPlayList' 
                     component={PreviewPlayListScreen} 
                 />
                 <Stack.Screen 

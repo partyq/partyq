@@ -16,7 +16,7 @@ import jsx from './SelectProvider.style';
 import BackgroundContainer from '../../../hoc/BackgroundContainer';
 import { Provider, iProvider } from '../../../config/RenderableData';
 import { setProviderId, getProviderInstance } from '../../../actions';
-import LinearGradientButton from '../../../components/LinearGradientButton/LinearGradientButton';
+import CustomButton, { MODE } from '../../../components/Button/CustomButton';
 
 export interface iSelectProvider {
   theme: any,
@@ -126,12 +126,13 @@ const SelectProvider = (props: iSelectProvider) => {
           </TouchableOpacity>
         ))}
       </View>
-      <LinearGradientButton
+      <CustomButton
         onPress={() => handleAuth()}
         disabled={props.providerId === '' ? true : false}
+        mode={MODE.CONTAINED}
       >
         Next
-      </LinearGradientButton>
+      </CustomButton>
     </BackgroundContainer>
   );
 };

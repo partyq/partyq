@@ -4,7 +4,6 @@ import { withTheme, ProgressBar } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Icon, Button } from 'react-native-elements';
 import { View, StatusBar } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
 
 import InternetStatus from '../components/InternetStatus/InternetStatus';
 
@@ -19,11 +18,8 @@ const BackgroundContainer = (props: any) => {
   };
 
   return (
-    <LinearGradient
-      start={{ x: 0, y: 0 }}
-      end={{ x: 0, y: 1 }}
-      colors={[theme.colors.backgroundLight, theme.colors.backgroundDark]}
-      style={{ flex: 1 }}>
+    <View
+      style={{ flex: 1, backgroundColor: theme.colors.backgroundLight }}>
 
       {
         props.progress
@@ -87,7 +83,7 @@ const BackgroundContainer = (props: any) => {
         </>
       }
 
-    </LinearGradient>
+    </View>
   );
 };
 

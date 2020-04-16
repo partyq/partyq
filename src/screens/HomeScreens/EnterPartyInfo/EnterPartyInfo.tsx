@@ -10,7 +10,7 @@ import SmoothPinCodeInput from 'react-native-smooth-pincode-input';
 
 import jsx from './EnterPartyInfo.style';
 import BackgroundContainer from '../../../hoc/BackgroundContainer';
-import LinearGradientButton from '../../../components/LinearGradientButton/LinearGradientButton';
+import CustomButton, { MODE } from '../../../components/Button/CustomButton';
 
 export interface iEnterPartyCode {
   theme: any,
@@ -64,12 +64,13 @@ const EnterPartyCode = (props: iEnterPartyCode) => {
           />
         }
       </View>
-      <LinearGradientButton
+      <CustomButton
         disabled={disableButton}
+        mode={MODE.CONTAINED}
         onPress={handleNavigation}
       >
         Join the Party!
-      </LinearGradientButton>
+      </CustomButton>
     </BackgroundContainer>
   );
 };

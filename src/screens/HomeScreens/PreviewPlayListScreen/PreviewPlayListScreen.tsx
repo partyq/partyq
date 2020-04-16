@@ -6,14 +6,13 @@ import {
   FlatList,
   Dimensions,
 } from 'react-native';
-import { SearchBar } from 'react-native-elements';
 import { withTheme } from 'react-native-paper';
 import { connect } from 'react-redux';
 
 import jsx from './PreviewPlayListScreen.style';
 import PlayListItem from '../../../components/PlayListItem/PlayListItem';
 import BackgroundContainer from '../../../hoc/BackgroundContainer';
-import LinearGradientButton from '../../../components/LinearGradientButton/LinearGradientButton';
+import CustomButton, { MODE } from '../../../components/Button/CustomButton';
 import { iPlayList, SearchType } from '../../../utility/MusicServices/SpotifyService';
 import { getProviderInstance, setProviderId } from '../../../actions';
 
@@ -121,40 +120,9 @@ const PreviewPlayListScreen = (props: iSelectDefaultPlayListScreen) => {
       navigation={props.navigation}
       onBeforeBack={onBeforeBack}
       title={
-        <Text style={styles.headingText}>Select a Playlist</Text>
+        <Text style={styles.headingText}>Preview</Text>
       }
     >
-      <View style={styles.searchContainer}>
-        <SearchBar
-          placeholder='Search'
-          round={true}
-          lightTheme={true}
-          onChangeText={(query) => handlePlayListQuery(query)}
-          onEndEditing={handleSearchPlayList}
-          value={playListQuery}
-          containerStyle={styles.searchBarContainer}
-          inputContainerStyle={styles.searchBarInputContainer}
-          inputStyle={styles.inputText}
-        />
-      </View>
-      <View style={styles.buttonsContainer}>
-        <LinearGradientButton
-          width={buttonWidth}
-          unselected={unselectButton.service}
-          type={unselectButton.service ? 'clear' : 'solid'}
-          onPress={() => handleButton('service')}
-        >
-          Spotify
-        </LinearGradientButton>
-        <LinearGradientButton
-          width={buttonWidth}
-          unselected={unselectButton.library}
-          type={unselectButton.library ? 'clear' : 'solid'}
-          onPress={() => handleButton('library')}
-        >
-          Your Library
-        </LinearGradientButton>
-      </View>
       <View style={styles.listContainer}>
         <FlatList
           data={searchResults ? searchResults : unselectButton.service === false ? partyPlayList : library}

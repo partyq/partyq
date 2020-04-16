@@ -6,7 +6,7 @@ import { withTheme } from 'react-native-paper';
 import jsx from './Entrance.style';
 import BackgroundContainer from '../../../hoc/BackgroundContainer';
 import { START_A_PARTY, JOIN_A_PARTY } from '../../../config/RenderableData';
-import LinearGradientButton from '../../../components/LinearGradientButton/LinearGradientButton';
+import CustomButton, { MODE } from '../../../components/Button/CustomButton';
 
 export interface iEntrance {
   theme: any,
@@ -32,17 +32,18 @@ const Entrance = (props: iEntrance) => {
       </View>
 
       <View style={styles.buttonContainer}>
-        <LinearGradientButton
+        <CustomButton
           onPress={handleStartNewParty}
+          mode={MODE.CONTAINED}
         >
           {START_A_PARTY}
-        </LinearGradientButton>
-        <LinearGradientButton
+        </CustomButton>
+        <CustomButton
           onPress={handleJoinParty}
-          type='outline'
+          mode={MODE.OUTLINED}
         >
             {JOIN_A_PARTY}
-        </LinearGradientButton>
+        </CustomButton>
       </View>
     </BackgroundContainer>
   );
