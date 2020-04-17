@@ -19,18 +19,7 @@ const BackgroundContainer = (props: any) => {
 
   return (
     <View
-      style={{ flex: 1, backgroundColor: theme.colors.backgroundLight }}>
-
-      {
-        props.progress
-          ? <SafeAreaView>
-            <ProgressBar
-              progress={props.progress}
-              color={theme.colors.primaryAccent}
-            />
-          </SafeAreaView>
-          : null
-      }
+      style={{ flex: 1, backgroundColor: theme.colors.background}}>
 
       <StatusBar hidden />
       <InternetStatus />
@@ -51,7 +40,7 @@ const BackgroundContainer = (props: any) => {
                 name='ios-arrow-back'
                 type='ionicon'
                 color={theme.fonts.color}
-                size={theme.fonts.medium}
+                size={theme.fonts.medium.fontSize}
               />
             }
             buttonStyle={{
