@@ -15,15 +15,11 @@ export default (theme: any, width: string | number) => StyleSheet.create({
     borderColor: theme.colors.disabled,
   },
   containedLabelStyle: {
-    fontFamily: theme.fonts.family,
-    fontSize: theme.fonts.regular,
-    fontWeight: 'bold',
+    ...theme.fonts.regular,
   },
   defaultLabelStyle: {
-    fontFamily: theme.fonts.family,
-    fontSize: theme.fonts.regular,
+    ...theme.fonts.regular,
     color: theme.colors.primary,
-    fontWeight: 'bold',
   },
   disabledLabelStyle: {
     color: theme.colors.disabled,

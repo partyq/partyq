@@ -1,13 +1,20 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import {
-  Text,
   View,
   TouchableOpacity,
   Image,
   Alert,
+  ScrollView,
 } from 'react-native';
-import { withTheme } from 'react-native-paper';
+import {
+  withTheme,
+  Paragraph,
+  Title,
+  Text,
+  List,
+  Divider,
+} from 'react-native-paper';
 import { connect } from 'react-redux';
 import { AppInstalledChecker } from 'react-native-check-app-install';
 import Spinner from 'react-native-loading-spinner-overlay';
@@ -25,6 +32,12 @@ export interface iSelectProvider {
   providerId: string,
   navigation: any,
 };
+
+export interface iRenderProviders {
+  styles: any,
+  providers: iProvider[],
+  onPress: (name: string) => void,
+}
 
 const SelectProvider = (props: iSelectProvider) => {
   const styles = jsx(props.theme);
@@ -65,7 +78,7 @@ const SelectProvider = (props: iSelectProvider) => {
 
   const handleAuth = () => {
     setSpinner(true);
-    setTimeout(async() => {
+    setTimeout(async () => {
       try {
         await initService();
       } catch (err) {
@@ -102,30 +115,11 @@ const SelectProvider = (props: iSelectProvider) => {
       onBeforeBack={onBeforeBack}
     >
       <Spinner visible={spinner} />
-      <View style={styles.header}>
-        <Text style={styles.title}>{Provider.title}</Text>
-        <Text style={styles.paragraph}>{Provider.paragraph}</Text>
-      </View>
-      <View style={styles.services}>
-        {providers.map(({ name, img, selected }: iProvider, i) => (
-          <TouchableOpacity
-            key={i}
-            activeOpacity={0.5}
-            onPress={() => handleSelect(name)}
-            style={[
-              styles.button,
-              selected ? {backgroundColor: '#EDEDED'} : null
-            ]}
-          >
-            <Image
-              source={img}
-              style={styles.image}
-              key={i}
-            />
-            <Text style={styles.buttonText} key={i}>{name}</Text>
-          </TouchableOpacity>
-        ))}
-      </View>
+
+      <Header styles={styles} />
+
+      <RenderProviders styles={styles} providers={providers} onPress={handleSelect} />
+
       <CustomButton
         onPress={() => handleAuth()}
         disabled={props.providerId === '' ? true : false}
@@ -136,6 +130,52 @@ const SelectProvider = (props: iSelectProvider) => {
     </BackgroundContainer>
   );
 };
+
+const Header = ({ styles }: any) => (
+  <View style={styles.header}>
+    <Title style={styles.title}>{Provider.title}</Title>
+    <Paragraph style={styles.paragraph}>{Provider.paragraph}</Paragraph>
+  </View>
+);
+
+const RenderProviders = ({ styles, providers, onPress }: iRenderProviders) => (
+  <View style={styles.services}>
+    <Divider style={styles.divider} />
+    <ScrollView>
+      {providers.map(({ name, img, selected }: iProvider, i: string | number | undefined) => (
+        <>
+          <TouchableOpacity
+            key={i}
+            activeOpacity={0.5}
+            onPress={() => onPress(name)}
+          >
+            <List.Item
+              style={[
+                styles.button,
+                selected ? { backgroundColor: '#EDEDED' } : null
+              ]}
+              title={name}
+              titleStyle={styles.buttonText}
+              left={() =>
+                <Image
+                  source={img}
+                  style={styles.image}
+                  key={i}
+                />
+              }
+            />
+          </TouchableOpacity>
+
+          <Divider style={styles.divider} />
+        </>
+      ))}
+      <List.Item
+        title='More coming soon!'
+        titleStyle={styles.moreComing}
+      />
+    </ScrollView>
+  </View>
+);
 
 
 const mapStateToProps = (state: any) => {

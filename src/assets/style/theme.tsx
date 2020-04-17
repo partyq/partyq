@@ -1,5 +1,55 @@
 /* eslint-disable import/prefer-default-export */
-import { DefaultTheme } from 'react-native-paper';
+import { DefaultTheme, Colors, configureFonts } from 'react-native-paper';
+
+const defaultFontConfig = {
+  large: {
+    fontFamily: 'System',
+    fontWeight: '800',
+    fontSize: 36,
+  },
+  medium: {
+    fontFamily: 'System',
+    fontWeight: '600',
+    fontSize: 24
+  },
+  regular: {
+    fontFamily: 'System',
+    fontWeight: '500',
+    fontSize: 16,
+  },
+  thin: {
+    fontFamily: 'System',
+    fontWeight: '400',
+    fontSize: 16,
+  },
+}
+
+export const Light = {
+  ...DefaultTheme,
+  roundness: 50,
+  dark: false,
+  colors: {
+    ...Colors,
+    primary: '#F53F6A',
+    background: Colors.white,
+    surface: Colors.white,
+    accent: '#F53F6A',
+    error: Colors.red100,
+    text: Colors.white,
+    onSurface: Colors.white,
+    disabled: Colors.grey600,
+    placeHolder: Colors.grey500,
+    backdrop: Colors.white,
+    onWhite: Colors.black,
+    onDark: Colors.white,
+  },
+  fonts: defaultFontConfig,
+  divider: {
+    marginTop: 10,
+    marginBottom: 10,
+  }
+};
+
 
 export const Dark = {
   colors: {
@@ -19,33 +69,6 @@ export const Dark = {
     color: '#FFFFFF',
     dark: '#555',
     disabled: '#dfe6e9',
-    small: 14,
-    regular: 18,
-    medium: 26,
-    large: 34,
-  },
-  roundness: 50,
-};
-
-export const Light = {
-  colors: {
-    ...DefaultTheme.colors,
-    primary: '#F53F6A',
-
-    // background colors
-    backgroundLight: '#FFF',
-    backgroundDark: '#FFF',
-    background: '#FFFFFF',
-
-    // accent
-    primaryAccent: '#F53F6A',
-    secondaryAccent: '#F53F6A',
-  },
-  fonts: {
-    color: '#707070',
-    light: '#FFF',
-    dark: '#555',
-    disabled: '#EDEDED',
     small: 14,
     regular: 18,
     medium: 26,
