@@ -16,7 +16,6 @@ export default (theme: any) => StyleSheet.create({
   title: {
     ...theme.fonts.large,
     color: theme.colors.grey600,
-    paddingTop: 5,
   },
   moreComing: {
     ...theme.fonts.thin,
@@ -33,7 +32,6 @@ export default (theme: any) => StyleSheet.create({
   },
   buttonText: {
     ...theme.fonts.regular,
-    color: theme.colors.onWhite,
     fontWeight: 'bold',
   },
   image: {

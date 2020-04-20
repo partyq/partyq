@@ -9,8 +9,6 @@ import {
 } from 'react-native';
 import {
   withTheme,
-  Paragraph,
-  Title,
   Text,
   List,
   Divider,
@@ -65,6 +63,7 @@ const SelectProvider = (props: iSelectProvider) => {
             const serviceInstsance = props.getProviderInstance();
             await serviceInstsance.authorize();
             reset();
+            setSpinner(false);
             props.navigation.navigate('SelectDefaultPlayList');
           }
           else {
@@ -83,8 +82,8 @@ const SelectProvider = (props: iSelectProvider) => {
         await initService();
       } catch (err) {
         console.debug(err);
+        setSpinner(false);
       }
-      setSpinner(false);
     }, 500);
   };
 
@@ -133,8 +132,8 @@ const SelectProvider = (props: iSelectProvider) => {
 
 const Header = ({ styles }: any) => (
   <View style={styles.header}>
-    <Title style={styles.title}>{Provider.title}</Title>
-    <Paragraph style={styles.paragraph}>{Provider.paragraph}</Paragraph>
+    <Text style={styles.title}>{Provider.title}</Text>
+    <Text style={styles.paragraph}>{Provider.paragraph}</Text>
   </View>
 );
 
@@ -170,7 +169,7 @@ const RenderProviders = ({ styles, providers, onPress }: iRenderProviders) => (
         </>
       ))}
       <List.Item
-        title='More coming soon!'
+        title={Provider.moreComing}
         titleStyle={styles.moreComing}
       />
     </ScrollView>

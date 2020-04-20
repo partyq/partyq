@@ -16,6 +16,7 @@ export default (theme: any, width: string | number) => StyleSheet.create({
   },
   containedLabelStyle: {
     ...theme.fonts.regular,
+    color: theme.colors.white,
   },
   defaultLabelStyle: {
     ...theme.fonts.regular,
