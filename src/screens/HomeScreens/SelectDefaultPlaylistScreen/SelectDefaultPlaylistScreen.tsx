@@ -6,7 +6,7 @@ import {
   FlatList,
   Dimensions,
 } from 'react-native';
-import { withTheme } from 'react-native-paper';
+import { withTheme, Divider } from 'react-native-paper';
 import { connect } from 'react-redux';
 
 import jsx from './SelectDefaultPlayListScreen.style';
@@ -41,7 +41,7 @@ const SelectDefaultPlayListScreen = (props: iSelectDefaultPlayListScreen) => {
     getPartyPlayLists();
   }, []);
 
-  const getPartyPlayLists = async(): Promise<void> => {
+  const getPartyPlayLists = async (): Promise<void> => {
     try {
       const instance = props.getProviderInstance();
       if (instance !== undefined) {
@@ -57,7 +57,7 @@ const SelectDefaultPlayListScreen = (props: iSelectDefaultPlayListScreen) => {
     }
   };
 
-  const getLibraryPLaylists = async(): Promise<void> => {
+  const getLibraryPLaylists = async (): Promise<void> => {
     try {
       const instance = props.getProviderInstance();
       if (instance !== undefined) {
@@ -76,7 +76,7 @@ const SelectDefaultPlayListScreen = (props: iSelectDefaultPlayListScreen) => {
   const handleButton = (id: string): void => {
     setSearchResults(undefined);
     setPlayListQuery('');
-    
+
     if (id === 'service') {
       setUnselectedButton({ service: false, library: true });
     } else if (id === 'library') {
@@ -95,7 +95,7 @@ const SelectDefaultPlayListScreen = (props: iSelectDefaultPlayListScreen) => {
     }
   };
 
-  const handleSearchPlayList = async(): Promise<void> => {
+  const handleSearchPlayList = async (): Promise<void> => {
     if (!playListQuery) return;
     try {
       const instance = props.getProviderInstance();
@@ -112,11 +112,11 @@ const SelectDefaultPlayListScreen = (props: iSelectDefaultPlayListScreen) => {
     }
   };
 
-  const onBeforeBack = async(): Promise<void> => {
+  const onBeforeBack = async (): Promise<void> => {
     props.setProviderId('');
   };
 
-  const onPlayListPress = async(playListId: string): Promise<void> => {
+  const onPlayListPress = async (playListId: string): Promise<void> => {
     props.navigation.navigate('PreviewPlayList', { playListId });
   };
 
@@ -128,13 +128,11 @@ const SelectDefaultPlayListScreen = (props: iSelectDefaultPlayListScreen) => {
         <Text style={styles.headingText}>Select a Playlist</Text>
       }
     >
-      <View style={styles.searchContainer}>
-        <SearchView
-          onChangeText={handleQueryChange}
-          onEndEditing={handleSearchPlayList}
-          value={playListQuery}
-        />
-      </View>
+      <SearchView
+        onChangeText={handleQueryChange}
+        onEndEditing={handleSearchPlayList}
+        value={playListQuery}
+      />
       <View style={styles.buttonsContainer}>
         <CustomButton
           width={buttonWidth}
@@ -153,16 +151,23 @@ const SelectDefaultPlayListScreen = (props: iSelectDefaultPlayListScreen) => {
       </View>
 
       <View style={styles.listContainer}>
+        <Divider />
         <FlatList
-          data={searchResults ? searchResults : unselectButton.service === false ? spotifyPlayList : library}
+          data={searchResults
+            ? searchResults : unselectButton.service === false
+              ? spotifyPlayList : library
+          }
           renderItem={({ item, index }) => (
-            <PlayListItem
-              image={item.image}
-              title={item.title}
-              description={`${item.numSongs} Songs`}
-              key={index}
-              onPress={() => onPlayListPress(item.id)}
-            />
+            <View>
+              <PlayListItem
+                image={item.image}
+                title={item.title}
+                description={`${item.numSongs} Songs`}
+                key={index}
+                onPress={() => onPlayListPress(item.id)}
+              />
+              <Divider />
+            </View>
           )}
           keyExtractor={(item: iPlayList) => item.id}
         />

@@ -5,20 +5,20 @@ export default (theme: any) => StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     borderWidth: 0,
-    flex: 1,
     width: '100%',
+    marginBottom: 15,
   },
   searchBarContainer: {
     width: '100%',
-    height: theme.fonts.large,
+    height: 40,
     backgroundColor: 'transparent',
     borderTopWidth: 0,
     borderBottomWidth: 0,
+    padding: 0,
   },
   searchBarInputContainer: {
     width: '100%',
     borderRadius: theme.roundness,
-    backgroundColor: theme.colors.backgroundDark,
     borderColor: theme.colors.dark,
     borderWidth: 1,
     borderBottomWidth: 1,
@@ -30,8 +30,7 @@ export default (theme: any) => StyleSheet.create({
     flex: 1,
   },
   inputText: {
-    fontSize: theme.fonts.small,
-    fontFamily: theme.fonts.family,
+    ...theme.fonts.thin,
     textAlignVertical: 'center',
   },
 });

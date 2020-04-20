@@ -14,7 +14,8 @@ export interface iProvider {
 
 export const Provider = {
   title: 'Select a Provider',
-  paragraph: 'By linking any of these accounts you will be able to host a room and play music from that account.',
+  paragraph: 'By linking any of these accounts you will be able to host a room and play music from that account',
+  moreComing: 'More coming soon!',
   providers: [
     {
       name: 'Spotify',
