@@ -32,50 +32,46 @@ const defaultFontConfig = (defaultColor: string) => {
   return fontConfig;
 };
 
-export const Light = {
+const margin = {
+  large: 36,
+  medium: 24,
+  regular: 16,
+  small: 8,
+}
+
+const defaultThemeConfig = {
   ...DefaultTheme,
+  margin: margin,
   roundness: 50,
+};
+
+export const Light = {
+  ...defaultThemeConfig,
   dark: false,
   colors: {
     ...Colors,
     text: Colors.black,
     primary: '#F53F6A',
     background: Colors.white,
-    surface: Colors.white,
     accent: '#F53F6A',
-    error: Colors.red100,
-    onSurface: Colors.white,
     disabled: Colors.grey600,
     placeHolder: Colors.grey500,
-    backdrop: Colors.white,
   },
   fonts: defaultFontConfig(Colors.black),
-  divider: {
-    marginTop: 10,
-    marginBottom: 10,
-  }
 };
 
 
 export const Dark = {
-  ...DefaultTheme,
-  roundness: 50,
-  dark: false,
+  ...defaultThemeConfig,
+  dark: true,
   colors: {
     ...Colors,
-    primary: '#F53F6A',
-    background: Colors.white,
-    surface: Colors.white,
-    accent: '#F53F6A',
     text: Colors.white,
-    onSurface: Colors.white,
+    primary: '#F53F6A',
+    background: Colors.black,
+    accent: '#F53F6A',
     disabled: Colors.grey600,
     placeHolder: Colors.grey500,
-    backdrop: Colors.white,
   },
   fonts: defaultFontConfig(Colors.white),
-  divider: {
-    marginTop: 10,
-    marginBottom: 10,
-  }
 };
