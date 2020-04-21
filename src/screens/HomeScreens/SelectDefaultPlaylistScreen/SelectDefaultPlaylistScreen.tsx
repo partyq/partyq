@@ -166,7 +166,6 @@ const SelectDefaultPlayListScreen = (props: iSelectDefaultPlayListScreen) => {
                 key={index}
                 onPress={() => onPlayListPress(item.id)}
               />
-              <Divider />
             </View>
           )}
           keyExtractor={(item: iPlayList) => item.id}

@@ -2,145 +2,169 @@
 import React, { useState, useEffect } from 'react';
 import {
   View,
-  Text,
   FlatList,
+  Image,
   Dimensions,
 } from 'react-native';
-import { withTheme } from 'react-native-paper';
+import {
+  withTheme,
+  Text,
+  Divider,
+} from 'react-native-paper';
 import { connect } from 'react-redux';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 import jsx from './PreviewPlayListScreen.style';
 import PlayListItem from '../../../components/PlayListItem/PlayListItem';
 import BackgroundContainer from '../../../hoc/BackgroundContainer';
+import {
+  iPlayList,
+  iTrack,
+  iPlayListDetails,
+} from '../../../utility/MusicServices/SpotifyService';
+import {
+  getProviderInstance,
+  setProviderId,
+} from '../../../actions';
 import CustomButton, { MODE } from '../../../components/Button/CustomButton';
-import { iPlayList, SearchType } from '../../../utility/MusicServices/SpotifyService';
-import { getProviderInstance, setProviderId } from '../../../actions';
 
 export interface iSelectDefaultPlayListScreen {
   theme: any,
   navigation: any,
   getProviderInstance: () => any,
   setProviderId: (providerId: string) => void,
+  playListDetails: iPlayList,
+  route: any,
+};
+
+export interface iTracksSectionProps {
+  style: any,
+  tracks: iTrack[],
+};
+
+export interface iPlayListDescription {
+  styles: any,
+  playList: iPlayListDetails,
+  onPress: () => void,
+  buttonWidth: number,
 };
 
 const PreviewPlayListScreen = (props: iSelectDefaultPlayListScreen) => {
   const styles = jsx(props.theme);
-  const buttonWidth = Dimensions.get('window').width * 0.4;
+  const buttonWidth = Dimensions.get('window').width * 0.5;
 
-  const [partyPlayList, setPartyPlayList] = useState<iPlayList[] | undefined>(undefined);
-  const [library, setLibrary] = useState<iPlayList[] | undefined>(undefined);
-  const [playListQuery, setPlayListQuery] = useState<string | undefined>(undefined);
-  const [searchResults, setSearchResults] = useState<iPlayList[] | undefined>(undefined);
-  const [unselectButton, setUnselectedButton] = useState({
-    service: false,
-    library: true,
-  });
+  const playListId = props.route.params.playListId;
+  const [playList, setPlayList] = useState<iPlayListDetails | undefined>(undefined);
+  const [spinner, setSpinner] = useState<boolean>(true);
 
   useEffect(() => {
-    getPartyPlayLists();
+    getPlayList();
   }, []);
 
-  const getPartyPlayLists = async(): Promise<void> => {
+  const getPlayList = async (): Promise<void> => {
     try {
       const instance = props.getProviderInstance();
       if (instance !== undefined) {
-        const data = await instance.getPartyPlayLists();
-        setPartyPlayList(data);
+        const data = await instance.getPlayList(playListId);
+        setPlayList(data);
+        setSpinner(false);
       }
       else {
-        setPartyPlayList(undefined);
+        setPlayList(undefined);
       }
     }
     catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
-  const getLibraryPLaylists = async(): Promise<void> => {
-    try {
-      const instance = props.getProviderInstance();
-      if (instance !== undefined) {
-        const data = await instance.getLibraryPlayLists();
-        setLibrary(data);
-      }
-      else {
-        setLibrary(undefined);
-      }
-    }
-    catch (error) {
-      console.log(error);
-    }
-  };
-
-  const handleButton = (id: string): void => {
-    setSearchResults(undefined);
-    setPlayListQuery(undefined);
-    
-    if (id === 'service') {
-      setUnselectedButton({ service: false, library: true });
-    } else if (id === 'library') {
-      setUnselectedButton({ service: true, library: false });
-      getLibraryPLaylists();
-    }
-  };
-
-  const handlePlayListQuery = (query: string): void => {
-    if (query) setPlayListQuery(query);
-    else setPlayListQuery(undefined);
-  };
-
-  const handleSearchPlayList = async(): Promise<void> => {
-    if (!playListQuery) return;
-    try {
-      const instance = props.getProviderInstance();
-      if (instance !== undefined) {
-        const data = await instance.getSearchResults(playListQuery, SearchType.PLAYLIST);
-        setSearchResults(data);
-      }
-      else {
-        setSearchResults(undefined);
-      }
-    }
-    catch (error) {
-      console.log(error);
-    }
-  };
-
-  const onBeforeBack = async(): Promise<void> => {
-    props.setProviderId('');
-  };
-
-  const onPlayListPress = async(playlist: iPlayList): Promise<void> => {
-    console.log(playlist);
+  const finish = (): void => {
     props.navigation.navigate('PartyMain');
   };
 
   return (
     <BackgroundContainer
       navigation={props.navigation}
-      onBeforeBack={onBeforeBack}
       title={
-        <Text style={styles.headingText}>Preview</Text>
+        <Text style={styles.headingText}>Preview PlayList</Text>
       }
     >
-      <View style={styles.listContainer}>
-        <FlatList
-          data={searchResults ? searchResults : unselectButton.service === false ? partyPlayList : library}
-          renderItem={({ item, index }) => (
-            <PlayListItem
-              image={item.image}
-              title={item.title}
-              description={`${item.numSongs} Songs`}
-              key={index}
-              onPress={() => onPlayListPress(item)}
-            />
-          )}
-          keyExtractor={(item: iPlayList) => item.id}
+      <Spinner visible={spinner} />
+
+      {playList ?
+        <PlayListDescription 
+          styles={styles}
+          playList={playList}
+          onPress={finish}
+          buttonWidth={buttonWidth}
         />
-      </View>
+        : null
+      }
+      {playList ?
+        <Tracks style={styles.listContainer} tracks={playList.tracks} />
+        : null
+      }
     </BackgroundContainer>
   );
 };
+
+const PlayListDescription = ({ styles, playList, onPress, buttonWidth }: iPlayListDescription) => (
+  <View style={styles.playListDescriptionContainer}>
+    <View style={styles.panel}>
+      <Image
+        source={{
+          uri: playList.image,
+        }}
+        style={styles.image}
+      />
+      <View style={styles.info}>
+        <View>
+          <Text
+            style={styles.title}
+            ellipsizeMode='tail'
+            numberOfLines={1}
+          >
+            {playList.title}
+          </Text>
+          <Text style={styles.numSongs}>{`${playList.tracks.length} Songs`}</Text>
+        </View>
+        <CustomButton
+          mode={MODE.CONTAINED}
+          onPress={onPress}
+          width={buttonWidth}
+        >
+          SELECT PLAYLIST
+        </CustomButton>
+      </View>
+    </View>
+    {
+      playList.description ? 
+      <>
+        <Divider />
+        <Text style={styles.description}>{playList.description}</Text>
+      </>
+      : null
+    }
+  </View>
+);
+
+const Tracks = ({ style, tracks }: iTracksSectionProps) => (
+  <View style={style}>
+    <Divider />
+    <FlatList
+      data={tracks}
+      renderItem={({ item }) => (
+        <PlayListItem
+          image={item.image}
+          title={item.title}
+          description={`By: ${item.artists}`}
+          key={item.id}
+        />
+      )}
+      keyExtractor={(item: iTrack) => item.id}
+    />
+  </View>
+);
 
 const mapDispatchToProps = (dispatch: any) => {
   return {

@@ -24,7 +24,6 @@ export default (theme: any) => StyleSheet.create({
   },
   paragraph: {
     ...theme.fonts.thin,
-    color: theme.fonts.color,
   },
   button: {
     width: '100%',
@@ -37,7 +36,9 @@ export default (theme: any) => StyleSheet.create({
   image: {
     width: 50,
     height: 50,
-    marginRight: 10
   },
-  divider: theme.divider,
+  divider: {
+    marginTop: theme.margin.small,
+    marginBottom: theme.margin.small,
+  }
 });

@@ -23,6 +23,21 @@ export interface iPlayList {
   numSongs: string,
 };
 
+export interface iTrack {
+  id: string,
+  image: string,
+  artists: string,
+  title: string,
+}
+
+export interface iPlayListDetails {
+  id: string,
+  title: string,
+  description: string,
+  tracks: iTrack[],
+  image: string,
+}
+
 export enum SearchType { PLAYLIST = 'playlist', TRACK = 'track' };
 
 export interface iSpotifyService {
@@ -59,6 +74,47 @@ class SpotifyService implements iSpotifyService {
 
   authorize = async(): Promise<void> => {
     this._token = await SpotifyAuth.initialize(this._spotifyConfig);
+  };
+
+  getPlayList = async( playListId: string ): Promise<iPlayListDetails> => {
+    const URL = `https://api.spotify.com/v1/playlists/${playListId}`;
+    const config = { 
+      params: { fields: "description,name,images,tracks.items.track(name,album.images,artists,id)" }, 
+      headers: { Authorization: `Bearer ${this._token}` },
+    };
+    const result = await axios.get(URL, config);
+
+    const {id, name, description, images, tracks} = result.data;
+    console.log(playListId);
+
+    const parsedTracks: iTrack[] = [];
+
+    tracks.items.forEach(({ track }: any) => {
+      const {id, name, artists, album} = track;
+      let stringOfArtists = '';
+
+      for (const artist of artists) {
+        stringOfArtists += `${artist.name},`;
+      };
+      const pos = stringOfArtists.lastIndexOf(',');
+
+      parsedTracks.push({
+        id,
+        title: name,
+        image: album.images ? album.images[0].url : undefined,
+        artists: stringOfArtists.slice(0, pos),
+      });
+    });
+
+    const playList: iPlayListDetails = {
+      id,
+      title: name,
+      description,
+      image: images ? images[0].url : undefined,
+      tracks: parsedTracks,
+    };
+
+    return playList;
   };
 
   /**
