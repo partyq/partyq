@@ -67,7 +67,18 @@ const SelectProvider = (props: iSelectProvider) => {
             props.navigation.navigate('SelectDefaultPlayList');
           }
           else {
-            Alert.alert('Spotify App must be installed to use their services.');
+            Alert.alert(
+              'Could not find Spotify',
+              'Spotify App must be installed to use their services.', [
+                {
+                  text: 'OK',
+                  onPress: () => {
+                    reset();
+                    setSpinner(false);
+                  }
+                }
+              ]
+            );
           }
         });
     } catch (err) {
