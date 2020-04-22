@@ -20,7 +20,7 @@ export default (theme: any) => StyleSheet.create({
     color: theme.colors.grey600,
   },
   description: {
-    ...theme.fonts.regular,
+    ...theme.fonts.thin,
   },
   cellStyleFocused: {
     borderColor: theme.colors.primary,

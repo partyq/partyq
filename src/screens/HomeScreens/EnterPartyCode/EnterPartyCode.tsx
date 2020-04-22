@@ -50,7 +50,7 @@ const EnterPartyCode = (props: iEnterPartyCode) => {
           onFulfill={checkCode}
           codeLength={5}
           cellSpacing={15}
-          cellSize={55}
+          cellSize={45}
           cellStyleFocused={styles.cellStyleFocused}
           cellStyle={styles.cellStyle}
           textStyle={styles.textStyle}

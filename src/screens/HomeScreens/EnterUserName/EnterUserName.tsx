@@ -9,7 +9,7 @@ import { withTheme } from 'react-native-paper';
 
 import jsx from './EnterUserName.style';
 import BackgroundContainer from '../../../hoc/BackgroundContainer';
-import CustomButton, { MODE } from '../../../components/Button/CustomButton';
+import ThemedButton, { MODE } from '../../../components/Button/ThemedButton';
 
 export interface iEnterUserName {
   theme: any,
@@ -26,7 +26,7 @@ const EnterUserName = (props: iEnterUserName) => {
   return (
     <BackgroundContainer navigation={props.navigation} >
       <View style={styles.header}>
-        <Text style={styles.text}>Enter Party Code</Text>
+        <Text style={styles.text}>Enter User Name</Text>
         <Text style={styles.description}>
           This will be your display name in the party
         </Text>
@@ -40,13 +40,13 @@ const EnterUserName = (props: iEnterUserName) => {
           onEndEditing={() => setDisableButton(false)}
         />
       </View>
-      <CustomButton
+      <ThemedButton
         disabled={disableButton}
         mode={MODE.CONTAINED}
         onPress={handleNavigation}
       >
         JOIN PARTY
-      </CustomButton>
+      </ThemedButton>
     </BackgroundContainer>
   );
 };
