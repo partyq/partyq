@@ -5,6 +5,7 @@ import {
   Text,
   FlatList,
   Dimensions,
+  TouchableOpacity
 } from 'react-native';
 import { withTheme, Divider } from 'react-native-paper';
 import { connect } from 'react-redux';
@@ -159,13 +160,18 @@ const SelectDefaultPlayListScreen = (props: iSelectDefaultPlayListScreen) => {
           }
           renderItem={({ item, index }) => (
             <View>
-              <PlayListItem
-                image={item.image}
-                title={item.title}
-                description={`${item.numSongs} Songs`}
-                key={index}
+              <TouchableOpacity
+                activeOpacity={0.5}
                 onPress={() => onPlayListPress(item.id)}
-              />
+              >
+                <PlayListItem
+                  image={item.image}
+                  title={item.title}
+                  description={`${item.numSongs} Songs`}
+                  key={index}
+                  onPress={() => onPlayListPress(item.id)}
+                />
+              </TouchableOpacity>
             </View>
           )}
           keyExtractor={(item: iPlayList) => item.id}
