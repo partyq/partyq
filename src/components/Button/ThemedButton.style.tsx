@@ -12,7 +12,8 @@ export default (theme: any, width: string | number) => StyleSheet.create({
     borderColor: theme.colors.primary,
   },
   disabledContainer: {
-    borderColor: theme.colors.disabled,
+    borderColor: theme.colors.grey300,
+    backgroundColor: theme.colors.grey300,
   },
   containedLabelStyle: {
     ...theme.fonts.regular,

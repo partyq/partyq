@@ -8,7 +8,7 @@ import {
 import { withTheme } from 'react-native-paper';
 import SmoothPinCodeInput from 'react-native-smooth-pincode-input';
 
-import jsx from './EnterPartyInfo.style';
+import jsx from './EnterPartyCode.style';
 import BackgroundContainer from '../../../hoc/BackgroundContainer';
 import ThemedButton, { MODE } from '../../../components/Button/ThemedButton';
 
@@ -20,8 +20,6 @@ export interface iEnterPartyCode {
 const EnterPartyCode = (props: iEnterPartyCode) => {
   const styles = jsx(props.theme);
   const [code, setCode] = useState('');
-  const [name, setName] = useState('');
-  const [isCodeValide, setIsCodeValide] = useState(false);
   const [disableButton, setDisableButton] = useState(true);
   const pinInput: any = React.createRef();
 
@@ -30,46 +28,41 @@ const EnterPartyCode = (props: iEnterPartyCode) => {
       pinInput.current.shake().then(() => setCode(''));
     } else {
       setDisableButton(false);
-      setIsCodeValide(true);
+      pinInput.current.blur();
     }
   };
 
-  const handleNavigation = () => props.navigation.navigate('Party');
+  const handleNavigation = () => props.navigation.navigate('EnterUserName');
 
   return (
     <BackgroundContainer navigation={props.navigation} >
       <View style={styles.header}>
         <Text style={styles.text}>Enter Party Code</Text>
+        <Text style={styles.description}>
+          Enter the 5 digit code for the party you want to join
+        </Text>
       </View>
       <View style={styles.code}>
-        {isCodeValide
-          ? <TextInput
-            style={styles.textInput}
-            placeholder="Type a funny name :)"
-            onChangeText={(_name) => setName(_name)}
-            value={name}
-          />
-          : <SmoothPinCodeInput
-            ref={pinInput}
-            value={code}
-            onTextChange={(_code: string) => setCode(_code)}
-            onFulfill={checkCode}
-            codeLength={5}
-            cellSpacing={6}
-            cellSize={40}
-            cellStyleFocused={styles.cellStyleFocused}
-            cellStyle={styles.cellStyle}
-            textStyle={styles.textStyle}
-            textStyleFocused={styles.textStyleFocused}
-          />
-        }
+        <SmoothPinCodeInput
+          ref={pinInput}
+          value={code}
+          onTextChange={(_code: string) => setCode(_code)}
+          onFulfill={checkCode}
+          codeLength={5}
+          cellSpacing={15}
+          cellSize={55}
+          cellStyleFocused={styles.cellStyleFocused}
+          cellStyle={styles.cellStyle}
+          textStyle={styles.textStyle}
+          textStyleFocused={styles.textStyleFocused}
+        />
       </View>
       <ThemedButton
         disabled={disableButton}
         mode={MODE.CONTAINED}
         onPress={handleNavigation}
       >
-        Join the Party!
+        Next
       </ThemedButton>
     </BackgroundContainer>
   );

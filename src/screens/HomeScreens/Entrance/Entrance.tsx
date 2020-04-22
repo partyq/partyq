@@ -11,13 +11,12 @@ import ThemedButton, { MODE } from '../../../components/Button/ThemedButton';
 export interface iEntrance {
   theme: any,
   navigation: any,
-
 };
 
 const Entrance = (props: iEntrance) => {
   const styles = jsx(props.theme);
   const handleStartNewParty = () => props.navigation.navigate('Services');
-  const handleJoinParty = () => props.navigation.navigate('Info');
+  const handleJoinParty = () => props.navigation.navigate('EnterPartyCode');
 
   return (
     <ImageBackground
