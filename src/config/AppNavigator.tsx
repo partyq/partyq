@@ -7,7 +7,8 @@ import { createStackNavigator } from '@react-navigation/stack';
 import SplashScreen from '../screens/LoginScreens/SplashScreen';
 import Entrance from '../screens/HomeScreens/Entrance/Entrance';
 import SelectProvider from '../screens/HomeScreens/SelectProvider/SelectProvider';
-import EnterPartyCode from '../screens/HomeScreens/EnterPartyInfo/EnterPartyInfo';
+import EnterPartyCode from '../screens/HomeScreens/EnterPartyCode/EnterPartyCode';
+import EnterUserName from '../screens/HomeScreens/EnterUserName/EnterUserName';
 import SelectDefaultPlaylistScreen from '../screens/HomeScreens/SelectDefaultPlaylistScreen/SelectDefaultPlaylistScreen';
 import PartyMainScreen from '../screens/PartyScreens/Main/PartyMainScreen';
 import PreviewPlayListScreen from '../screens/HomeScreens/PreviewPlayListScreen/PreviewPlayListScreen';
@@ -42,8 +43,12 @@ const AppNavigator = () => {
                     component={PreviewPlayListScreen} 
                 />
                 <Stack.Screen 
-                    name='Info' 
+                    name='EnterPartyCode' 
                     component={EnterPartyCode} 
+                />
+                <Stack.Screen 
+                    name='EnterUserName' 
+                    component={EnterUserName} 
                 />
                 <Stack.Screen 
                     name='PartyMain' 

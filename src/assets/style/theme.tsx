@@ -54,7 +54,7 @@ export const Light = {
     primary: '#F53F6A',
     background: Colors.white,
     accent: '#F53F6A',
-    disabled: Colors.grey600,
+    disabled: Colors.grey400,
     placeHolder: Colors.grey500,
   },
   fonts: defaultFontConfig(Colors.black),
