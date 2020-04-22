@@ -1,9 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React from 'react';
-import {
-  Image,
-  TouchableOpacity,
-} from 'react-native';
+import { Image } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { withTheme, List, Divider } from 'react-native-paper';
 
@@ -14,7 +11,6 @@ export interface iPlayListItem {
   image: string,
   title: string,
   description: string,
-  onPress?: () => void,
 };
 
 const PlayListItem = (props: iPlayListItem) => {
@@ -22,32 +18,27 @@ const PlayListItem = (props: iPlayListItem) => {
 
   return (
     <>
-      <TouchableOpacity
-        activeOpacity={0.5}
-        onPress={props.onPress}
-      >
-        <List.Item
-          style={styles.container}
-          title={props.title}
-          description={props.description}
-          titleStyle={styles.title}
-          descriptionStyle={styles.description}
-          left={() =>
-            props.image ?
-              <Image
-                source={{
-                  uri: props.image,
-                }}
-                style={styles.image}
-              /> :
-              <Icon
-                name='image-off'
-                type='MaterialCommunityIcons'
-                size={styles.image.height}
-              />
-          }
-        />
-      </TouchableOpacity>
+      <List.Item
+        style={styles.container}
+        title={props.title}
+        description={props.description}
+        titleStyle={styles.title}
+        descriptionStyle={styles.description}
+        left={() =>
+          props.image ?
+            <Image
+              source={{
+                uri: props.image,
+              }}
+              style={styles.image}
+            /> :
+            <Icon
+              name='image-off'
+              type='MaterialCommunityIcons'
+              size={styles.image.height}
+            />
+        }
+      />
       <Divider />
     </>
   );
