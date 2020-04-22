@@ -34,7 +34,7 @@ const Entrance = (props: iEntrance) => {
       >
         <View style={styles.titleContainer}>
           <Image
-            source={require('../../../assets/img/Auxio_Light.png')}
+            source={require('../../../assets/img/PartyQ_Light.png')}
             style={{
               height: 150,
               width: 150,
