@@ -19,9 +19,17 @@ const BackgroundContainer = (props: any) => {
 
   return (
     <View
-      style={{ flex: 1, backgroundColor: theme.colors.background}}>
+      style={{ 
+        flex: 1, 
+        backgroundColor: props.style ? 
+          props.style.backgroundColor || theme.colors.white : 
+          theme.colors.background
+      }}
+    >
 
-      <StatusBar hidden />
+      <StatusBar 
+        barStyle={props.statusBarStyle || 'dark-content'}
+      />
       <InternetStatus />
 
       {props.disableBack ? null
@@ -52,24 +60,18 @@ const BackgroundContainer = (props: any) => {
         </SafeAreaView>
       }
 
-      {props.style
-        ? <View style={props.style}>
-          {props.children}
-        </View>
-        : <>
-          <View style={{
-            flex: 1,
-            flexDirection: 'column',
-            alignItems: 'center',
-            width: '100%',
-            paddingLeft: 14,
-            paddingRight: 14,
-            paddingBottom: 14,
-          }}>
-            {props.children}
-          </View>
-        </>
-      }
+      <View style={{
+        flex: 1,
+        flexDirection: 'column',
+        alignItems: 'center',
+        width: '100%',
+        paddingLeft: 14,
+        paddingRight: 14,
+        paddingBottom: 14,
+        ...props.style
+      }}>
+        {props.children}
+      </View>
 
     </View>
   );

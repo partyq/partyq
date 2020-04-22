@@ -1,12 +1,12 @@
 /* eslint-disable no-unused-vars */
 import React from 'react';
-import { View, Image } from 'react-native';
+import { View, Image, ImageBackground } from 'react-native';
 import { withTheme } from 'react-native-paper';
 
 import jsx from './Entrance.style';
 import BackgroundContainer from '../../../hoc/BackgroundContainer';
 import { START_A_PARTY, JOIN_A_PARTY } from '../../../config/RenderableData';
-import CustomButton, { MODE } from '../../../components/Button/CustomButton';
+import ThemedButton, { MODE } from '../../../components/Button/ThemedButton';
 
 export interface iEntrance {
   theme: any,
@@ -19,32 +19,46 @@ const Entrance = (props: iEntrance) => {
   const handleJoinParty = () => props.navigation.navigate('EnterPartyCode');
 
   return (
-    <BackgroundContainer disableBack>
-      <View style={styles.titleContainer}>
-        <Image
-          source={require('../../../assets/img/PartyQ-Logo.png')}
-          style={{
-            height: 300,
-            width: 300
-          }}
-        />
-      </View>
+    <ImageBackground
+      source={require('../../../assets/img/Intro_Background.png')}
+      style={{
+        flex: 1
+      }}
+    >
+      <BackgroundContainer 
+        style={{
+          backgroundColor: 'transparent'
+        }}
+        disableBack
+        statusBarStyle='light-content'
+      >
+        <View style={styles.titleContainer}>
+          <Image
+            source={require('../../../assets/img/Auxio_Light.png')}
+            style={{
+              height: 150,
+              width: 150,
+              resizeMode: 'contain'
+            }}
+          />
+        </View>
 
-      <View style={styles.buttonContainer}>
-        <CustomButton
-          onPress={handleStartNewParty}
-          mode={MODE.CONTAINED}
-        >
-          {START_A_PARTY}
-        </CustomButton>
-        <CustomButton
-          onPress={handleJoinParty}
-          mode={MODE.OUTLINED}
-        >
-            {JOIN_A_PARTY}
-        </CustomButton>
-      </View>
-    </BackgroundContainer>
+        <View style={styles.buttonContainer}>
+          <ThemedButton
+            onPress={handleStartNewParty}
+            mode={MODE.CONTAINED}
+          >
+            {START_A_PARTY}
+          </ThemedButton>
+          <ThemedButton
+            onPress={handleJoinParty}
+            mode={MODE.OUTLINED}
+          >
+              {JOIN_A_PARTY}
+          </ThemedButton>
+        </View>
+      </BackgroundContainer>
+    </ImageBackground>
   );
 };
 

@@ -26,7 +26,7 @@ import {
   getProviderInstance,
   setProviderId,
 } from '../../../actions';
-import CustomButton, { MODE } from '../../../components/Button/CustomButton';
+import ThemedButton, { MODE } from '../../../components/Button/ThemedButton';
 
 export interface iSelectDefaultPlayListScreen {
   theme: any,
@@ -128,13 +128,13 @@ const PlayListDescription = ({ styles, playList, onPress, buttonWidth }: iPlayLi
           </Text>
           <Text style={styles.numSongs}>{`${playList.tracks.length} Songs`}</Text>
         </View>
-        <CustomButton
+        <ThemedButton
           mode={MODE.CONTAINED}
           onPress={onPress}
           width={buttonWidth}
         >
           SELECT PLAYLIST
-        </CustomButton>
+        </ThemedButton>
       </View>
     </View>
     {

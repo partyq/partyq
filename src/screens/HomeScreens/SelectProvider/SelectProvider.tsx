@@ -21,7 +21,7 @@ import jsx from './SelectProvider.style';
 import BackgroundContainer from '../../../hoc/BackgroundContainer';
 import { Provider, iProvider } from '../../../config/RenderableData';
 import { setProviderId, getProviderInstance } from '../../../actions';
-import CustomButton, { MODE } from '../../../components/Button/CustomButton';
+import ThemedButton, { MODE } from '../../../components/Button/ThemedButton';
 
 export interface iSelectProvider {
   theme: any,
@@ -67,7 +67,18 @@ const SelectProvider = (props: iSelectProvider) => {
             props.navigation.navigate('SelectDefaultPlayList');
           }
           else {
-            Alert.alert('Spotify App must be installed to use their services.');
+            Alert.alert(
+              'Could not find Spotify',
+              'Spotify App must be installed to use their services.', [
+                {
+                  text: 'OK',
+                  onPress: () => {
+                    reset();
+                    setSpinner(false);
+                  }
+                }
+              ]
+            );
           }
         });
     } catch (err) {
@@ -119,13 +130,13 @@ const SelectProvider = (props: iSelectProvider) => {
 
       <RenderProviders styles={styles} providers={providers} onPress={handleSelect} />
 
-      <CustomButton
+      <ThemedButton
         onPress={() => handleAuth()}
         disabled={props.providerId === '' ? true : false}
         mode={MODE.CONTAINED}
       >
         Next
-      </CustomButton>
+      </ThemedButton>
     </BackgroundContainer>
   );
 };

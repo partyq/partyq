@@ -5,7 +5,7 @@ import {
   Button,
 } from 'react-native-paper';
 
-import jsx from './CustomButton.style';
+import jsx from './ThemedButton.style';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export enum MODE {
@@ -14,7 +14,7 @@ export enum MODE {
   TEXT = 'text',
 }
 
-export interface iCustomButton {
+export interface iThemedButton {
   theme: any,
   width?: number,
   children?: any,
@@ -23,7 +23,7 @@ export interface iCustomButton {
   onPress?: () => void,
 }
 
-const CustomButton = (props: iCustomButton) => {
+const ThemedButton = (props: iThemedButton) => {
   const styles = jsx(props.theme, props.width ? props.width : '100%');
 
   const getLabelStyle = (): any => {
@@ -58,4 +58,4 @@ const CustomButton = (props: iCustomButton) => {
   );
 };
 
-export default withTheme(CustomButton);
+export default withTheme(ThemedButton);
