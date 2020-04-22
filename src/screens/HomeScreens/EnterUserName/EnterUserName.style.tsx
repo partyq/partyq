@@ -6,14 +6,14 @@ export default (theme: any) => StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'space-evenly',
     textAlign: 'left',
-    width: '100%'
+    // width: '100%'
   },
   text: {
     ...theme.fonts.large,
     color: theme.colors.grey600,
   },
   description: {
-    ...theme.fonts.regular,
+    ...theme.fonts.thin,
   },
   input: {
     flex: 3,

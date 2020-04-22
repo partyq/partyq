@@ -6,7 +6,7 @@ export default (theme: any) => StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'space-evenly',
     textAlign: 'left',
-    width: '100%'
+    // width: '100%'
   },
   code: {
     flex: 3,
