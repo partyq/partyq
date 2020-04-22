@@ -21,7 +21,7 @@ import jsx from './SelectProvider.style';
 import BackgroundContainer from '../../../hoc/BackgroundContainer';
 import { Provider, iProvider } from '../../../config/RenderableData';
 import { setProviderId, getProviderInstance } from '../../../actions';
-import CustomButton, { MODE } from '../../../components/Button/CustomButton';
+import ThemedButton, { MODE } from '../../../components/Button/ThemedButton';
 
 export interface iSelectProvider {
   theme: any,
@@ -119,13 +119,13 @@ const SelectProvider = (props: iSelectProvider) => {
 
       <RenderProviders styles={styles} providers={providers} onPress={handleSelect} />
 
-      <CustomButton
+      <ThemedButton
         onPress={() => handleAuth()}
         disabled={props.providerId === '' ? true : false}
         mode={MODE.CONTAINED}
       >
         Next
-      </CustomButton>
+      </ThemedButton>
     </BackgroundContainer>
   );
 };

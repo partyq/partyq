@@ -13,7 +13,7 @@ import jsx from './SelectDefaultPlayListScreen.style';
 import PlayListItem from '../../../components/PlayListItem/PlayListItem';
 import SearchView from '../../../components/SearchView/SearchView';
 import BackgroundContainer from '../../../hoc/BackgroundContainer';
-import CustomButton, { MODE } from '../../../components/Button/CustomButton';
+import ThemedButton, { MODE } from '../../../components/Button/ThemedButton';
 import { iPlayList, SearchType } from '../../../utility/MusicServices/SpotifyService';
 import { getProviderInstance, setProviderId } from '../../../actions';
 
@@ -134,20 +134,20 @@ const SelectDefaultPlayListScreen = (props: iSelectDefaultPlayListScreen) => {
         value={playListQuery}
       />
       <View style={styles.buttonsContainer}>
-        <CustomButton
+        <ThemedButton
           width={buttonWidth}
           mode={unselectButton.service ? MODE.TEXT : MODE.CONTAINED}
           onPress={() => handleButton('service')}
         >
           Spotify
-        </CustomButton>
-        <CustomButton
+        </ThemedButton>
+        <ThemedButton
           width={buttonWidth}
           mode={unselectButton.library ? MODE.TEXT : MODE.CONTAINED}
           onPress={() => handleButton('library')}
         >
           Library
-        </CustomButton>
+        </ThemedButton>
       </View>
 
       <View style={styles.listContainer}>
