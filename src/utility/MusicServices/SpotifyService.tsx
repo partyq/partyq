@@ -38,6 +38,10 @@ export interface iPlayListDetails {
   image: string,
 }
 
+export interface iUserProfile {
+  displayName: string
+}
+
 export enum SearchType { PLAYLIST = 'playlist', TRACK = 'track' };
 
 export interface iSpotifyService {
@@ -76,6 +80,8 @@ class SpotifyService implements iSpotifyService {
     this._token = await SpotifyAuth.initialize(this._spotifyConfig);
   };
 
+  getToken = () => this._token;
+
   getPlayList = async( playListId: string ): Promise<iPlayListDetails> => {
     const URL = `https://api.spotify.com/v1/playlists/${playListId}`;
     const config = { 
@@ -94,7 +100,7 @@ class SpotifyService implements iSpotifyService {
       let stringOfArtists = '';
 
       for (const artist of artists) {
-        stringOfArtists += `${artist.name},`;
+        stringOfArtists += `${artist.name}, `;
       };
       const pos = stringOfArtists.lastIndexOf(',');
 
@@ -116,6 +122,15 @@ class SpotifyService implements iSpotifyService {
 
     return playList;
   };
+
+  getUserProfile = async(): Promise<iUserProfile> => {
+    const URL = 'https://api.spotify.com/v1/me';
+    const config = { headers: { Authorization: `Bearer ${this._token}` } };
+    const result = (await axios.get(URL, config)).data;
+    return {
+      displayName: result.display_name
+    };
+  }
 
   /**
    * Get featured spotify playlists. Defaults to USA UTC time.

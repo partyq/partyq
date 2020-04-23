@@ -46,10 +46,11 @@ const SplashScreen = (props: iSplashScreen) => {
   return (
     <View style={styles.container}>
       <Image
-        source={require('../../assets/img/PartyQ-Logo.png')}
+        source={require('../../assets/img/PartyQ_Dark.png')}
         style={{
-          height: 300,
-          width: 300
+          height: 150,
+          width: 150,
+          resizeMode: 'contain'
         }}
       />
     </View>

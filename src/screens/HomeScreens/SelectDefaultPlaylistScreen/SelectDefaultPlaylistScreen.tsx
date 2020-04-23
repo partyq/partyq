@@ -169,7 +169,7 @@ const SelectDefaultPlayListScreen = (props: iSelectDefaultPlayListScreen) => {
                   title={item.title}
                   description={`${item.numSongs} Songs`}
                   key={index}
-                  onPress={() => onPlayListPress(item.id)}
+                  // onPress={() => onPlayListPress(item.id)}
                 />
               </TouchableOpacity>
             </View>

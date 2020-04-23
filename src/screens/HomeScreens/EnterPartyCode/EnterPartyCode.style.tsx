@@ -6,7 +6,7 @@ export default (theme: any) => StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'space-evenly',
     textAlign: 'left',
-    width: '100%'
+    // width: '100%'
   },
   code: {
     flex: 3,
@@ -20,7 +20,7 @@ export default (theme: any) => StyleSheet.create({
     color: theme.colors.grey600,
   },
   description: {
-    ...theme.fonts.regular,
+    ...theme.fonts.thin,
   },
   cellStyleFocused: {
     borderColor: theme.colors.primary,

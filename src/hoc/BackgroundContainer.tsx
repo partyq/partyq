@@ -17,10 +17,62 @@ const BackgroundContainer = (props: any) => {
     props.navigation.goBack();
   };
 
+  const mainContent = (
+    <>
+      <View
+        style={{
+          // paddingTop: 15,
+          flexDirection: 'row',
+          alignItems: 'center',
+          // backgroundColor: 'transparent',
+          justifyContent: 'space-between'
+        }}
+      >
+        {props.disableBack ? null
+          : <Button
+              icon={
+                <Icon
+                  name='ios-arrow-back'
+                  type='ionicon'
+                  color={theme.colors.text}
+                  size={24}
+                />
+              }
+              buttonStyle={{
+                backgroundColor: 'transparent',
+                borderRadius: theme.roundness,
+                alignSelf: 'center',
+                margin: 8
+              }}
+              onPress={handleNavigate}
+            />
+        }
+        {props.title}
+        <View
+          style={{
+            width: 40
+          }}
+        />
+      </View>
+      <View style={{
+        flex: 1,
+        flexDirection: 'column',
+        alignItems: 'center',
+        width: '100%',
+        paddingHorizontal: 14,
+        paddingBottom: 14,
+        ...props.style
+      }}>
+        {props.children}
+      </View>
+    </>
+  )
+
   return (
     <View
       style={{ 
-        flex: 1, 
+        flex: 1,
+        flexDirection: 'column',
         backgroundColor: props.style ? 
           props.style.backgroundColor || theme.colors.white : 
           theme.colors.background
@@ -32,46 +84,16 @@ const BackgroundContainer = (props: any) => {
       />
       <InternetStatus />
 
-      {props.disableBack ? null
+      {props.ignoreSafeArea ?
+        mainContent
         : <SafeAreaView
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            backgroundColor: 'transparent',
-          }}>
-          <Button
-            icon={
-              <Icon
-                name='ios-arrow-back'
-                type='ionicon'
-                color={theme.colors.text}
-                size={24}
-              />
-            }
-            buttonStyle={{
-              backgroundColor: 'transparent',
-              borderRadius: theme.roundness,
-              alignSelf: 'center',
-              margin: 8,
+            style={{
+              flex: 1
             }}
-            onPress={handleNavigate}
-          />
-          {props.title}
-        </SafeAreaView>
+          >
+            {mainContent}
+          </SafeAreaView>
       }
-
-      <View style={{
-        flex: 1,
-        flexDirection: 'column',
-        alignItems: 'center',
-        width: '100%',
-        paddingLeft: 14,
-        paddingRight: 14,
-        paddingBottom: 14,
-        ...props.style
-      }}>
-        {props.children}
-      </View>
 
     </View>
   );
