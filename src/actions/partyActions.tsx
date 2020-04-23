@@ -4,9 +4,6 @@ import {
     leaveParty as _leaveParty,
     endParty as _endParty
 } from '../utility/backend';
-import {
-    PartyStatus
-} from '../states/partyState';
 import store from '../store/store';
 
 export const SET_PARTY_ID = 'SET_PARTY_ID';
@@ -17,38 +14,24 @@ export const setPartyId = (id: string) => ({
     id
 })
 
-export const setPartyStatus = (status: PartyStatus | null) => ({
-    type: SET_PARTY_STATUS,
-    status
-});
-
-export const createParty = (playlistId: string) => {
+export const createParty = (playlistId: string, provider: any, callback: (() => void) | undefined) => {
     return (dispatch: Function) => {
-        _createParty(playlistId)
+        _createParty(playlistId, provider)
             .then(
                 (partyId: string) => {
-                    dispatch(setPartyStatus(PartyStatus.SUCCESS));
                     dispatch(setPartyId(partyId));
-                    console.log(partyId);
+                    if (callback !== undefined) {
+                        callback();
+                    }
                 }
             )
     }
 }
 
 export const joinParty = () => {
-    return (dispatch: Function) => {
+    return () => {
         const { party, user } = store.getState().reducer;
         _joinParty(party.id, user.username)
-            .then(
-                () => {
-                    dispatch(setPartyStatus(PartyStatus.SUCCESS));
-                    console.log(party.id);
-                },
-                (status: PartyStatus) => {
-                    dispatch(setPartyStatus(status));
-                    console.log(status);
-                }
-            )
     }
 }
 
@@ -59,7 +42,6 @@ export const leaveParty = () => {
             .then(
                 () => {
                     dispatch(setPartyId(''));
-                    dispatch(setPartyStatus(null));
                 }
             )
     }
@@ -72,7 +54,6 @@ export const endParty = () => {
             .then(
                 () => {
                     dispatch(setPartyId(''));
-                    dispatch(setPartyStatus(null));
                 }
             )
     }

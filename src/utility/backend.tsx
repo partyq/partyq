@@ -1,12 +1,16 @@
 import firestore from '@react-native-firebase/firestore';
 
-import { PartyStatus } from '../states/partyState';
+import store from '../store/store';
 
-export const createParty = (playlistId: string) => {
-    return new Promise<string>(async (resolve) => {
-        const querySnapshot = await firestore()
-            .collection('parties')
-            .orderBy('id', 'desc')
+const PARTIES_COLLECTION = 'parties';
+const SONG_REQUESTS_COLLECTION = 'songRequests';
+const USERS_COLLECTION = 'users';
+
+export const createParty = (playlistId: string, provider: any) => {
+    return new Promise<string>(async (resolve, reject) => {
+        let querySnapshot = await firestore()
+            .collection(PARTIES_COLLECTION)
+            .orderBy('created', 'desc')
             .limit(1)
             .get()
         let lastPartyId;
@@ -15,15 +19,38 @@ export const createParty = (playlistId: string) => {
         } else {
             lastPartyId = parseInt(querySnapshot.docs[0].get('id'));
         }
-        lastPartyId += 1;
-        const partyId = `0000${lastPartyId}`.slice(-5);
+        let partyId;
+        if (lastPartyId === 9999) {
+            querySnapshot = await firestore()
+                .collection(PARTIES_COLLECTION)
+                .orderBy('created', 'asc')
+                .limit(1)
+                .get();
+            const oldParty = querySnapshot.docs[0];
+            partyId = `0000${oldParty.get('id')}`.slice(-5);
+            oldParty.ref.delete();
+        } else {
+            partyId = `0000${lastPartyId + 1}`.slice(-5);
+        }
+        const playlist = await provider.getPlayList(playlistId);
+        if (playlist.tracks.length === 0) {
+            return reject('The playlist you selected has no songs.');
+        }
+        const currentSongId = playlist.tracks[0].id;
+        let nextSongId = null;
+        if (playlist.tracks.length > 1) {
+            nextSongId = playlist.tracks[1].id;
+        }
         await firestore()
-            .collection('parties')
+            .collection(PARTIES_COLLECTION)
             .add({
                 id: partyId,
-                playlistId,
-                playlistIndex: 0,
-                hostName: ""
+                hostName: "",
+                currentSongTimeElapsed: 0,
+                previousSongId: null,
+                currentSongId: currentSongId,
+                nextSongId: nextSongId,
+                created: new Date()
             })
         return resolve(partyId);
     });
@@ -32,7 +59,7 @@ export const createParty = (playlistId: string) => {
 export const getPartyById = (id: string) => {
     return new Promise<string | null>(async (resolve) => {
         const querySnapshot = await firestore()
-            .collection('parties')
+            .collection(PARTIES_COLLECTION)
             .where('id', '==', id)
             .limit(1)
             .get()
@@ -40,14 +67,14 @@ export const getPartyById = (id: string) => {
             return resolve(null);
         }
         const doc = querySnapshot.docs[0];
-        return resolve(doc.get('partyId') as string);
+        return resolve(doc.get('id') as string);
     });
 }
 
 export const getUser = (partyId: string, username: string) => {
     return new Promise<string | null>(async (resolve) => {
         const querySnapshot = await firestore()
-            .collection('users')
+            .collection(USERS_COLLECTION)
             .where('partyId', '==', partyId)
             .where('displayName', '==', username)
             .limit(1)
@@ -64,10 +91,10 @@ export const joinParty = (partyId: string, username: string) => {
     return new Promise<string>(async (resolve, reject) => {
         const displayName = await getUser(partyId, username);
         if (displayName !== null) {
-            return reject(PartyStatus.USER_ALREADY_EXISTS);
+            return reject('A user with that name already exists.');
         }
         await firestore()
-            .collection('users')
+            .collection(USERS_COLLECTION)
             .add({
                 displayName: username,
                 partyId: partyId
@@ -79,7 +106,7 @@ export const joinParty = (partyId: string, username: string) => {
 export const leaveParty = (username: string) => {
     return new Promise(async (resolve) => {
         const querySnapshot = await firestore()
-            .collection('users')
+            .collection(USERS_COLLECTION)
             .where('displayName', '==', username)
             .limit(1)
             .get();
@@ -96,7 +123,7 @@ export const endParty = (partyId: string) => {
     return new Promise(async (resolve) => {
         const batch = firestore().batch();
         const partiesQuerySnapshot = await firestore()
-            .collection('parties')
+            .collection(PARTIES_COLLECTION)
             .where('id', '==', partyId)
             .limit(1)
             .get();
@@ -104,7 +131,7 @@ export const endParty = (partyId: string) => {
             batch.delete(partiesQuerySnapshot.docs[0].ref);
         }
         const usersQuerySnapshot = await firestore()
-            .collection('users')
+            .collection(USERS_COLLECTION)
             .where('partyId', '==', partyId)
             .get();
         usersQuerySnapshot.forEach((docSnapshot) => {

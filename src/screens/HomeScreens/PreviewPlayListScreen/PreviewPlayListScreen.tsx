@@ -27,6 +27,7 @@ import {
   setProviderId,
 } from '../../../actions';
 import ThemedButton, { MODE } from '../../../components/Button/ThemedButton';
+import { createParty } from '../../../actions/partyActions';
 
 export interface iSelectDefaultPlayListScreen {
   theme: any,
@@ -35,6 +36,10 @@ export interface iSelectDefaultPlayListScreen {
   setProviderId: (providerId: string) => void,
   playListDetails: iPlayList,
   route: any,
+  createParty: (
+    playlistId: string, 
+    provider: any, 
+    callback: (() => void) | undefined) => void
 };
 
 export interface iTracksSectionProps {
@@ -79,7 +84,10 @@ const PreviewPlayListScreen = (props: iSelectDefaultPlayListScreen) => {
   };
 
   const finish = (): void => {
-    props.navigation.navigate('PartyMain');
+    const instance = props.getProviderInstance();
+    props.createParty(playListId, instance, () => {
+      props.navigation.navigate('PartyMain');
+    })
   };
 
   return (
@@ -170,6 +178,10 @@ const mapDispatchToProps = (dispatch: any) => {
   return {
     getProviderInstance: () => dispatch(getProviderInstance()),
     setProviderId: (providerId: string) => dispatch(setProviderId(providerId)),
+    createParty: (
+      playlistId: string, 
+      provider: any, 
+      callback: (() => void) | undefined) => dispatch(createParty(playlistId, provider, callback))
   }
 };
 
