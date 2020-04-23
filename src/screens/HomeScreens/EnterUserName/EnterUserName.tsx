@@ -53,9 +53,15 @@ const EnterUserName = (props: iEnterUserName) => {
         <TextInput
           style={styles.textInput}
           placeholder="Enter Display Name"
-          onChangeText={(_name) => props.setUsername(_name)}
+          onChangeText={(_name) => {
+            props.setUsername(_name);
+            if (_name.length > 0) {
+              setDisableButton(false);
+            } else {
+              setDisableButton(true);
+            }
+          }}
           value={props.username}
-          onEndEditing={() => setDisableButton(false)}
         />
       </View>
       <ThemedButton

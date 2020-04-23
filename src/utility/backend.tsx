@@ -50,6 +50,7 @@ export const createParty = (playlistId: string, provider: any) => {
                 previousSongId: null,
                 currentSongId: currentSongId,
                 nextSongId: nextSongId,
+                token: provider.getToken(),
                 created: new Date()
             })
         return resolve(partyId);
@@ -71,26 +72,33 @@ export const getPartyById = (id: string) => {
     });
 }
 
-export const getUser = (partyId: string, username: string) => {
-    return new Promise<string | null>(async (resolve) => {
-        const querySnapshot = await firestore()
+export const isValidUsername = (partyId: string, username: string) => {
+    return new Promise<boolean>(async (resolve) => {
+        let querySnapshot = await firestore()
             .collection(USERS_COLLECTION)
             .where('partyId', '==', partyId)
             .where('displayName', '==', username)
             .limit(1)
             .get()
-        if (querySnapshot.empty) {
-            return resolve(null);
+        if (!querySnapshot.empty) {
+            return resolve(false);
         }
-        const doc = querySnapshot.docs[0];
-        return resolve(doc.get('displayName') as string);
+        querySnapshot = await firestore()
+            .collection(PARTIES_COLLECTION)
+            .where('hostName', '==', username)
+            .limit(1)
+            .get();
+        if (!querySnapshot.empty) {
+            return resolve(false);
+        }
+        return resolve(true);
     })
 }
 
 export const joinParty = (partyId: string, username: string) => {
     return new Promise<string>(async (resolve, reject) => {
-        const displayName = await getUser(partyId, username);
-        if (displayName !== null) {
+        const usernameValid = await isValidUsername(partyId, username);
+        if (!usernameValid) {
             return reject('A user with that name already exists.');
         }
         await firestore()

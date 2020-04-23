@@ -76,6 +76,8 @@ class SpotifyService implements iSpotifyService {
     this._token = await SpotifyAuth.initialize(this._spotifyConfig);
   };
 
+  getToken = () => this._token;
+
   getPlayList = async( playListId: string ): Promise<iPlayListDetails> => {
     const URL = `https://api.spotify.com/v1/playlists/${playListId}`;
     const config = { 
