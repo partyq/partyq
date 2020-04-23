@@ -41,11 +41,12 @@ export const createParty = (playlistId: string, provider: any) => {
         if (playlist.tracks.length > 1) {
             nextSongId = playlist.tracks[1].id;
         }
+        const userProfile = await provider.getUserProfile();
         await firestore()
             .collection(PARTIES_COLLECTION)
             .add({
                 id: partyId,
-                hostName: "",
+                hostName: userProfile.displayName,
                 currentSongTimeElapsed: 0,
                 previousSongId: null,
                 currentSongId: currentSongId,
