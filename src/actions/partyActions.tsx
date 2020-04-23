@@ -7,7 +7,6 @@ import {
 import store from '../store/store';
 
 export const SET_PARTY_ID = 'SET_PARTY_ID';
-export const SET_PARTY_STATUS = 'SET_PARTY_STATUS';
 
 export const setPartyId = (id: string) => ({
     type: SET_PARTY_ID,
@@ -28,17 +27,30 @@ export const createParty = (playlistId: string, provider: any, callback: (() => 
     }
 }
 
-export const joinParty = () => {
+export const joinParty = (callback: ((error: string | null) => void) | undefined) => {
     return () => {
-        const { party, user } = store.getState().reducer;
-        _joinParty(party.id, user.username)
+        const { id } = store.getState().partyReducer;
+        const { username } = store.getState().userReducer;
+        _joinParty(id, username)
+            .then(
+                () => {
+                    if (callback !== undefined) {
+                        callback(null);
+                    }
+                },
+                (error: string) => {
+                    if (callback !== undefined) {
+                        callback(error);
+                    }
+                }
+            )
     }
 }
 
 export const leaveParty = () => {
     return (dispatch: Function) => {
-        const { user } = store.getState().reducer;
-        _leaveParty(user.username)
+        const { username } = store.getState().userReducer;
+        _leaveParty(username)
             .then(
                 () => {
                     dispatch(setPartyId(''));
@@ -49,8 +61,8 @@ export const leaveParty = () => {
 
 export const endParty = () => {
     return (dispatch: Function) => {
-        const { party } = store.getState().reducer;
-        _endParty(party.id)
+        const { id } = store.getState().partyReducer;
+        _endParty(id)
             .then(
                 () => {
                     dispatch(setPartyId(''));

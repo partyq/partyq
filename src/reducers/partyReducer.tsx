@@ -1,25 +1,19 @@
 import PartyState from '../states/partyState';
 import {
-    SET_PARTY_ID,
-    SET_PARTY_STATUS
+    SET_PARTY_ID
 } from '../actions/partyActions';
 
 export const initialState: PartyState = {
-    id: '',
-    status: null
+    id: ''
 };
 
 const reducer = (state: PartyState = initialState, action: any) => {
     switch (action.type) {
-        case SET_PARTY_STATUS:
-            const {status, message} = action;
-            return Object.assign({}, state, {
-                status, message
-            });
         case SET_PARTY_ID:
-            const {partyId} = action;
+            const { id } = action;
+            console.log(id);
             return Object.assign({}, state, {
-                id: partyId
+                id
             })
         default: 
             return state

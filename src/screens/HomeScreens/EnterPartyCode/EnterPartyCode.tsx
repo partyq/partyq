@@ -3,18 +3,22 @@ import React, { useState } from 'react';
 import {
   Text,
   View,
-  TextInput,
+  Alert,
 } from 'react-native';
 import { withTheme } from 'react-native-paper';
 import SmoothPinCodeInput from 'react-native-smooth-pincode-input';
+import { connect } from 'react-redux';
 
 import jsx from './EnterPartyCode.style';
 import BackgroundContainer from '../../../hoc/BackgroundContainer';
 import ThemedButton, { MODE } from '../../../components/Button/ThemedButton';
+import { getPartyById } from '../../../utility/backend';
+import { setPartyId } from '../../../actions/partyActions';
 
 export interface iEnterPartyCode {
   theme: any,
-  navigation: any
+  navigation: any,
+  setPartyId: (partyId: string) => void
 };
 
 const EnterPartyCode = (props: iEnterPartyCode) => {
@@ -32,7 +36,22 @@ const EnterPartyCode = (props: iEnterPartyCode) => {
     }
   };
 
-  const handleNavigation = () => props.navigation.navigate('EnterUserName');
+  const handleNavigation = () => {
+    getPartyById(code)
+      .then(
+        (partyId: string | null) => {
+          if (partyId === null) {
+            Alert.alert(
+              'Could not find party.',
+              'There is no party with the ID that you specified.'
+            )
+            return;
+          }
+          props.setPartyId(code);
+          props.navigation.navigate('EnterUserName');
+        }
+      )
+  }
 
   return (
     <BackgroundContainer navigation={props.navigation} >
@@ -68,4 +87,13 @@ const EnterPartyCode = (props: iEnterPartyCode) => {
   );
 };
 
-export default withTheme(EnterPartyCode);
+const mapDispatchToProps = (dispatch: Function) => ({
+  setPartyId: (partyId: string) => dispatch(setPartyId(partyId))
+});
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(
+  withTheme(EnterPartyCode)
+);

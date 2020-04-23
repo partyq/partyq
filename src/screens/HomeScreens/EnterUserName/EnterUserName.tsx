@@ -4,27 +4,45 @@ import {
   Text,
   View,
   TextInput,
+  Alert,
 } from 'react-native';
 import { withTheme } from 'react-native-paper';
+import { connect } from 'react-redux';
 
 import jsx from './EnterUserName.style';
 import BackgroundContainer from '../../../hoc/BackgroundContainer';
 import ThemedButton, { MODE } from '../../../components/Button/ThemedButton';
+import { joinParty } from '../../../actions/partyActions';
+import { setUserName } from '../../../actions/userActions';
 
 export interface iEnterUserName {
   theme: any,
-  navigation: any
+  navigation: any,
+  username: string,
+  joinParty: (callback: ((error: string | null) => void) | undefined) => void,
+  setUsername: (username: string) => void
 };
 
 const EnterUserName = (props: iEnterUserName) => {
   const styles = jsx(props.theme);
-  const [name, setName] = useState('');
   const [disableButton, setDisableButton] = useState(true);
 
-  const handleNavigation = () => props.navigation.navigate('PartyMain');
+  const handleNavigation = () => {
+    props.joinParty((error: string | null) => {
+      if (error !== null) {
+        Alert.alert(
+          'Could not join party.',
+          error
+        );
+        return;
+      }
+      props.navigation.navigate('PartyMain');
+    })
+    
+  }
 
   return (
-    <BackgroundContainer navigation={props.navigation} >
+    <BackgroundContainer navigation={props.navigation}>
       <View style={styles.header}>
         <Text style={styles.text}>Enter User Name</Text>
         <Text style={styles.description}>
@@ -35,8 +53,8 @@ const EnterUserName = (props: iEnterUserName) => {
         <TextInput
           style={styles.textInput}
           placeholder="Enter Display Name"
-          onChangeText={(_name) => setName(_name)}
-          value={name}
+          onChangeText={(_name) => props.setUsername(_name)}
+          value={props.username}
           onEndEditing={() => setDisableButton(false)}
         />
       </View>
@@ -51,4 +69,14 @@ const EnterUserName = (props: iEnterUserName) => {
   );
 };
 
-export default withTheme(EnterUserName);
+const mapDispatchToProps = (dispatch: Function) => ({
+  joinParty: (callback: ((error: string | null) => void) | undefined) => dispatch(joinParty(callback)),
+  setUsername: (username: string) => dispatch(setUserName(username))
+});
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(
+  withTheme(EnterUserName)
+);
