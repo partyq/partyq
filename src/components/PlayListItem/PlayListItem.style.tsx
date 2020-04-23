@@ -18,5 +18,7 @@ export default (theme: any) => StyleSheet.create({
   description: {
     ...theme.fonts.thin,
     color: 'grey',
+    fontSize: 12,
+    marginTop: 2
   },
 });

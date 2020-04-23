@@ -100,7 +100,7 @@ class SpotifyService implements iSpotifyService {
       let stringOfArtists = '';
 
       for (const artist of artists) {
-        stringOfArtists += `${artist.name},`;
+        stringOfArtists += `${artist.name}, `;
       };
       const pos = stringOfArtists.lastIndexOf(',');
 

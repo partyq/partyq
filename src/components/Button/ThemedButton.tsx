@@ -20,6 +20,7 @@ export interface iThemedButton {
   children?: any,
   disabled?: boolean,
   mode?: MODE | undefined,
+  size?: 'sm';
   onPress?: () => void,
 }
 
@@ -48,7 +49,12 @@ const ThemedButton = (props: iThemedButton) => {
       ]}
       labelStyle={[
         getLabelStyle(),
-        props.disabled ? styles.disabledLabelStyle : null,
+        props.disabled 
+          ? styles.disabledLabelStyle 
+          : null,
+        props.size
+          ? styles.small
+          : null
       ]}
     >
       {props.children}

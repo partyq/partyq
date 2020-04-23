@@ -140,6 +140,7 @@ const PlayListDescription = ({ styles, playList, onPress, buttonWidth }: iPlayLi
           mode={MODE.CONTAINED}
           onPress={onPress}
           width={buttonWidth}
+          size='sm'
         >
           SELECT PLAYLIST
         </ThemedButton>

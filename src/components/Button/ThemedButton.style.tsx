@@ -26,4 +26,7 @@ export default (theme: any, width: string | number) => StyleSheet.create({
   disabledLabelStyle: {
     color: theme.colors.disabled,
   },
+  small: {
+    fontSize: 14
+  }
 });

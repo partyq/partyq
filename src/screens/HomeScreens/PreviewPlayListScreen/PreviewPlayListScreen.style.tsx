@@ -10,10 +10,13 @@ export default (theme: any) => StyleSheet.create({
   },
   title: {
     ...theme.fonts.medium,
+    fontSize: 18
   },
   numSongs: {
-    ...theme.fonts.regular,
+    ...theme.fonts.thin,
     color: 'grey',
+    fontSize: 13,
+    marginTop: 5
   },
   description: {
     ...theme.fonts.thin,
