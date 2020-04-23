@@ -8,11 +8,11 @@ export default (theme: any) => StyleSheet.create({
     width: '100%'
   },
   buttonContainer: {
-    flex: 0.7,
+    flex: 0.8,
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'space-around',
-    marginBottom: '15%',
+    marginBottom: '10%',
     width: '100%'
   },
 });

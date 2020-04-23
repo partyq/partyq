@@ -34,27 +34,25 @@ const ThemedButton = (props: iThemedButton) => {
   };
 
   return (
-    <SafeAreaView style={{ width: props.width ? props.width : '100%' }}>
-      <Button
-        mode={props.mode}
-        disabled={props.disabled}
-        onPress={props.onPress}
-        style={[
-          props.mode === MODE.TEXT
-            ? styles.defaultContainer
-            : styles.styledContainer,
-          props.disabled
-            ? styles.disabledContainer
-            : null,
-        ]}
-        labelStyle={[
-          getLabelStyle(),
-          props.disabled ? styles.disabledLabelStyle : null,
-        ]}
-      >
-        {props.children}
-      </Button>
-    </SafeAreaView>
+    <Button
+      mode={props.mode}
+      disabled={props.disabled}
+      onPress={props.onPress}
+      style={[
+        props.mode === MODE.TEXT
+          ? styles.defaultContainer
+          : styles.styledContainer,
+        props.disabled
+          ? styles.disabledContainer
+          : null,
+      ]}
+      labelStyle={[
+        getLabelStyle(),
+        props.disabled ? styles.disabledLabelStyle : null,
+      ]}
+    >
+      {props.children}
+    </Button>
   );
 };
 
