@@ -13,14 +13,14 @@ export const setPartyId = (id: string) => ({
     id
 })
 
-export const createParty = (playlistId: string, provider: any, callback: (() => void) | undefined) => {
+export const createParty = (playlistId: string, provider: any, callback: ((initialId: string) => void) | undefined) => {
     return (dispatch: Function) => {
         _createParty(playlistId, provider)
             .then(
-                (partyId: string) => {
+                ({partyId, initialId}) => {
                     dispatch(setPartyId(partyId));
                     if (callback !== undefined) {
-                        callback();
+                        callback(initialId);
                     }
                 }
             )

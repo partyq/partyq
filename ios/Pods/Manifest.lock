@@ -497,6 +497,8 @@ PODS:
     - ReactCommon/jscallinvoker (= 0.61.5)
   - RNCMaskedView (0.1.6):
     - React
+  - RNDeviceInfo (5.5.7):
+    - React
   - RNEventEmitter (1.0.15):
     - React
   - RNFBApp (6.4.0):
@@ -557,6 +559,7 @@ DEPENDENCIES:
   - ReactCommon/jscallinvoker (from `../node_modules/react-native/ReactCommon`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - "RNCMaskedView (from `../node_modules/@react-native-community/masked-view`)"
+  - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - RNEventEmitter (from `../node_modules/react-native-events`)
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - "RNFBAuth (from `../node_modules/@react-native-firebase/auth`)"
@@ -647,6 +650,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   RNCMaskedView:
     :path: "../node_modules/@react-native-community/masked-view"
+  RNDeviceInfo:
+    :path: "../node_modules/react-native-device-info"
   RNEventEmitter:
     :path: "../node_modules/react-native-events"
   RNFBApp:
@@ -717,6 +722,7 @@ SPEC CHECKSUMS:
   React-RCTVibration: a49a1f42bf8f5acf1c3e297097517c6b3af377ad
   ReactCommon: 198c7c8d3591f975e5431bec1b0b3b581aa1c5dd
   RNCMaskedView: a88953beefbd347a29072d9eba90e42945fe291e
+  RNDeviceInfo: e2102056bde3ad5d137fd029d8d431510a00486a
   RNEventEmitter: db22b54ae7d9be0bd5725613f79a51e2bc364a93
   RNFBApp: 69781cf10ce41f6f6db789e6264dd80119ef2fb7
   RNFBAuth: 50fcc7826344dc96caad8bc4f5b40a64904297b8
@@ -728,6 +734,6 @@ SPEC CHECKSUMS:
   RNVectorIcons: 0bb4def82230be1333ddaeee9fcba45f0b288ed4
   Yoga: f2a7cd4280bfe2cca5a7aed98ba0eb3d1310f18b
 
-PODFILE CHECKSUM: a7bb3b128f95abfca04237866705750f1500ce4f
+PODFILE CHECKSUM: 1380076fbdad47defb3f11985fd4e0d8dd201be2
 
 COCOAPODS: 1.8.4

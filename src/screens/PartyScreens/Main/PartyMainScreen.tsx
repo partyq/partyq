@@ -1,6 +1,10 @@
 import React, {
-    useState
+    useState, useEffect
 } from 'react';
+import {
+    PlayerState,
+    RepeatMode
+} from 'react-native-spotify-remote';
 import {
     View,
     Image,
@@ -23,15 +27,19 @@ import {
     createStackNavigator 
 } from '@react-navigation/stack';
 import Carousel from 'react-native-snap-carousel';
+import firestore from '@react-native-firebase/firestore';
 
 import jsx from './PartyMainScreen.style';
+import { connect } from 'react-redux';
+import { PARTIES_COLLECTION } from '../../../utility/backend';
+import { Track } from '../../../utility/MusicServices/MusicService';
+import { getProviderInstance } from '../../../actions';
 
 interface PartyMainScreenProps {
-    theme: any
-}
-
-interface Track {
-    imageUri: string
+    theme: any,
+    partyId: string,
+    username: string,
+    getProviderInstance: () => any
 }
 
 enum PartyOverlayType {
@@ -44,18 +52,6 @@ enum PartyOverlayType {
 interface PartyMember {
     name: string
 }
-
-const TRACKS: Track[] = [
-    {
-        imageUri: 'https://upload.wikimedia.org/wikipedia/en/7/72/Stoneyalbum.jpg'
-    },
-    {
-        imageUri: 'https://images.complex.com/complex/images/c_fill,dpr_auto,q_90,w_920/fl_lossy,pg_1/fg5nor5r1qpeoujsxqtc/post-malone-circles'
-    },
-    {
-        imageUri: 'https://upload.wikimedia.org/wikipedia/en/7/72/Stoneyalbum.jpg'
-    }
-];
 
 const PARTY_MEMBERS: PartyMember[] = [
     {
@@ -158,8 +154,6 @@ const SETTING_MENUS: iSettingsMenuItem[] = [
     }
 ]
 
-const IS_PARTY_HOST = true;
-
 interface PartyOverlayProps {
     title: string,
     children: React.ReactElement[] | React.ReactElement
@@ -259,8 +253,54 @@ const PartyMainScreen = (props: PartyMainScreenProps) => {
     const [partyOverlayType, setPartyOverlayTypePage] = useState<PartyOverlayType | null>(null);
     const [topSliderHeight] = useState(new Animated.Value(TOP_SLIDER_HEIGHT));
     const [bottomSliderHeight] = useState(new Animated.Value(BOTTOM_SLIDER_HEIGHT));
+    const [playerState, setPlayerState] = useState<PlayerState>({
+        paused: false,
+        playbackOptions: {
+            isShuffling: false,
+            repeatMode: RepeatMode.Off
+        },
+        playbackSpeed: 0,
+        playbackPosition: 0,
+        playbackRestrictions: {
+            canRepeatContext: true,
+            canRepeatTrack: true,
+            canSkipNext: true,
+            canSkipPrevious: true,
+            canToggleShuffle: true
+        },
+        track: {
+            duration: 0,
+            uri: "",
+            album: {
+                name: "",
+                uri: ""
+            },
+            saved: false,
+            episode: false,
+            podcast: false,
+            name: "",
+            artist: {
+                name: "",
+                uri: ""
+            }
+        }
+    });
+
+    const [hostName, setHostName] = useState('');
+    const [currentSong, setCurrentSong] = useState<Track | null>(null);
+    const [previousSong, setPreviousSong] = useState<Track | null>(null);
+    const [nextSong, setNextSong] = useState<Track | null>(null);
 
     const styles = jsx(props.theme);
+
+    const IS_PARTY_HOST = props.username === '';
+
+    const secondsToTime = (seconds: number): string => {
+        const minutes = Math.floor(seconds / 60);
+        const remainder = seconds & 60;
+        const _seconds = `0${remainder}`.slice(-2);
+        return `${minutes}:${_seconds}`;
+    }
 
     const renderTrackCarouselItem = (item: {
         item: Track,
@@ -269,7 +309,7 @@ const PartyMainScreen = (props: PartyMainScreenProps) => {
         <View style={styles.carouselImageView}>
             <Image
                 style={styles.carouselImage}
-                source={{uri: item.item.imageUri}}
+                source={{uri: item.item.image}}
             />
         </View>
     )
@@ -311,6 +351,85 @@ const PartyMainScreen = (props: PartyMainScreenProps) => {
             setPartyOverlayTypePage(null);
         }, SLIDER_ANIMATION_DURATION);
     }
+
+    const onPlayerStateChanged = (state: PlayerState) => {
+        console.log(state);
+        // if (state.playbackOptions.playbackPosition === 0) {
+
+        // }
+    }
+
+    const onPlayPausePressed = () => {
+        const providerInstance = props.getProviderInstance();
+        if (playerState.paused) {
+            providerInstance.resume();
+        } else {
+            providerInstance.pause();
+        }
+    }
+
+    const onNextPressed = () => {
+        const providerInstance = props.getProviderInstance();
+        providerInstance.next();
+    }
+
+    const onPreviousPressed = () => {
+        const providerInstance = props.getProviderInstance();
+        providerInstance.previous();
+    }
+
+    useEffect(() => {
+        const query = firestore()
+            .collection(PARTIES_COLLECTION)
+            .where('id', '==', props.partyId)
+            .limit(1);
+        const providerInstance = props.getProviderInstance();
+        if (IS_PARTY_HOST) {
+            providerInstance.registerCallbacks(
+                {
+                    onPlayerStateChanged
+                }
+            )
+            query
+                .get()
+                .then(
+                    async (documentSnapshot) => {
+                        const partyData = documentSnapshot.docs[0].data();
+                        if (partyData.previousSongId !== null) {
+                            setPreviousSong(
+                                await providerInstance.getTrack(partyData.previousSongId));
+                        }
+                        setCurrentSong(
+                            await providerInstance.getTrack(partyData.currentSongId));
+                        if (partyData.nextSongId !== null) {
+                            setNextSong(
+                                await providerInstance.getTrack(partyData.nextSongId));
+                        }
+                    }
+                )
+        } else {
+            const subscriber = query
+                .onSnapshot(
+                    async (documentSnapshot) => {
+                        const partyData = documentSnapshot.docs[0].data();
+                        setHostName(partyData.hostName);
+                        // setTimeElapsed(partyData.currentSongTimeElapsed);
+                        providerInstance.setToken(partyData.token);
+                        if (partyData.previousSongId !== null) {
+                            setPreviousSong(
+                                await providerInstance.getTrack(partyData.previousSongId));
+                        }
+                        setCurrentSong(
+                            await providerInstance.getTrack(partyData.currentSongId));
+                        if (partyData.nextSongId !== null) {
+                            setNextSong(
+                                await providerInstance.getTrack(partyData.nextSongId));
+                        }
+                    }
+                )
+            return () => subscriber();
+        }
+    }, []);
 
     const PartyOverlay = (props: PartyOverlayProps) => {
         return (
@@ -388,6 +507,13 @@ const PartyMainScreen = (props: PartyMainScreenProps) => {
         )
     }
 
+    let carouselTracks: Track[] = [];
+    [previousSong, currentSong, nextSong].forEach(track => {
+        if (track !== null) {
+            carouselTracks.push(track);
+        }
+    });
+
     return (
         <>
             {partyOverlayType !== PartyOverlayType.PartyMembers && partyOverlayType !== PartyOverlayType.RequestASong && partyOverlayType !== PartyOverlayType.SongRequests && (
@@ -405,7 +531,9 @@ const PartyMainScreen = (props: PartyMainScreenProps) => {
                     ) : (
                         <>
                             <View style={styles.edgeRow}>
-                                <Text style={styles.partyId}>12345</Text>
+                                <Text style={styles.partyId}>
+                                    {props.partyId}
+                                </Text>
                                 {IS_PARTY_HOST ? (
                                     <IconButton 
                                         icon="settings"
@@ -422,7 +550,11 @@ const PartyMainScreen = (props: PartyMainScreenProps) => {
                                 )}
                             </View>
                             <View style={styles.centerRow}>
-                                <Text style={styles.pageTitle}>Your Party</Text>
+                                <Text style={styles.pageTitle}>
+                                    {IS_PARTY_HOST
+                                        ? 'Your Party'
+                                        : `${hostName}'s Party`}
+                                </Text>
                             </View>
                         </>
                     )}
@@ -430,34 +562,41 @@ const PartyMainScreen = (props: PartyMainScreenProps) => {
             )}
             {partyOverlayType == null && (
                 <View style={styles.main}>
-                    <Carousel
-                        data={TRACKS}
-                        renderItem={renderTrackCarouselItem}
-                        sliderWidth={Dimensions.get('window').width}
-                        itemWidth={300}
-                    />
-                    <View style={styles.songDetailsView}>
-                        <Text
-                            style={styles.songTitle}
-                        >
-                            White Iverson
-                        </Text>
-                        <Text
-                            style={styles.songArtist}
-                        >
-                            By: Post Malone
-                        </Text>
-                        <View style={styles.songProgressView}>
-                            <View style={styles.edgeRow}>
-                                <Text>2:20</Text>
-                                <Text>5:00</Text>
-                            </View>
-                            <ProgressBar
-                                style={styles.progressBar}
-                                progress={0.3}
+                    {currentSong !== null && (
+                        <>
+                            <Carousel
+                                data={carouselTracks}
+                                renderItem={renderTrackCarouselItem}
+                                sliderWidth={Dimensions.get('window').width}
+                                itemWidth={300}
+                                scrollEnabled={false}
                             />
-                        </View>
-                    </View>
+                            <View style={styles.songDetailsView}>
+                                <Text
+                                    style={styles.songTitle}
+                                    numberOfLines={2}
+                                    ellipsizeMode='tail'
+                                >
+                                    {currentSong.title}
+                                </Text>
+                                <Text
+                                    style={styles.songArtist}
+                                >
+                                    By: {currentSong.artists}
+                                </Text>
+                                <View style={styles.songProgressView}>
+                                    <View style={styles.edgeRow}>
+                                        <Text>0:00</Text>
+                                        <Text>{secondsToTime(currentSong.durationMs / 1000)}</Text>
+                                    </View>
+                                    <ProgressBar
+                                        style={styles.progressBar}
+                                        progress={0}
+                                    />
+                                </View>
+                            </View>
+                        </>
+                    )}  
                 </View>
             )}
             {partyOverlayType !== PartyOverlayType.Settings && (
@@ -484,17 +623,17 @@ const PartyMainScreen = (props: PartyMainScreenProps) => {
                                         <>
                                             <IconButton 
                                                 icon="skip-previous"
-                                                onPress={() => null}
+                                                onPress={onPreviousPressed}
                                             />
                                             <IconButton 
-                                                icon="play"
+                                                icon={playerState.paused ? 'play' : 'pause'}
                                                 color='white'
                                                 style={styles.playButton}
-                                                onPress={() => null}
+                                                onPress={onPlayPausePressed}
                                             />
                                             <IconButton 
                                                 icon="skip-next"
-                                                onPress={() => null}
+                                                onPress={onNextPressed}
                                             />
                                         </>
                                     ) : (
@@ -527,4 +666,18 @@ const PartyMainScreen = (props: PartyMainScreenProps) => {
     );
 }
 
-export default withTheme(PartyMainScreen);
+const mapStateToProps = (state: any) => ({
+    partyId: state.partyReducer.id,
+    username: state.userReducer.username
+});
+
+const mapDispatchToProps = (dispatch: Function) => ({
+    getProviderInstance: () => dispatch(getProviderInstance()),
+});
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(
+    withTheme(PartyMainScreen)
+);
