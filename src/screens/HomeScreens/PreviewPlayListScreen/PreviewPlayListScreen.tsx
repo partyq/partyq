@@ -18,10 +18,10 @@ import jsx from './PreviewPlayListScreen.style';
 import PlayListItem from '../../../components/PlayListItem/PlayListItem';
 import BackgroundContainer from '../../../hoc/BackgroundContainer';
 import {
-  iPlayList,
-  iTrack,
-  iPlayListDetails,
-} from '../../../utility/MusicServices/SpotifyService';
+  PlayList,
+  Track,
+  PlayListDetails,
+} from '../../../utility/MusicServices/MusicService';
 import {
   getProviderInstance,
   setProviderId,
@@ -34,22 +34,22 @@ export interface iSelectDefaultPlayListScreen {
   navigation: any,
   getProviderInstance: () => any,
   setProviderId: (providerId: string) => void,
-  playListDetails: iPlayList,
+  playListDetails: PlayList,
   route: any,
   createParty: (
     playlistId: string, 
     provider: any, 
-    callback: (() => void) | undefined) => void
+    callback: ((initialId: string) => void) | undefined) => void
 };
 
 export interface iTracksSectionProps {
   style: any,
-  tracks: iTrack[],
+  tracks: Track[],
 };
 
 export interface iPlayListDescription {
   styles: any,
-  playList: iPlayListDetails,
+  playList: PlayListDetails,
   onPress: () => void,
   buttonWidth: number,
 };
@@ -59,7 +59,7 @@ const PreviewPlayListScreen = (props: iSelectDefaultPlayListScreen) => {
   const buttonWidth = Dimensions.get('window').width * 0.5;
 
   const playListId = props.route.params.playListId;
-  const [playList, setPlayList] = useState<iPlayListDetails | undefined>(undefined);
+  const [playList, setPlayList] = useState<PlayListDetails | undefined>(undefined);
   const [spinner, setSpinner] = useState<boolean>(true);
 
   useEffect(() => {
@@ -85,7 +85,8 @@ const PreviewPlayListScreen = (props: iSelectDefaultPlayListScreen) => {
 
   const finish = (): void => {
     const instance = props.getProviderInstance();
-    props.createParty(playListId, instance, () => {
+    props.createParty(playListId, instance, (initialId: string) => {
+      instance.playTrack(initialId);
       props.navigation.navigate('PartyMain');
     })
   };
@@ -170,7 +171,7 @@ const Tracks = ({ style, tracks }: iTracksSectionProps) => (
           key={item.id}
         />
       )}
-      keyExtractor={(item: iTrack) => item.id}
+      keyExtractor={(item: Track) => item.id}
     />
   </View>
 );
@@ -182,7 +183,7 @@ const mapDispatchToProps = (dispatch: any) => {
     createParty: (
       playlistId: string, 
       provider: any, 
-      callback: (() => void) | undefined) => dispatch(createParty(playlistId, provider, callback))
+      callback: ((initialId: string) => void) | undefined) => dispatch(createParty(playlistId, provider, callback))
   }
 };
 

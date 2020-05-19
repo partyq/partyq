@@ -2,12 +2,15 @@ import firestore from '@react-native-firebase/firestore';
 
 import store from '../store/store';
 
-const PARTIES_COLLECTION = 'parties';
-const SONG_REQUESTS_COLLECTION = 'songRequests';
-const USERS_COLLECTION = 'users';
+export const PARTIES_COLLECTION = 'parties';
+export const SONG_REQUESTS_COLLECTION = 'songRequests';
+export const USERS_COLLECTION = 'users';
 
 export const createParty = (playlistId: string, provider: any) => {
-    return new Promise<string>(async (resolve, reject) => {
+    return new Promise<{
+        partyId: string,
+        initialId: string
+    }>(async (resolve, reject) => {
         let querySnapshot = await firestore()
             .collection(PARTIES_COLLECTION)
             .orderBy('created', 'desc')
@@ -36,7 +39,7 @@ export const createParty = (playlistId: string, provider: any) => {
         if (playlist.tracks.length === 0) {
             return reject('The playlist you selected has no songs.');
         }
-        const currentSongId = playlist.tracks[0].id;
+        const initialId = playlist.tracks[0].id;
         let nextSongId = null;
         if (playlist.tracks.length > 1) {
             nextSongId = playlist.tracks[1].id;
@@ -49,12 +52,12 @@ export const createParty = (playlistId: string, provider: any) => {
                 hostName: userProfile.displayName,
                 currentSongTimeElapsed: 0,
                 previousSongId: null,
-                currentSongId: currentSongId,
+                currentSongId: initialId,
                 nextSongId: nextSongId,
                 token: provider.getToken(),
                 created: new Date()
             })
-        return resolve(partyId);
+        return resolve({partyId, initialId});
     });
 }
 

@@ -13,6 +13,7 @@ import {
   List,
   Divider,
 } from 'react-native-paper';
+import DeviceInfo from 'react-native-device-info';
 import { connect } from 'react-redux';
 import { AppInstalledChecker } from 'react-native-check-app-install';
 import Spinner from 'react-native-loading-spinner-overlay';
@@ -56,7 +57,14 @@ const SelectProvider = (props: iSelectProvider) => {
 
   const initService = async () => {
     try {
-      AppInstalledChecker
+      if (await DeviceInfo.isEmulator()) {
+        const serviceInstsance = props.getProviderInstance();
+        await serviceInstsance.authorize();
+        reset();
+        setSpinner(false);
+        props.navigation.navigate('SelectDefaultPlayList');
+      } else {
+        AppInstalledChecker
         .isAppInstalled('spotify')
         .then(async (isInstalled: boolean) => {
           if (isInstalled === true) {
@@ -81,6 +89,7 @@ const SelectProvider = (props: iSelectProvider) => {
             );
           }
         });
+      }
     } catch (err) {
       console.debug("Couldn't authorize with or connect to Spotify", err);
     }

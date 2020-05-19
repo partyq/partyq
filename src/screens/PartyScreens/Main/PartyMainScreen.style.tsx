@@ -43,8 +43,7 @@ export default (theme: any) => StyleSheet.create({
     },
     main: {
         marginTop: 130,
-        paddingTop: 50,
-        paddingBottom: 50
+        paddingTop: 10,
     },
     musicControlsView: {
         display: 'flex',
@@ -54,7 +53,7 @@ export default (theme: any) => StyleSheet.create({
         width: 250
     },
     playButton: {
-        backgroundColor: theme.colors.primaryAccent,
+        backgroundColor: theme.colors.primary,
         width: 50,
         height: 50,
         borderRadius: 100
@@ -70,7 +69,6 @@ export default (theme: any) => StyleSheet.create({
         borderRadius: 140
     },
     songDetailsView: {
-        marginTop: 30,
         padding: 20
     },
     songTitle: {
@@ -84,7 +82,7 @@ export default (theme: any) => StyleSheet.create({
         opacity: 0.5
     },
     songProgressView: {
-        marginTop: 40
+        marginTop: 30
     },
     progressBar: {
         height: 10,

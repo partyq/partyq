@@ -4,54 +4,36 @@ import {
   ApiScope,
   ApiConfig
 } from 'react-native-spotify-remote';
-
 import {
+  // @ts-ignore
   SPOTIFY_CLIENT_ID,
+  // @ts-ignore
   SPOTIFY_REDIRECT_URL,
+  // @ts-ignore
+  SPOTIFY_DEBUG_REFRESH_TOKEN,
+  // @ts-ignore
   IP,
+  // @ts-ignore
   PORT
 } from 'react-native-dotenv';
-
 import axios from 'axios';
+import qs from 'qs';
+import DeviceInfo from 'react-native-device-info';
 
+import {
+  MusicService,
+  staticImplements,
+  PlayList,
+  PlayListDetails,
+  Track,
+  UserProfile,
+  SearchType,
+  SearchResult,
+  SpotifyCallbacks
+} from './MusicService';
 
-export interface iPlayList {
-  id: string,
-  uri: string,
-  image: string,
-  title: string,
-  numSongs: string,
-};
-
-export interface iTrack {
-  id: string,
-  image: string,
-  artists: string,
-  title: string,
-}
-
-export interface iPlayListDetails {
-  id: string,
-  title: string,
-  description: string,
-  tracks: iTrack[],
-  image: string,
-}
-
-export interface iUserProfile {
-  displayName: string
-}
-
-export enum SearchType { PLAYLIST = 'playlist', TRACK = 'track' };
-
-export interface iSpotifyService {
-  authorize: () => void,
-  getPartyPlayLists: () => Promise<iPlayList[]>,
-  getLibraryPlayLists: () => Promise<iPlayList[]>,
-  getSearchResults: (query: string, type: SearchType) => Promise<iPlayList[]>,
-};
-
-class SpotifyService implements iSpotifyService {
+@staticImplements<MusicService>()
+class SpotifyService {
 
   private static instance: SpotifyService;
   private _token: string | undefined;
@@ -65,8 +47,7 @@ class SpotifyService implements iSpotifyService {
       tokenSwapURL: `http://${IP}:${PORT}/swap`,
       scope: ApiScope.AppRemoteControlScope | ApiScope.PlaylistReadPrivateScope
     };
-  }
-  ;
+  };
 
   static getInstance = () => {
     if (!SpotifyService.instance) {
@@ -77,12 +58,28 @@ class SpotifyService implements iSpotifyService {
   }
 
   authorize = async(): Promise<void> => {
-    this._token = await SpotifyAuth.initialize(this._spotifyConfig);
+    if (await DeviceInfo.isEmulator()) {
+      const debugAuthResult = await axios.post(
+        `http://${IP}:${PORT}/refresh`, 
+        qs.stringify({
+          refresh_token: SPOTIFY_DEBUG_REFRESH_TOKEN
+        }), {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
+        }
+      });
+      this._token = debugAuthResult.data.access_token;
+    } else {
+      this._token = await SpotifyAuth.initialize(this._spotifyConfig);
+      SpotifyRemote.connect(this._token);
+    }
   };
 
   getToken = () => this._token;
 
-  getPlayList = async( playListId: string ): Promise<iPlayListDetails> => {
+  setToken = (token: string) => this._token = token;
+
+  getPlayList = async( playListId: string ): Promise<PlayListDetails> => {
     const URL = `https://api.spotify.com/v1/playlists/${playListId}`;
     const config = { 
       params: { fields: "description,name,images,tracks.items.track(name,album.images,artists,id)" }, 
@@ -93,10 +90,38 @@ class SpotifyService implements iSpotifyService {
     const {id, name, description, images, tracks} = result.data;
     console.log(playListId);
 
-    const parsedTracks: iTrack[] = [];
+    const parsedTracks = this.parseTracks(tracks.items);
 
-    tracks.items.forEach(({ track }: any) => {
-      const {id, name, artists, album} = track;
+    const playList: PlayListDetails = {
+      id,
+      title: name,
+      description,
+      image: images ? images[0].url : undefined,
+      tracks: parsedTracks,
+    };
+
+    return playList;
+  };
+
+  playTrack = (id: string) => SpotifyRemote.playUri(`spotify:track:${id}`)
+
+  registerCallbacks = (callbacks: SpotifyCallbacks): void => {
+    SpotifyRemote.on('playerStateChanged', callbacks.onPlayerStateChanged)
+  }
+
+  resume = () => SpotifyRemote.resume()
+
+  pause = () => SpotifyRemote.pause()
+
+  next = () => SpotifyRemote.skipToNext()
+
+  previous = () => SpotifyRemote.skipToPrevious()
+
+  private parseTracks = (tracks: any[]): Track[] => {
+    const parsedTracks: Track[] = [];
+
+    tracks.forEach(({ track }: any) => {
+      const {id, name, artists, album, duration_ms} = track;
       let stringOfArtists = '';
 
       for (const artist of artists) {
@@ -109,21 +134,14 @@ class SpotifyService implements iSpotifyService {
         title: name,
         image: album.images ? album.images[0].url : undefined,
         artists: stringOfArtists.slice(0, pos),
+        durationMs: duration_ms
       });
     });
 
-    const playList: iPlayListDetails = {
-      id,
-      title: name,
-      description,
-      image: images ? images[0].url : undefined,
-      tracks: parsedTracks,
-    };
+    return parsedTracks;
+  }
 
-    return playList;
-  };
-
-  getUserProfile = async(): Promise<iUserProfile> => {
+  getUserProfile = async(): Promise<UserProfile> => {
     const URL = 'https://api.spotify.com/v1/me';
     const config = { headers: { Authorization: `Bearer ${this._token}` } };
     const result = (await axios.get(URL, config)).data;
@@ -135,8 +153,8 @@ class SpotifyService implements iSpotifyService {
   /**
    * Get featured spotify playlists. Defaults to USA UTC time.
    */
-  getPartyPlayLists = async(): Promise<iPlayList[]> => {
-    const playLists: iPlayList[] = [];
+  getPartyPlayLists = async(): Promise<PlayList[]> => {
+    const playLists: PlayList[] = [];
     const URL = 'https://api.spotify.com/v1/browse/categories/party/playlists';
     const config = { headers: { Authorization: `Bearer ${this._token}` } };
     const result = await axios.get(URL, config);
@@ -157,8 +175,8 @@ class SpotifyService implements iSpotifyService {
   /**
    * Get users library playlists.
    */
-  getLibraryPlayLists = async(): Promise<iPlayList[]> => {
-    const playLists: iPlayList[] = [];
+  getLibraryPlayLists = async(): Promise<PlayList[]> => {
+    const playLists: PlayList[] = [];
     const URL = 'https://api.spotify.com/v1/me/playlists';
     const config = { headers: { Authorization: `Bearer ${this._token}` } };
     const result = await axios.get(URL, config);
@@ -179,8 +197,8 @@ class SpotifyService implements iSpotifyService {
   /**
    * Search playlists.
    */
-  getSearchResults = async(query: string, type: SearchType): Promise<iPlayList[]> => {
-    const playLists: iPlayList[] = [];
+  getSearchResults = async(query: string, type: SearchType): Promise<SearchResult[]> => {
+    const searchResults: SearchResult[] = [];
     const URL = 'https://api.spotify.com/v1/search';
     const config = { 
       params: { q: query, type }, 
@@ -189,7 +207,7 @@ class SpotifyService implements iSpotifyService {
     const result = await axios.get(URL, config);
 
     result.data.playlists.items.forEach((item: any) => {
-      playLists.push({
+      searchResults.push({
         id: item.id,
         uri: item.uri,
         image: item.images.length ? item.images[0].url : null,
@@ -198,7 +216,17 @@ class SpotifyService implements iSpotifyService {
       });
     });
 
-    return playLists;
+    return searchResults;
+  }
+
+  getTrack = async (id: string): Promise<Track> => {
+    const URL = `https://api.spotify.com/v1/tracks/${id}`;
+    const config = { headers: { Authorization: `Bearer ${this._token}` } };
+    const result = await axios.get(URL, config);
+
+    const trackData = result.data;
+
+    return this.parseTracks([{track: trackData}])[0];
   }
 
 };

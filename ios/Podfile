@@ -44,6 +44,8 @@ target 'partyq' do
   # https://firebase.google.com/docs/ios/setup#available-pods
 
 
+  pod 'RNDeviceInfo', :path => '../node_modules/react-native-device-info'
+
   target 'partyqTests' do
     inherit! :search_paths
     # Pods for testing
