@@ -5,6 +5,25 @@ import store from '../store/store';
 export const PARTIES_COLLECTION = 'parties';
 export const SONG_REQUESTS_COLLECTION = 'songRequests';
 export const USERS_COLLECTION = 'users';
+export const VOTES_COLLECTION = 'votes';
+
+export interface PartyMember {
+    name: string
+}
+
+export interface SongRequest {
+    partyId: string,
+    requester: string,
+    requestedAt: Date,
+    songId: string
+}
+
+export interface SongVote {
+    partyId: string,
+    songId: string,
+    username: string,
+    value: number
+}
 
 export const createParty = (playlistId: string, provider: any) => {
     return new Promise<{
@@ -152,4 +171,93 @@ export const endParty = (partyId: string) => {
         await batch.commit();
         return resolve();
     })
+}
+
+export const partyMembersListener: Function = async (
+    partyId: string, 
+    handler: (members: PartyMember[]) => void
+) => {
+    const subscriber = await firestore()
+        .collection(USERS_COLLECTION)
+        .where('partyId', '==', partyId)
+        .onSnapshot(
+            async (documentSnapshot) => {
+                const members: PartyMember[] = documentSnapshot.docs.map(doc => {
+                    const data = doc.data();
+                    return {
+                        name: data.displayName as string
+                    }
+                });
+                handler(members);
+            }
+        )
+    return () => subscriber();
+}
+
+export const songRequestsListener: Function = async (
+    partyId: string,
+    handler: (songRequests: SongRequest[]) => void
+) => {
+    const subscriber = await firestore()
+        .collection(SONG_REQUESTS_COLLECTION)
+        .where('partyId', '==', partyId)
+        .onSnapshot(
+            async (documentSnapshot) => {
+                const songRequests: SongRequest[] = documentSnapshot.docs.map(
+                    doc => doc.data() as SongRequest);
+                handler(songRequests);
+            }
+        )
+    return () => subscriber();
+}
+
+export const votesListener: Function = async (
+    partyId: string,
+    handler: (votes: SongVote[]) => void
+) => {
+    const subscriber = await firestore()
+        .collection(VOTES_COLLECTION)
+        .where('partyId', '==', partyId)
+        .onSnapshot(
+            async (documentSnapshot) => {
+                const votes: SongVote[] = documentSnapshot.docs.map(
+                    doc => doc.data() as SongVote);
+                handler(votes);
+            }
+        )
+    return () => subscriber();
+}
+
+export const voteOnSong = async (
+    partyId: string, 
+    songId: string, 
+    username: string,
+    value: 1 | -1
+) => {
+    const querySnapshot = await firestore()
+        .collection(VOTES_COLLECTION)
+        .where('partyId', '==', partyId)
+        .where('songId', '==', songId)
+        .where('username', '==', username)
+        .limit(1)
+        .get();
+    if (querySnapshot.empty) {
+        await firestore()
+            .collection(VOTES_COLLECTION)
+            .add({
+                partyId: partyId,
+                songId: songId,
+                username: username,
+                value: value
+            });
+    } else {
+        const doc = querySnapshot.docs[0];
+        const data = doc.data();
+        await firestore()
+            .collection(VOTES_COLLECTION)
+            .doc(doc.id)
+            .update({
+                value: value
+            });
+    }
 }

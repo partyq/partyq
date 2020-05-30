@@ -31,9 +31,18 @@ import firestore from '@react-native-firebase/firestore';
 
 import jsx from './PartyMainScreen.style';
 import { connect } from 'react-redux';
-import { PARTIES_COLLECTION } from '../../../utility/backend';
+import { 
+    PARTIES_COLLECTION,
+    partyMembersListener,
+    PartyMember,
+    songRequestsListener,
+    SongRequest,
+    SongVote,
+    votesListener
+ } from '../../../utility/backend';
 import { Track } from '../../../utility/MusicServices/MusicService';
 import { getProviderInstance } from '../../../actions';
+import SongRequestItem from '../../../components/SongRequestItem/SongRequestItem';
 
 interface PartyMainScreenProps {
     theme: any,
@@ -48,103 +57,6 @@ enum PartyOverlayType {
     SongRequests,
     RequestASong
 }
-
-interface PartyMember {
-    name: string
-}
-
-const PARTY_MEMBERS: PartyMember[] = [
-    {
-        name: 'John'
-    },
-    {
-        name: 'Joey'
-    },
-    {
-        name: 'Chandler'
-    },
-    {
-        name: 'Ross'
-    },
-    {
-        name: 'Monica'
-    },
-    {
-        name: 'Rachel'
-    },
-    {
-        name: 'Pheobe'
-    },
-    {
-        name: 'Leonard'
-    },
-    {
-        name: 'Charlie'
-    },
-    {
-        name: 'Sheldon'
-    },
-    {
-        name: 'John'
-    },
-    {
-        name: 'Joey'
-    },
-    {
-        name: 'Chandler'
-    },
-    {
-        name: 'Ross'
-    },
-    {
-        name: 'Monica'
-    },
-    {
-        name: 'Rachel'
-    },
-    {
-        name: 'Pheobe'
-    },
-    {
-        name: 'Leonard'
-    },
-    {
-        name: 'Charlie'
-    },
-    {
-        name: 'Sheldon'
-    },
-    {
-        name: 'John'
-    },
-    {
-        name: 'Joey'
-    },
-    {
-        name: 'Chandler'
-    },
-    {
-        name: 'Ross'
-    },
-    {
-        name: 'Monica'
-    },
-    {
-        name: 'Rachel'
-    },
-    {
-        name: 'Pheobe'
-    },
-    {
-        name: 'Leonard'
-    },
-    {
-        name: 'Charlie'
-    },
-    {
-        name: 'Sheldon'
-    }
-]
 
 const SETTING_MENUS: iSettingsMenuItem[] = [
     {
@@ -290,6 +202,9 @@ const PartyMainScreen = (props: PartyMainScreenProps) => {
     const [currentSong, setCurrentSong] = useState<Track | null>(null);
     const [previousSong, setPreviousSong] = useState<Track | null>(null);
     const [nextSong, setNextSong] = useState<Track | null>(null);
+    const [partyMembers, setPartyMembers] = useState<PartyMember[]>([]);
+    const [songRequests, setSongRequests] = useState<SongRequest[]>([]);
+    const [songVotes, setSongVotes] = useState<SongVote[]>([]);
 
     const styles = jsx(props.theme);
 
@@ -431,6 +346,45 @@ const PartyMainScreen = (props: PartyMainScreenProps) => {
         }
     }, []);
 
+    useEffect(() => {
+        return partyMembersListener(props.partyId, 
+            (members: PartyMember[]) => {
+                setPartyMembers(members);
+            })
+    }, []);
+
+    useEffect(() => {
+        return songRequestsListener(props.partyId,
+            (requests: SongRequest[]) => {
+                setSongRequests(requests);
+            })
+    }, []);
+
+    useEffect(() => {
+        return votesListener(props.partyId,
+            (votes: SongVote[]) => {
+                setSongVotes(votes);
+            })
+    }, []);
+
+    let upvotes: {[key: string]: number} = {};
+    let downvotes: {[key: string]: number} = {};
+    songVotes.forEach(vote => {
+        if (vote.value === 1) {
+            if (!(vote.songId in upvotes)) {
+                upvotes[vote.songId] = 1;
+            } else {
+                upvotes[vote.songId] += 1;
+            }
+        } else {
+            if (!(vote.songId in downvotes)) {
+                downvotes[vote.songId] = 1;
+            } else {
+                downvotes[vote.songId] += 1;
+            }
+        }
+    });
+
     const PartyOverlay = (props: PartyOverlayProps) => {
         return (
             <>
@@ -471,11 +425,11 @@ const PartyMainScreen = (props: PartyMainScreenProps) => {
                 <Text 
                     style={styles.partyMembersCount}
                 >
-                    Total Members: {PARTY_MEMBERS.length}
+                    Total Members: {partyMembers.length}
                 </Text>
                 <ScrollView>
                     <List.Section>
-                        {PARTY_MEMBERS.map((member: PartyMember, i: number) => (
+                        {partyMembers.map((member: PartyMember, i: number) => (
                             <List.Item
                                 key={i}
                                 title={member.name}
@@ -502,7 +456,24 @@ const PartyMainScreen = (props: PartyMainScreenProps) => {
             <PartyOverlay
                 title='Song Requests'
             >
-                <></>
+                <Text 
+                    style={styles.partyMembersCount}
+                >
+                    Songs Requested: {songRequests.length}
+                </Text>
+                <ScrollView>
+                    <List.Section>
+                        {songRequests.map((request: SongRequest, i: number) => (
+                            <SongRequestItem
+                                key={i}
+                                songId={request.songId}
+                                upvotes={upvotes[request.songId] | 0}
+                                downvotes={downvotes[request.songId] | 0}
+                                requester={request.requester}
+                            />
+                        ))}
+                    </List.Section>
+                </ScrollView>
             </PartyOverlay>
         )
     }
