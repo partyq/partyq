@@ -34,7 +34,9 @@ export interface iSelectDefaultPlayListScreen {
   navigation: any,
   getProviderInstance: () => any,
   setProviderId: (providerId: string) => void,
-  playListDetails: PlayList,
+  // playListDetails: PlayList,
+  ignoreSafeArea?: true,
+  onFinish?: (playlistId: string) => void,
   route: any,
   createParty: (playlistId: string, provider: any) => any
 };
@@ -81,16 +83,21 @@ const PreviewPlayListScreen = (props: iSelectDefaultPlayListScreen) => {
   };
 
   const finish = async(): Promise<void> => {
-    const instance = props.getProviderInstance();
-    const initialId = await props.createParty(playListId, instance);
-    console.log({initialId, playListId})
-    instance.playTrack(initialId);
-    props.navigation.navigate('PartyMain');
+    if (props.onFinish) {
+      props.onFinish(playListId);
+    } else {
+      const instance = props.getProviderInstance();
+      const initialId = await props.createParty(playListId, instance);
+      console.log({initialId, playListId})
+      instance.playTrack(initialId);
+      props.navigation.navigate('PartyMain');
+    }
   };
 
   return (
     <BackgroundContainer
       navigation={props.navigation}
+      ignoreSafeArea={props.ignoreSafeArea!}
       title={
         <Text style={styles.headingText}>Preview PlayList</Text>
       }
