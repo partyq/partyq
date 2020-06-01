@@ -11,6 +11,7 @@ export interface iPlayListItem {
   image: string,
   title: string,
   description: string,
+  right?: () => React.ReactElement
 };
 
 const PlayListItem = (props: iPlayListItem) => {
@@ -38,6 +39,7 @@ const PlayListItem = (props: iPlayListItem) => {
               size={styles.image.height}
             />
         }
+        right={props.right!}
       />
       <Divider />
     </>
