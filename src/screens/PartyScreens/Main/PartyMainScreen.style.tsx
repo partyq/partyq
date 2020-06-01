@@ -4,7 +4,6 @@ export default (theme: any) => StyleSheet.create({
     slider: {
         elevation: 3,
         padding: 20,
-        borderRadius: 30,
         width: '100%',
         position: 'absolute',
         display: 'flex',
@@ -16,10 +15,14 @@ export default (theme: any) => StyleSheet.create({
     },
     topSlider: {
         top: 0,
-        paddingTop: 40
+        paddingTop: 40,
+        borderBottomLeftRadius: 30,
+        borderBottomRightRadius: 30,
     },
     bottomSlider: {
-        bottom: 0
+        bottom: 0,
+        borderTopLeftRadius: 30,
+        borderTopRightRadius: 30,
     },
     edgeRow: {
         display: 'flex',
