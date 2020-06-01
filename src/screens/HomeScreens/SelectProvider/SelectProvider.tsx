@@ -182,7 +182,6 @@ const RenderProviders = ({ styles, providers, onPress }: iRenderProviders) => (
         <>
           <TouchableOpacity
             key={i}
-            activeOpacity={0.5}
             onPress={() => onPress(name)}
           >
             <List.Item
