@@ -43,6 +43,9 @@ import {
 import { Track } from '../../../utility/MusicServices/MusicService';
 import { getProviderInstance } from '../../../actions';
 import SongRequestItem from '../../../components/SongRequestItem/SongRequestItem';
+import SelectDefaultPlaylistScreen from '../../HomeScreens/SelectDefaultPlaylistScreen/SelectDefaultPlaylistScreen';
+import ThemedButton, { MODE } from '../../../components/Button/ThemedButton';
+import PreviewPlayListScreen from '../../HomeScreens/PreviewPlayListScreen/PreviewPlayListScreen';
 
 interface PartyMainScreenProps {
     theme: any,
@@ -67,8 +70,9 @@ const SETTING_MENUS: iSettingsMenuItem[] = [
 ]
 
 interface PartyOverlayProps {
-    title: string,
-    children: React.ReactElement[] | React.ReactElement
+    title?: string,
+    children: React.ReactElement[] | React.ReactElement,
+    noHeader?: true
 }
 
 const TOP_SLIDER_HEIGHT = 130;
@@ -92,62 +96,9 @@ interface SettingsScreenProps {
     theme: any
 }
 
-const SettingsMainScreen = (props: SettingsScreenProps) => {
-    return (
-        <ScrollView>
-            <List.Section>
-                {SETTING_MENUS.map((menu: iSettingsMenuItem, i: number) => (
-                    <SettingsMenuItem
-                        key={i}
-                        title={menu.title}
-                        icon={menu.icon}
-                        onPress={() => props.navigation.navigate(menu.screenName)}
-                    />
-                ))}
-            </List.Section>
-            <List.Section>
-                <Button
-                    mode='contained'
-                    onPress={() => null}
-                >
-                    <Text>End Party</Text>
-                </Button>
-            </List.Section>
-        </ScrollView>
-    );
-}
-
-const DefaultPlaylistScreen = () => {
-    return <></>
-}
-
-const SettingsStack = createStackNavigator();
-
-const SettingsNavigationContainer = () => {
-    return (
-        <NavigationContainer
-            independent={true}
-        >
-            <SettingsStack.Navigator
-                initialRouteName='Main'
-                headerMode='none'
-                screenOptions={{
-                    cardStyle: {
-                        backgroundColor: 'white'
-                    }
-                }}
-            >
-                <SettingsStack.Screen 
-                    name='Main' 
-                    component={SettingsMainScreen} 
-                />
-                <SettingsStack.Screen 
-                    name='DefaultPlaylist' 
-                    component={DefaultPlaylistScreen} 
-                />
-            </SettingsStack.Navigator>
-        </NavigationContainer>
-    )
+interface SettingsPlaylistScreenProps {
+    navigation: any,
+    route: any
 }
 
 const SettingsMenuItem = (props: SettingsMenuItemProps) => {
@@ -385,7 +336,36 @@ const PartyMainScreen = (props: PartyMainScreenProps) => {
         }
     });
 
-    const PartyOverlay = (props: PartyOverlayProps) => {
+    const SettingsSelectDefaultPlaylistScreen = (props: SettingsPlaylistScreenProps) => {
+        return (
+            <SelectDefaultPlaylistScreen
+                navigation={props.navigation}
+                onBeforeBack={() => null}
+                ignoreSafeArea
+            />
+        )
+    }
+    
+    const SettingsPreviewPlaylistScreen = (_props: SettingsPlaylistScreenProps) => {
+        return (
+            <PreviewPlayListScreen
+                navigation={_props.navigation}
+                route={_props.route}
+                ignoreSafeArea
+                onFinish={async (playlistId: string) => {
+                    // TODO: Actually set playlist to playing
+                    const instance = props.getProviderInstance();
+                    const playlist = await instance.getPlayList(playlistId);
+                    if (playlist.tracks.length > 0) {
+                        // instance.playTrack(playli)
+                        closeOverlay();
+                    }
+                }}
+            />
+        )
+    }
+
+    const SettingsMainScreen = (props: SettingsScreenProps) => {
         return (
             <>
                 <View style={styles.overlayView}>
@@ -394,7 +374,7 @@ const PartyMainScreen = (props: PartyMainScreenProps) => {
                         onPress={closeOverlay}
                     />
                     <Text style={styles.pageTitle}>
-                        {props.title}
+                        Party Settings
                     </Text>
                     <IconButton
                         icon=''
@@ -402,6 +382,84 @@ const PartyMainScreen = (props: PartyMainScreenProps) => {
                         disabled
                     />
                 </View>
+                <ScrollView>
+                    <List.Section>
+                        {SETTING_MENUS.map((menu: iSettingsMenuItem, i: number) => (
+                            <SettingsMenuItem
+                                key={i}
+                                title={menu.title}
+                                icon={menu.icon}
+                                onPress={() => props.navigation.navigate(menu.screenName)}
+                            />
+                        ))}
+                    </List.Section>
+                    <List.Section>
+                        <ThemedButton
+                            mode={MODE.CONTAINED}
+                            onPress={() => null}
+                        >
+                            END PARTY
+                        </ThemedButton>
+                    </List.Section>
+                </ScrollView>
+            </>
+        );
+    }
+    
+    const SettingsStack = createStackNavigator();
+    
+    const SettingsNavigationContainer = () => {
+        return (
+            <NavigationContainer
+                independent={true}
+            >
+                <SettingsStack.Navigator
+                    initialRouteName='Main'
+                    headerMode='none'
+                    screenOptions={{
+                        cardStyle: {
+                            backgroundColor: 'white'
+                        }
+                    }}
+                >
+                    <SettingsStack.Screen 
+                        name='Main' 
+                        component={SettingsMainScreen} 
+                    />
+                    <SettingsStack.Screen 
+                        name='DefaultPlaylist' 
+                        component={SettingsSelectDefaultPlaylistScreen} 
+                    />
+                    <SettingsStack.Screen 
+                        name='PreviewPlayList' 
+                        component={SettingsPreviewPlaylistScreen} 
+                    />
+                </SettingsStack.Navigator>
+            </NavigationContainer>
+        )
+    }
+
+    const PartyOverlay = (props: PartyOverlayProps) => {
+        return (
+            <>
+                {!props.noHeader && (
+                    <View style={styles.overlayView}>
+                        <IconButton
+                            icon='close'
+                            onPress={closeOverlay}
+                        />
+                        {props.title && (
+                            <Text style={styles.pageTitle}>
+                                {props.title}
+                            </Text>
+                        )}
+                        <IconButton
+                            icon=''
+                            onPress={() => null}
+                            disabled
+                        />
+                    </View>
+                )}
                 {props.children}
             </>
         )
@@ -410,7 +468,8 @@ const PartyMainScreen = (props: PartyMainScreenProps) => {
     const SettingsPartyOverlay = () => {
         return (
             <PartyOverlay
-                title='Party Settings'
+                noHeader
+                // title='Party Settings'
             >
                 <SettingsNavigationContainer />
             </PartyOverlay>
@@ -609,12 +668,18 @@ const PartyMainScreen = (props: PartyMainScreenProps) => {
                                         </>
                                     ) : (
                                         <>
-                                            <Button
+                                            <ThemedButton
+                                                mode={MODE.CONTAINED}
+                                                onPress={() => openOverlay(PartyOverlayType.RequestASong)}
+                                            >
+                                                REQUEST A SONG
+                                            </ThemedButton>
+                                            {/* <Button
                                                 mode='contained'
                                                 onPress={() => openOverlay(PartyOverlayType.RequestASong)}
                                             >
                                                 Request a song
-                                            </Button>
+                                            </Button> */}
                                         </>
                                     )}
                                 </View>

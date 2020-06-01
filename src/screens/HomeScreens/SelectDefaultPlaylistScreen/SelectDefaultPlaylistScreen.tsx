@@ -15,7 +15,7 @@ import PlayListItem from '../../../components/PlayListItem/PlayListItem';
 import SearchView from '../../../components/SearchView/SearchView';
 import BackgroundContainer from '../../../hoc/BackgroundContainer';
 import ThemedButton, { MODE } from '../../../components/Button/ThemedButton';
-import { iPlayList, SearchType } from '../../../utility/MusicServices/SpotifyService';
+import { PlayList, SearchType } from '../../../utility/MusicServices/MusicService';
 import { getProviderInstance, setProviderId } from '../../../actions';
 
 export interface iSelectDefaultPlayListScreen {
@@ -23,16 +23,18 @@ export interface iSelectDefaultPlayListScreen {
   navigation: any,
   getProviderInstance: () => any,
   setProviderId: (providerId: string) => void,
+  ignoreSafeArea?: true,
+  onBeforeBack?: () => void
 };
 
 const SelectDefaultPlayListScreen = (props: iSelectDefaultPlayListScreen) => {
   const styles = jsx(props.theme);
   const buttonWidth = Dimensions.get('window').width * 0.4;
 
-  const [spotifyPlayList, setSpotifyPlayList] = useState<iPlayList[] | undefined>(undefined);
-  const [library, setLibrary] = useState<iPlayList[] | undefined>(undefined);
+  const [spotifyPlayList, setSpotifyPlayList] = useState<PlayList[] | undefined>(undefined);
+  const [library, setLibrary] = useState<PlayList[] | undefined>(undefined);
   const [playListQuery, setPlayListQuery] = useState<string>('');
-  const [searchResults, setSearchResults] = useState<iPlayList[] | undefined>(undefined);
+  const [searchResults, setSearchResults] = useState<PlayList[] | undefined>(undefined);
   const [unselectButton, setUnselectedButton] = useState({
     service: false,
     library: true,
@@ -124,7 +126,8 @@ const SelectDefaultPlayListScreen = (props: iSelectDefaultPlayListScreen) => {
   return (
     <BackgroundContainer
       navigation={props.navigation}
-      onBeforeBack={onBeforeBack}
+      onBeforeBack={props.onBeforeBack || onBeforeBack}
+      ignoreSafeArea={props.ignoreSafeArea!}
       title={
         <Text style={styles.headingText}>Select a Playlist</Text>
       }
@@ -174,7 +177,7 @@ const SelectDefaultPlayListScreen = (props: iSelectDefaultPlayListScreen) => {
               </TouchableOpacity>
             </View>
           )}
-          keyExtractor={(item: iPlayList) => item.id}
+          keyExtractor={(item: PlayList) => item.id}
         />
       </View>
     </BackgroundContainer>
