@@ -184,10 +184,7 @@ const mapDispatchToProps = (dispatch: any) => {
   return {
     getProviderInstance: () => dispatch(getProviderInstance()),
     setProviderId: (providerId: string) => dispatch(setProviderId(providerId)),
-    createParty: (
-      playlistId: string, 
-      provider: any, 
-      callback: ((initialId: string) => void) | undefined) => dispatch(createParty(playlistId, provider, callback))
+    createParty: (playlistId: string, provider: any) => dispatch(createParty(playlistId, provider))
   }
 };
 

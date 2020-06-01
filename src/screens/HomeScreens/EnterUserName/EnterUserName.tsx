@@ -72,13 +72,8 @@ const EnterUserName = (props: iEnterUserName) => {
 };
 
 const mapDispatchToProps = (dispatch: Function) => ({
-  joinParty: (callback: ((error: string | null) => void) | undefined) => dispatch(joinParty(callback)),
+  joinParty: () => dispatch(joinParty()),
   setUsername: (username: string) => dispatch(setUserName(username))
 });
 
-export default connect(
-  null,
-  mapDispatchToProps
-)(
-  withTheme(EnterUserName)
-);
+export default connect(null,mapDispatchToProps)(withTheme(EnterUserName));
