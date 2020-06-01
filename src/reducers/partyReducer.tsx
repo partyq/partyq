@@ -11,7 +11,6 @@ const reducer = (state: PartyState = initialState, action: any) => {
     switch (action.type) {
         case SET_PARTY_ID:
             const { id } = action;
-            console.log(id);
             return Object.assign({}, state, {
                 id
             })

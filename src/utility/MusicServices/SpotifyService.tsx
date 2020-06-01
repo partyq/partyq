@@ -2,7 +2,9 @@ import {
   auth as SpotifyAuth,
   remote as SpotifyRemote,
   ApiScope,
-  ApiConfig
+  ApiConfig,
+  SpotifySession,
+  RepeatMode
 } from 'react-native-spotify-remote';
 import {
   // @ts-ignore
@@ -36,7 +38,7 @@ import {
 class SpotifyService {
 
   private static instance: SpotifyService;
-  private _token: string | undefined;
+  private _session: SpotifySession;
   private _spotifyConfig: ApiConfig;
 
   constructor() {
@@ -45,14 +47,20 @@ class SpotifyService {
       redirectURL: SPOTIFY_REDIRECT_URL,
       tokenRefreshURL: `http://${IP}:${PORT}/refresh`,
       tokenSwapURL: `http://${IP}:${PORT}/swap`,
-      scope: ApiScope.AppRemoteControlScope | ApiScope.PlaylistReadPrivateScope
+      scopes: [ApiScope.AppRemoteControlScope, ApiScope.PlaylistReadPrivateScope]
+    };
+    this._session = {
+      accessToken: '',
+      refreshToken: '',
+      expirationDate: '',
+      scope: ApiScope.AppRemoteControlScope,
+      expired: false,
     };
   };
 
   static getInstance = () => {
     if (!SpotifyService.instance) {
       SpotifyService.instance = new SpotifyService();
-      SpotifyService.instance._token = '';
     }
     return SpotifyService.instance;
   }
@@ -68,27 +76,47 @@ class SpotifyService {
           'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
         }
       });
-      this._token = debugAuthResult.data.access_token;
+      this._session = debugAuthResult.data;
     } else {
-      this._token = await SpotifyAuth.initialize(this._spotifyConfig);
-      SpotifyRemote.connect(this._token);
+      try {
+        await SpotifyRemote.disconnect();
+        await SpotifyAuth.endSession();
+
+        this._session = await SpotifyAuth.authorize(this._spotifyConfig);
+        await SpotifyRemote.connect(this._session.accessToken);
+      }
+      catch(error) {
+        throw 'Please try again'
+      }
     }
   };
 
-  getToken = () => this._token;
+  getToken = () => this._session?.accessToken;
 
-  setToken = (token: string) => this._token = token;
+  setToken = (token: string) => {
+    if (this._session) {
+      this._session.accessToken = token;
+    }
+    else {
+      this._session = {
+        accessToken: token,
+        refreshToken: '',
+        expirationDate: '',
+        scope: ApiScope.AppRemoteControlScope,
+        expired: false,
+      }
+    }
+  };
 
   getPlayList = async( playListId: string ): Promise<PlayListDetails> => {
     const URL = `https://api.spotify.com/v1/playlists/${playListId}`;
     const config = { 
       params: { fields: "description,name,images,tracks.items.track(name,album.images,artists,id)" }, 
-      headers: { Authorization: `Bearer ${this._token}` },
+      headers: { Authorization: `Bearer ${this._session.accessToken}` },
     };
     const result = await axios.get(URL, config);
 
     const {id, name, description, images, tracks} = result.data;
-    console.log(playListId);
 
     const parsedTracks = this.parseTracks(tracks.items);
 
@@ -143,7 +171,7 @@ class SpotifyService {
 
   getUserProfile = async(): Promise<UserProfile> => {
     const URL = 'https://api.spotify.com/v1/me';
-    const config = { headers: { Authorization: `Bearer ${this._token}` } };
+    const config = { headers: { Authorization: `Bearer ${this._session.accessToken}` } };
     const result = (await axios.get(URL, config)).data;
     return {
       displayName: result.display_name
@@ -156,7 +184,7 @@ class SpotifyService {
   getPartyPlayLists = async(): Promise<PlayList[]> => {
     const playLists: PlayList[] = [];
     const URL = 'https://api.spotify.com/v1/browse/categories/party/playlists';
-    const config = { headers: { Authorization: `Bearer ${this._token}` } };
+    const config = { headers: { Authorization: `Bearer ${this._session.accessToken}` } };
     const result = await axios.get(URL, config);
 
     result.data.playlists.items.forEach((item: any) => {
@@ -178,7 +206,7 @@ class SpotifyService {
   getLibraryPlayLists = async(): Promise<PlayList[]> => {
     const playLists: PlayList[] = [];
     const URL = 'https://api.spotify.com/v1/me/playlists';
-    const config = { headers: { Authorization: `Bearer ${this._token}` } };
+    const config = { headers: { Authorization: `Bearer ${this._session.accessToken}` } };
     const result = await axios.get(URL, config);
 
     result.data.items.forEach((item: any) => {
@@ -202,7 +230,7 @@ class SpotifyService {
     const URL = 'https://api.spotify.com/v1/search';
     const config = { 
       params: { q: query, type }, 
-      headers: { Authorization: `Bearer ${this._token}` },
+      headers: { Authorization: `Bearer ${this._session.accessToken}` },
     };
     const result = await axios.get(URL, config);
 
@@ -221,7 +249,7 @@ class SpotifyService {
 
   getTrack = async (id: string): Promise<Track> => {
     const URL = `https://api.spotify.com/v1/tracks/${id}`;
-    const config = { headers: { Authorization: `Bearer ${this._token}` } };
+    const config = { headers: { Authorization: `Bearer ${this._session.accessToken}` } };
     const result = await axios.get(URL, config);
 
     const trackData = result.data;

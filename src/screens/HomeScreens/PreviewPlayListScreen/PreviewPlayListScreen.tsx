@@ -36,10 +36,7 @@ export interface iSelectDefaultPlayListScreen {
   setProviderId: (providerId: string) => void,
   playListDetails: PlayList,
   route: any,
-  createParty: (
-    playlistId: string, 
-    provider: any, 
-    callback: ((initialId: string) => void) | undefined) => void
+  createParty: (playlistId: string, provider: any) => any
 };
 
 export interface iTracksSectionProps {
@@ -83,12 +80,12 @@ const PreviewPlayListScreen = (props: iSelectDefaultPlayListScreen) => {
     }
   };
 
-  const finish = (): void => {
+  const finish = async(): Promise<void> => {
     const instance = props.getProviderInstance();
-    props.createParty(playListId, instance, (initialId: string) => {
-      instance.playTrack(initialId);
-      props.navigation.navigate('PartyMain');
-    })
+    const initialId = await props.createParty(playListId, instance);
+    console.log({initialId, playListId})
+    instance.playTrack(initialId);
+    props.navigation.navigate('PartyMain');
   };
 
   return (
