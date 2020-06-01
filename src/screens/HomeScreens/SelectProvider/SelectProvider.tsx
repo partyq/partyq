@@ -55,6 +55,21 @@ const SelectProvider = (props: iSelectProvider) => {
     }
   }, []);
 
+  const handleError = (error: string) => {
+    Alert.alert(
+      "Couldn't authorize with or connect to Spotify",
+      error, [
+        {
+          text: 'OK',
+          onPress: () => {
+            reset();
+            setSpinner(false);
+          }
+        }
+      ]
+    );
+  };
+
   const initService = async () => {
     try {
       if (await DeviceInfo.isEmulator()) {
@@ -64,34 +79,36 @@ const SelectProvider = (props: iSelectProvider) => {
         setSpinner(false);
         props.navigation.navigate('SelectDefaultPlayList');
       } else {
-        AppInstalledChecker
-        .isAppInstalled('spotify')
-        .then(async (isInstalled: boolean) => {
-          if (isInstalled === true) {
+        const isInstalled = await AppInstalledChecker.isAppInstalled('spotify');
+        if (isInstalled) {
+          try {
             const serviceInstsance = props.getProviderInstance();
             await serviceInstsance.authorize();
             reset();
             setSpinner(false);
             props.navigation.navigate('SelectDefaultPlayList');
           }
-          else {
-            Alert.alert(
-              'Could not find Spotify',
-              'Spotify App must be installed to use their services.', [
-                {
-                  text: 'OK',
-                  onPress: () => {
-                    reset();
-                    setSpinner(false);
-                  }
-                }
-              ]
-            );
+          catch(error) {
+            handleError(error);
           }
-        });
+        }
+        else {
+          Alert.alert(
+            'Could not find Spotify',
+            'Spotify App must be installed to use their services.', [
+              {
+                text: 'OK',
+                onPress: () => {
+                  reset();
+                  setSpinner(false);
+                }
+              }
+            ]
+          );
+        }
       }
-    } catch (err) {
-      console.debug("Couldn't authorize with or connect to Spotify", err);
+    } catch (error) {
+      handleError(error);
     }
   }
 

@@ -118,21 +118,20 @@ export const isValidUsername = (partyId: string, username: string) => {
     })
 }
 
-export const joinParty = (partyId: string, username: string) => {
-    return new Promise<string>(async (resolve, reject) => {
-        const usernameValid = await isValidUsername(partyId, username);
-        if (!usernameValid) {
-            return reject('A user with that name already exists.');
-        }
-        await firestore()
-            .collection(USERS_COLLECTION)
-            .add({
-                displayName: username,
-                partyId: partyId
-            })
-        return resolve(partyId);
-    })
+export const joinParty = async (partyId: string, username: string): Promise<string> => {
+    const usernameValid = await isValidUsername(partyId, username);
+    if (!usernameValid) {
+        throw 'A user with that name already exists.';
+    }
+    await firestore()
+        .collection(USERS_COLLECTION)
+        .add({
+            displayName: username,
+            partyId: partyId
+        });
+    return partyId;
 }
+
 
 export const leaveParty = (username: string) => {
     return new Promise(async (resolve) => {

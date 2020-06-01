@@ -38,10 +38,7 @@ export interface iSelectDefaultPlayListScreen {
   ignoreSafeArea?: true,
   onFinish?: (playlistId: string) => void,
   route: any,
-  createParty: (
-    playlistId: string, 
-    provider: any, 
-    callback: ((initialId: string) => void) | undefined) => void
+  createParty: (playlistId: string, provider: any) => any
 };
 
 export interface iTracksSectionProps {
@@ -85,15 +82,15 @@ const PreviewPlayListScreen = (props: iSelectDefaultPlayListScreen) => {
     }
   };
 
-  const finish = (): void => {
+  const finish = async(): Promise<void> => {
     if (props.onFinish) {
       props.onFinish(playListId);
     } else {
       const instance = props.getProviderInstance();
-      props.createParty(playListId, instance, (initialId: string) => {
-        instance.playTrack(initialId);
-        props.navigation.navigate('PartyMain');
-      });
+      const initialId = await props.createParty(playListId, instance);
+      console.log({initialId, playListId})
+      instance.playTrack(initialId);
+      props.navigation.navigate('PartyMain');
     }
   };
 

@@ -117,14 +117,15 @@ const PartyMainScreen = (props: PartyMainScreenProps) => {
     const [topSliderHeight] = useState(new Animated.Value(TOP_SLIDER_HEIGHT));
     const [bottomSliderHeight] = useState(new Animated.Value(BOTTOM_SLIDER_HEIGHT));
     const [playerState, setPlayerState] = useState<PlayerState>({
-        paused: false,
+        isPaused: false,
         playbackOptions: {
             isShuffling: false,
-            repeatMode: RepeatMode.Off
+            repeatMode: RepeatMode.Context
         },
         playbackSpeed: 0,
         playbackPosition: 0,
         playbackRestrictions: {
+            canSeek: true,
             canRepeatContext: true,
             canRepeatTrack: true,
             canSkipNext: true,
@@ -218,20 +219,33 @@ const PartyMainScreen = (props: PartyMainScreenProps) => {
         }, SLIDER_ANIMATION_DURATION);
     }
 
-    const onPlayerStateChanged = (state: PlayerState) => {
-        console.log(state);
-        // if (state.playbackOptions.playbackPosition === 0) {
-
-        // }
+    const onPlayerStateChanged = async (state: PlayerState) => {
+        setPlayerState(state);
     }
+
+    useEffect(() => {
+        console.debug({
+            currentSongId: `spotify:track:${currentSong?.id}`,
+            playerStateId: playerState.track.uri,
+        })
+
+        if (currentSong && playerState.track.uri !== `spotify:track:${currentSong?.id}`) {
+            console.warn('Lets pray')
+            const providerInstance = props.getProviderInstance();
+            providerInstance.pause();
+        }
+    }, [playerState])
 
     const onPlayPausePressed = () => {
         const providerInstance = props.getProviderInstance();
-        if (playerState.paused) {
+        if (playerState.isPaused) {
             providerInstance.resume();
         } else {
             providerInstance.pause();
         }
+        const newPlayerState = {...playerState};
+        newPlayerState.isPaused = !playerState.isPaused;
+        setPlayerState(newPlayerState);
     }
 
     const onNextPressed = () => {
@@ -599,7 +613,7 @@ const PartyMainScreen = (props: PartyMainScreenProps) => {
                                 renderItem={renderTrackCarouselItem}
                                 sliderWidth={Dimensions.get('window').width}
                                 itemWidth={300}
-                                scrollEnabled={false}
+                                scrollEnabled={true}
                             />
                             <View style={styles.songDetailsView}>
                                 <Text
@@ -656,7 +670,7 @@ const PartyMainScreen = (props: PartyMainScreenProps) => {
                                                 onPress={onPreviousPressed}
                                             />
                                             <IconButton 
-                                                icon={playerState.paused ? 'play' : 'pause'}
+                                                icon={playerState.isPaused ? 'play' : 'pause'}
                                                 color='white'
                                                 style={styles.playButton}
                                                 onPress={onPlayPausePressed}

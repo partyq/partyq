@@ -17,7 +17,6 @@ export class AppContextProvider extends React.Component {
 
   render() {
     const { theme } = this.state;
-    console.log(theme)
     return (
       <Context.Provider value={this.state}>
         <PaperProvider theme={theme}>

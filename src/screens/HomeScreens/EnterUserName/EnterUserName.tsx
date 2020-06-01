@@ -19,7 +19,7 @@ export interface iEnterUserName {
   theme: any,
   navigation: any,
   username: string,
-  joinParty: (callback: ((error: string | null) => void) | undefined) => void,
+  joinParty: () => Promise<any>,
   setUsername: (username: string) => void
 };
 
@@ -27,19 +27,15 @@ const EnterUserName = (props: iEnterUserName) => {
   const styles = jsx(props.theme);
   const [disableButton, setDisableButton] = useState(true);
 
-  const handleNavigation = () => {
-    props.joinParty((error: string | null) => {
-      if (error !== null) {
-        Alert.alert(
-          'Could not join party.',
-          error
-        );
-        return;
-      }
+  const handleNavigation = async() => {
+    try {
+      await props.joinParty();
       props.navigation.navigate('PartyMain');
-    })
-    
-  }
+    }
+    catch (error) {
+      Alert.alert('Could not join party.', error);
+    } 
+  };
 
   return (
     <BackgroundContainer navigation={props.navigation}>
