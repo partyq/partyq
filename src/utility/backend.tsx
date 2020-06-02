@@ -172,15 +172,15 @@ export const endParty = (partyId: string) => {
     })
 }
 
-export const partyMembersListener: Function = async (
+export const partyMembersListener: Function = (
     partyId: string, 
     handler: (members: PartyMember[]) => void
 ) => {
-    const subscriber = await firestore()
+    const subscriber = firestore()
         .collection(USERS_COLLECTION)
         .where('partyId', '==', partyId)
         .onSnapshot(
-            async (documentSnapshot) => {
+            (documentSnapshot) => {
                 const members: PartyMember[] = documentSnapshot.docs.map(doc => {
                     const data = doc.data();
                     return {
@@ -193,15 +193,15 @@ export const partyMembersListener: Function = async (
     return () => subscriber();
 }
 
-export const songRequestsListener: Function = async (
+export const songRequestsListener: Function = (
     partyId: string,
     handler: (songRequests: SongRequest[]) => void
 ) => {
-    const subscriber = await firestore()
+    const subscriber = firestore()
         .collection(SONG_REQUESTS_COLLECTION)
         .where('partyId', '==', partyId)
         .onSnapshot(
-            async (documentSnapshot) => {
+            (documentSnapshot) => {
                 const songRequests: SongRequest[] = documentSnapshot.docs.map(
                     doc => doc.data() as SongRequest);
                 handler(songRequests);
@@ -210,15 +210,15 @@ export const songRequestsListener: Function = async (
     return () => subscriber();
 }
 
-export const votesListener: Function = async (
+export const votesListener: Function = (
     partyId: string,
     handler: (votes: SongVote[]) => void
 ) => {
-    const subscriber = await firestore()
+    const subscriber = firestore()
         .collection(VOTES_COLLECTION)
         .where('partyId', '==', partyId)
         .onSnapshot(
-            async (documentSnapshot) => {
+            (documentSnapshot) => {
                 const votes: SongVote[] = documentSnapshot.docs.map(
                     doc => doc.data() as SongVote);
                 handler(votes);

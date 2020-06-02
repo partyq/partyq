@@ -17,43 +17,49 @@ const BackgroundContainer = (props: any) => {
     props.navigation.goBack();
   };
 
-  const mainContent = (
-    <>
+  const header = (
+    <View
+      style={{
+        // paddingTop: 15,
+        flexDirection: 'row',
+        alignItems: 'center',
+        // backgroundColor: 'transparent',
+        justifyContent: 'space-between'
+      }}
+    >
+      {props.disableBack ? null
+        : <Button
+            icon={
+              <Icon
+                name='ios-arrow-back'
+                type='ionicon'
+                color={theme.colors.text}
+                size={24}
+              />
+            }
+            buttonStyle={{
+              backgroundColor: 'transparent',
+              borderRadius: theme.roundness,
+              alignSelf: 'center',
+              margin: 8
+            }}
+            onPress={handleNavigate}
+          />
+      }
+      {props.title}
       <View
         style={{
-          // paddingTop: 15,
-          flexDirection: 'row',
-          alignItems: 'center',
-          // backgroundColor: 'transparent',
-          justifyContent: 'space-between'
+          width: 40
         }}
-      >
-        {props.disableBack ? null
-          : <Button
-              icon={
-                <Icon
-                  name='ios-arrow-back'
-                  type='ionicon'
-                  color={theme.colors.text}
-                  size={24}
-                />
-              }
-              buttonStyle={{
-                backgroundColor: 'transparent',
-                borderRadius: theme.roundness,
-                alignSelf: 'center',
-                margin: 8
-              }}
-              onPress={handleNavigate}
-            />
-        }
-        {props.title}
-        <View
-          style={{
-            width: 40
-          }}
-        />
-      </View>
+      />
+    </View>
+  )
+
+  const mainContent = (
+    <>
+      {props.noHeader !== true && (
+        header
+      )}
       <View style={{
         flex: 1,
         flexDirection: 'column',

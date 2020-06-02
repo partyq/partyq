@@ -8,45 +8,31 @@ import {
 import {
   View,
   Image,
-  Dimensions,
-  Animated,
-  ScrollView
+  Dimensions
 } from 'react-native';
 import {
   Text,
   IconButton,
   ProgressBar,
   Button,
-  List,
   withTheme
 } from 'react-native-paper';
-import {
-  NavigationContainer
-} from '@react-navigation/native';
-import {
-  createStackNavigator
-} from '@react-navigation/stack';
 import Carousel from 'react-native-snap-carousel';
 import firestore from '@react-native-firebase/firestore';
 import { connect } from 'react-redux';
 
 import jsx from './PartyMainScreen.style';
 import {
-  PARTIES_COLLECTION,
-  partyMembersListener,
-  PartyMember,
-  songRequestsListener,
-  SongRequest,
-  SongVote,
-  votesListener
+  PARTIES_COLLECTION
 } from '../../../utility/backend';
 import { Track } from '../../../utility/MusicServices/MusicService';
 import { getProviderInstance } from '../../../actions';
-import SongRequestItem from '../../../components/SongRequestItem/SongRequestItem';
-import SelectDefaultPlaylistScreen from '../../HomeScreens/SelectDefaultPlaylistScreen/SelectDefaultPlaylistScreen';
 import ThemedButton, { MODE } from '../../../components/Button/ThemedButton';
-import PreviewPlayListScreen from '../../HomeScreens/PreviewPlayListScreen/PreviewPlayListScreen';
-import PartyOverlay from '../Overlay/PartyOverlay';
+import PartyViewSlider from '../../../components/PartyViewSlider/PartyViewSlider';
+import SettingsNavigationContainer from '../SliderScreens/Settings/SettingsNavigationContainer';
+import PartyMembersScreen from '../SliderScreens/PartyMembersScreen/PartyMembersScreen';
+import SongRequestsScreen from '../SliderScreens/SongRequestsScreen/SongRequestsScreen';
+import RequestASongScreen from '../SliderScreens/RequestASongScreen/RequestASongScreen';
 
 interface PartyMainScreenProps {
   theme: any,
@@ -55,62 +41,259 @@ interface PartyMainScreenProps {
   getProviderInstance: () => any
 }
 
-enum PartyOverlayType {
-  Settings,
-  PartyMembers,
-  SongRequests,
-  RequestASong
+interface iTopSliderProps {
+  partyId: string,
+  isPartyHost: boolean,
+  hostName: string,
+  styles: any,
+  hidden: boolean,
+  onOverlayChange?: (overlay: React.ReactElement | null) => void
 }
 
-const SETTING_MENUS: iSettingsMenuItem[] = [
-  {
-    title: 'Default Playlist',
-    icon: 'playlist-music',
-    screenName: 'DefaultPlaylist'
-  }
-]
+const TopSlider = (props: iTopSliderProps) => {
+  const {
+    partyId,
+    isPartyHost,
+    hostName,
+    styles,
+    hidden,
+    onOverlayChange
+  } = props;
 
-const TOP_SLIDER_HEIGHT = 130;
-const BOTTOM_SLIDER_HEIGHT = 160;
-const SLIDER_ANIMATION_DURATION = 500;
+  const [overlay, setOverlay] = useState<React.ReactElement | null>(null);
 
-interface iSettingsMenuItem {
-  title: string,
-  icon: string,
-  screenName: string
-}
+  useEffect(() => {
+    if (onOverlayChange) {
+      onOverlayChange(overlay);
+    }
+  }, [overlay]);
 
-interface SettingsMenuItemProps {
-  title: string,
-  icon: string,
-  onPress: () => null | null | undefined
-}
-
-interface SettingsScreenProps {
-  navigation: any,
-  theme: any
-}
-
-interface SettingsPlaylistScreenProps {
-  navigation: any,
-  route: any
-}
-
-const SettingsMenuItem = (props: SettingsMenuItemProps) => {
   return (
-    <List.Item
-      title={props.title}
-      left={() => <List.Icon icon={props.icon} />}
-      right={() => <List.Icon icon='chevron-right' />}
-      onPress={props.onPress}
-    />
-  );
+    <PartyViewSlider
+      open={overlay !== null}
+      onClose={() => setOverlay(null)}
+      side='top'
+      hidden={hidden}
+    >
+      {overlay ? (
+        overlay
+      ) : (
+          <>
+            <View style={styles.edgeRow}>
+              <Text style={styles.partyId}>
+                {partyId}
+              </Text>
+              {isPartyHost ? (
+                <IconButton
+                  icon="settings"
+                  onPress={() => setOverlay(
+                    <SettingsNavigationContainer />
+                  )}
+                />
+              ) : (
+                  <Button
+                    onPress={() => null}
+                  >
+                    <Text style={styles.leaveText}>
+                      Leave
+                    </Text>
+                  </Button>
+                )}
+            </View>
+            <View style={styles.centerRow}>
+              <Text style={styles.pageTitle}>
+                {isPartyHost
+                  ? 'Your Party'
+                  : `${hostName}'s Party`}
+              </Text>
+            </View>
+          </>
+        )}
+    </PartyViewSlider>
+  )
+}
+
+interface iBottomSliderProps {
+  styles: any,
+  playerState: any,
+  setPlayerState: (state: any) => void,
+  isPartyHost: boolean,
+  getProviderInstance: () => any,
+  hidden: boolean,
+  onOverlayChange?: (overlay: React.ReactElement | null) => void
+}
+
+const BottomSlider = (props: iBottomSliderProps) => {
+  const {
+    styles,
+    playerState,
+    isPartyHost,
+    getProviderInstance,
+    setPlayerState,
+    hidden,
+    onOverlayChange
+  } = props;
+
+  const [overlay, setOverlay] = useState<React.ReactElement | null>(null);
+
+  const onPlayPausePressed = () => {
+    const providerInstance = getProviderInstance();
+    if (playerState.isPaused) {
+      providerInstance.resume();
+    } else {
+      providerInstance.pause();
+    }
+    const newPlayerState = { ...playerState };
+    newPlayerState.isPaused = !playerState.isPaused;
+    setPlayerState(newPlayerState);
+  }
+
+  const onNextPressed = () => {
+    const providerInstance = getProviderInstance();
+    providerInstance.next();
+  }
+
+  const onPreviousPressed = () => {
+    const providerInstance = getProviderInstance();
+    providerInstance.previous();
+  }
+
+  useEffect(() => {
+    if (onOverlayChange) {
+      onOverlayChange(overlay);
+    }
+  }, [overlay]);
+
+  return (
+    <PartyViewSlider
+      open={overlay !== null}
+      onClose={() => setOverlay(null)}
+      side='bottom'
+      hidden={hidden}
+    >
+      {overlay ? (
+        overlay
+      ) : (
+        <>
+          <View style={styles.centerRow}>
+            <View style={styles.musicControlsView}>
+              {isPartyHost ? (
+                <>
+                  <IconButton
+                    icon="skip-previous"
+                    onPress={onPreviousPressed}
+                  />
+                  <IconButton
+                    icon={playerState.isPaused ? 'play' : 'pause'}
+                    color='white'
+                    style={styles.playButton}
+                    onPress={onPlayPausePressed}
+                  />
+                  <IconButton
+                    icon="skip-next"
+                    onPress={onNextPressed}
+                  />
+                </>
+              ) : (
+                  <>
+                    <ThemedButton
+                      mode={MODE.CONTAINED}
+                      onPress={() => setOverlay(
+                        <RequestASongScreen />
+                      )}
+                    >
+                      REQUEST A SONG
+                    </ThemedButton>
+                  </>
+                )}
+            </View>
+          </View>
+          <View style={styles.edgeRow}>
+            <IconButton
+              icon="account-group"
+              onPress={() => setOverlay(
+                <PartyMembersScreen />
+              )}
+            />
+            <IconButton
+              icon="playlist-music"
+              onPress={() => setOverlay(
+                <SongRequestsScreen />
+              )}
+            />
+          </View>
+        </>
+      )}
+    </PartyViewSlider>
+  )
+}
+
+interface iPartyNavigationContainerProps {
+  children: React.ReactElement[] | React.ReactElement,
+  partyId: string,
+  isPartyHost: boolean,
+  hostName: string,
+  styles: any,
+  playerState: any,
+  setPlayerState: (state: any) => void,
+  getProviderInstance: () => any
+}
+
+const PartyNavigationContainer = (props: iPartyNavigationContainerProps) => {
+  const {
+    partyId,
+    isPartyHost,
+    hostName,
+    styles,
+    children,
+    playerState,
+    setPlayerState,
+    getProviderInstance
+  } = props;
+
+  const [openSlider, setOpenSlider] = useState<'top' | 'bottom' | null>(null);
+
+  const onTopOverlayChanged = (overlay: React.ReactElement | null) => {
+    if (overlay === null) {
+      setOpenSlider(null);
+    } else {
+      setOpenSlider('top');
+    }
+  }
+
+  const onBottomOverlayChanged = (overlay: React.ReactElement | null) => {
+    if (overlay === null) {
+      setOpenSlider(null);
+    } else {
+      setOpenSlider('bottom');
+    }
+  }
+
+  return (
+    <>
+      <TopSlider
+        partyId={partyId}
+        isPartyHost={isPartyHost}
+        hostName={hostName}
+        styles={styles}
+        hidden={openSlider === 'bottom'}
+        onOverlayChange={onTopOverlayChanged}
+      />
+      {children}
+      <BottomSlider
+        styles={styles}
+        playerState={playerState}
+        setPlayerState={setPlayerState}
+        isPartyHost={isPartyHost}
+        getProviderInstance={getProviderInstance}
+        hidden={openSlider === 'top'}
+        onOverlayChange={onBottomOverlayChanged}
+      />
+    </>
+  )
 }
 
 const PartyMainScreen = (props: PartyMainScreenProps) => {
-  const [partyOverlayType, setPartyOverlayTypePage] = useState<PartyOverlayType | null>(null);
-  const [topSliderHeight] = useState(new Animated.Value(TOP_SLIDER_HEIGHT));
-  const [bottomSliderHeight] = useState(new Animated.Value(BOTTOM_SLIDER_HEIGHT));
   const [playerState, setPlayerState] = useState<PlayerState>({
     isPaused: false,
     playbackOptions: {
@@ -149,13 +332,10 @@ const PartyMainScreen = (props: PartyMainScreenProps) => {
   const [currentSong, setCurrentSong] = useState<Track | null>(null);
   const [previousSong, setPreviousSong] = useState<Track | null>(null);
   const [nextSong, setNextSong] = useState<Track | null>(null);
-  const [partyMembers, setPartyMembers] = useState<PartyMember[]>([]);
-  const [songRequests, setSongRequests] = useState<SongRequest[]>([]);
-  const [songVotes, setSongVotes] = useState<SongVote[]>([]);
 
   const styles = jsx(props.theme);
 
-  const IS_PARTY_HOST = props.username === '';
+  const isPartyHost = props.username === '';
 
   const secondsToTime = (seconds: number): string => {
     const minutes = Math.floor(seconds / 60);
@@ -176,95 +356,13 @@ const PartyMainScreen = (props: PartyMainScreenProps) => {
       </View>
     )
 
-  const openOverlay = (type: PartyOverlayType) => {
-    setPartyOverlayTypePage(type);
-    let animatedValue;
-    if (type === PartyOverlayType.Settings) {
-      animatedValue = topSliderHeight;
-    } else {
-      animatedValue = bottomSliderHeight;
-    }
-    Animated.timing(
-      animatedValue,
-      {
-        toValue: Dimensions.get('window').height * 0.95,
-        duration: SLIDER_ANIMATION_DURATION
-      }
-    ).start();
-  }
-
-  const closeOverlay = () => {
-    let animatedValue, toValue;
-    if (partyOverlayType === PartyOverlayType.Settings) {
-      animatedValue = topSliderHeight;
-      toValue = TOP_SLIDER_HEIGHT;
-    } else {
-      animatedValue = bottomSliderHeight;
-      toValue = BOTTOM_SLIDER_HEIGHT;
-    }
-    Animated.timing(
-      animatedValue,
-      {
-        toValue: toValue,
-        duration: SLIDER_ANIMATION_DURATION
-      }
-    ).start();
-    setTimeout(() => {
-      setPartyOverlayTypePage(null);
-    }, SLIDER_ANIMATION_DURATION);
-  }
-
-  const onPlayerStateChanged = async (state: PlayerState) => {
-    setPlayerState(state);
-  }
-
-  useEffect(() => {
-    console.debug({
-      currentSongId: `spotify:track:${currentSong?.id}`,
-      playerStateId: playerState.track.uri,
-    })
-
-    if (currentSong && playerState.track.uri !== `spotify:track:${currentSong?.id}`) {
-      console.warn('Lets pray')
-      const providerInstance = props.getProviderInstance();
-      providerInstance.pause();
-    }
-  }, [playerState])
-
-  const onPlayPausePressed = () => {
-    const providerInstance = props.getProviderInstance();
-    if (playerState.isPaused) {
-      providerInstance.resume();
-    } else {
-      providerInstance.pause();
-    }
-    const newPlayerState = { ...playerState };
-    newPlayerState.isPaused = !playerState.isPaused;
-    setPlayerState(newPlayerState);
-  }
-
-  const onNextPressed = () => {
-    const providerInstance = props.getProviderInstance();
-    providerInstance.next();
-  }
-
-  const onPreviousPressed = () => {
-    const providerInstance = props.getProviderInstance();
-    providerInstance.previous();
-  }
-
   useEffect(() => {
     const query = firestore()
       .collection(PARTIES_COLLECTION)
       .where('id', '==', props.partyId)
       .limit(1);
     const providerInstance = props.getProviderInstance();
-    if (IS_PARTY_HOST) {
-      providerInstance.registerCallbacks(
-        {
-          onPlayerStateChanged
-        }
-      )
+    if (isPartyHost) {
       query
         .get()
         .then(
@@ -306,224 +404,6 @@ const PartyMainScreen = (props: PartyMainScreenProps) => {
     }
   }, []);
 
-  useEffect(() => {
-    return partyMembersListener(props.partyId,
-      (members: PartyMember[]) => {
-        setPartyMembers(members);
-      })
-  }, []);
-
-  useEffect(() => {
-    return songRequestsListener(props.partyId,
-      (requests: SongRequest[]) => {
-        setSongRequests(requests);
-      })
-  }, []);
-
-  useEffect(() => {
-    return votesListener(props.partyId,
-      (votes: SongVote[]) => {
-        setSongVotes(votes);
-      })
-  }, []);
-
-  let upvotes: { [key: string]: number } = {};
-  let downvotes: { [key: string]: number } = {};
-  songVotes.forEach(vote => {
-    if (vote.value === 1) {
-      if (!(vote.songId in upvotes)) {
-        upvotes[vote.songId] = 1;
-      } else {
-        upvotes[vote.songId] += 1;
-      }
-    } else {
-      if (!(vote.songId in downvotes)) {
-        downvotes[vote.songId] = 1;
-      } else {
-        downvotes[vote.songId] += 1;
-      }
-    }
-  });
-
-  const SettingsSelectDefaultPlaylistScreen = (props: SettingsPlaylistScreenProps) => {
-    return (
-      <SelectDefaultPlaylistScreen
-        navigation={props.navigation}
-        onBeforeBack={() => null}
-        ignoreSafeArea
-      />
-    )
-  }
-
-  const SettingsPreviewPlaylistScreen = (_props: SettingsPlaylistScreenProps) => {
-    return (
-      <PreviewPlayListScreen
-        navigation={_props.navigation}
-        route={_props.route}
-        ignoreSafeArea
-        onFinish={async (playlistId: string) => {
-          // TODO: Actually set playlist to playing
-          const instance = props.getProviderInstance();
-          const playlist = await instance.getPlayList(playlistId);
-          if (playlist.tracks.length > 0) {
-            // instance.playTrack(playli)
-            closeOverlay();
-          }
-        }}
-      />
-    )
-  }
-
-  const SettingsMainScreen = (props: SettingsScreenProps) => {
-    return (
-      <>
-        <View style={styles.overlayView}>
-          <IconButton
-            icon='close'
-            onPress={closeOverlay}
-          />
-          <Text style={styles.pageTitle}>
-            Party Settings
-                    </Text>
-          <IconButton
-            icon=''
-            onPress={() => null}
-            disabled
-          />
-        </View>
-        <ScrollView>
-          <List.Section>
-            {SETTING_MENUS.map((menu: iSettingsMenuItem, i: number) => (
-              <SettingsMenuItem
-                key={i}
-                title={menu.title}
-                icon={menu.icon}
-                onPress={() => props.navigation.navigate(menu.screenName)}
-              />
-            ))}
-          </List.Section>
-          <List.Section>
-            <ThemedButton
-              mode={MODE.CONTAINED}
-              onPress={() => null}
-            >
-              END PARTY
-                        </ThemedButton>
-          </List.Section>
-        </ScrollView>
-      </>
-    );
-  }
-
-  const SettingsStack = createStackNavigator();
-
-  const SettingsNavigationContainer = () => {
-    return (
-      <NavigationContainer
-        independent={true}
-      >
-        <SettingsStack.Navigator
-          initialRouteName='Main'
-          headerMode='none'
-          screenOptions={{
-            cardStyle: {
-              backgroundColor: 'white'
-            }
-          }}
-        >
-          <SettingsStack.Screen
-            name='Main'
-            component={SettingsMainScreen}
-          />
-          <SettingsStack.Screen
-            name='DefaultPlaylist'
-            component={SettingsSelectDefaultPlaylistScreen}
-          />
-          <SettingsStack.Screen
-            name='PreviewPlayList'
-            component={SettingsPreviewPlaylistScreen}
-          />
-        </SettingsStack.Navigator>
-      </NavigationContainer>
-    )
-  }
-
-  const SettingsPartyOverlay = () => {
-    return (
-      <PartyOverlay
-        noHeader
-        closeOverlay={closeOverlay}
-      // title='Party Settings'
-      >
-        <SettingsNavigationContainer />
-      </PartyOverlay>
-    )
-  }
-
-  const PartyMembersOverlay = () => {
-    return (
-      <PartyOverlay
-        title='Party Members'
-        closeOverlay={closeOverlay}
-      >
-        <Text
-          style={styles.partyMembersCount}
-        >
-          Total Members: {partyMembers.length}
-        </Text>
-        <ScrollView>
-          <List.Section>
-            {partyMembers.map((member: PartyMember, i: number) => (
-              <List.Item
-                key={i}
-                title={member.name}
-              />
-            ))}
-          </List.Section>
-        </ScrollView>
-      </PartyOverlay>
-    )
-  }
-
-  const RequestASongOverlay = () => {
-    return (
-      <PartyOverlay
-        title='Request A Song'
-        closeOverlay={closeOverlay}
-      >
-        <></>
-      </PartyOverlay>
-    )
-  }
-
-  const SongRequestsOverlay = () => {
-    return (
-      <PartyOverlay
-        title='Song Requests'
-        closeOverlay={closeOverlay}
-      >
-        <Text
-          style={styles.partyMembersCount}
-        >
-          Songs Requested: {songRequests.length}
-        </Text>
-        <ScrollView>
-          <List.Section>
-            {songRequests.map((request: SongRequest, i: number) => (
-              <SongRequestItem
-                key={i}
-                songId={request.songId}
-                upvotes={upvotes[request.songId] | 0}
-                downvotes={downvotes[request.songId] | 0}
-                requester={request.requester}
-              />
-            ))}
-          </List.Section>
-        </ScrollView>
-      </PartyOverlay>
-    )
-  }
-
   let carouselTracks: Track[] = [];
   [previousSong, currentSong, nextSong].forEach(track => {
     if (track !== null) {
@@ -532,160 +412,53 @@ const PartyMainScreen = (props: PartyMainScreenProps) => {
   });
 
   return (
-    <>
-      {partyOverlayType !== PartyOverlayType.PartyMembers && partyOverlayType !== PartyOverlayType.RequestASong && partyOverlayType !== PartyOverlayType.SongRequests && (
-        <Animated.View
-          style={[
-            styles.slider,
-            styles.topSlider,
-            {
-              height: topSliderHeight
-            }
-          ]}
-        >
-          {partyOverlayType === PartyOverlayType.Settings ? (
-            <SettingsPartyOverlay />
-          ) : (
-              <>
+    <PartyNavigationContainer
+      partyId={props.partyId}
+      isPartyHost={isPartyHost}
+      hostName={hostName}
+      styles={styles}
+      playerState={playerState}
+      setPlayerState={setPlayerState}
+      getProviderInstance={props.getProviderInstance}
+    >
+      <View style={styles.main}>
+        {currentSong !== null && (
+          <>
+            <Carousel
+              data={carouselTracks}
+              renderItem={renderTrackCarouselItem}
+              sliderWidth={Dimensions.get('window').width}
+              itemWidth={300}
+              scrollEnabled={true}
+            />
+            <View style={styles.songDetailsView}>
+              <Text
+                style={styles.songTitle}
+                numberOfLines={2}
+                ellipsizeMode='tail'
+              >
+                {currentSong.title}
+              </Text>
+              <Text
+                style={styles.songArtist}
+              >
+                By: {currentSong.artists}
+              </Text>
+              <View style={styles.songProgressView}>
                 <View style={styles.edgeRow}>
-                  <Text style={styles.partyId}>
-                    {props.partyId}
-                  </Text>
-                  {IS_PARTY_HOST ? (
-                    <IconButton
-                      icon="settings"
-                      onPress={() => openOverlay(PartyOverlayType.Settings)}
-                    />
-                  ) : (
-                      <Button
-                        onPress={() => null}
-                      >
-                        <Text style={styles.leaveText}>
-                          Leave
-                        </Text>
-                      </Button>
-                    )}
+                  <Text>0:00</Text>
+                  <Text>{secondsToTime(currentSong.durationMs / 1000)}</Text>
                 </View>
-                <View style={styles.centerRow}>
-                  <Text style={styles.pageTitle}>
-                    {IS_PARTY_HOST
-                      ? 'Your Party'
-                      : `${hostName}'s Party`}
-                  </Text>
-                </View>
-              </>
-            )}
-        </Animated.View>
-      )}
-      {partyOverlayType == null && (
-        <View style={styles.main}>
-          {currentSong !== null && (
-            <>
-              <Carousel
-                data={carouselTracks}
-                renderItem={renderTrackCarouselItem}
-                sliderWidth={Dimensions.get('window').width}
-                itemWidth={300}
-                scrollEnabled={true}
-              />
-              <View style={styles.songDetailsView}>
-                <Text
-                  style={styles.songTitle}
-                  numberOfLines={2}
-                  ellipsizeMode='tail'
-                >
-                  {currentSong.title}
-                </Text>
-                <Text
-                  style={styles.songArtist}
-                >
-                  By: {currentSong.artists}
-                </Text>
-                <View style={styles.songProgressView}>
-                  <View style={styles.edgeRow}>
-                    <Text>0:00</Text>
-                    <Text>{secondsToTime(currentSong.durationMs / 1000)}</Text>
-                  </View>
-                  <ProgressBar
-                    style={styles.progressBar}
-                    progress={0}
-                  />
-                </View>
+                <ProgressBar
+                  style={styles.progressBar}
+                  progress={0}
+                />
               </View>
-            </>
-          )}
-        </View>
-      )}
-      {partyOverlayType !== PartyOverlayType.Settings && (
-        <Animated.View
-          style={[
-            styles.slider,
-            styles.bottomSlider,
-            {
-              height: bottomSliderHeight
-            }
-          ]}
-        >
-          {partyOverlayType === PartyOverlayType.PartyMembers ? (
-            <PartyMembersOverlay />
-          ) : partyOverlayType === PartyOverlayType.RequestASong ? (
-            <RequestASongOverlay />
-          ) : partyOverlayType === PartyOverlayType.SongRequests ? (
-            <SongRequestsOverlay />
-          ) : (
-                  <>
-                    <View style={styles.centerRow}>
-                      <View style={styles.musicControlsView}>
-                        {IS_PARTY_HOST ? (
-                          <>
-                            <IconButton
-                              icon="skip-previous"
-                              onPress={onPreviousPressed}
-                            />
-                            <IconButton
-                              icon={playerState.isPaused ? 'play' : 'pause'}
-                              color='white'
-                              style={styles.playButton}
-                              onPress={onPlayPausePressed}
-                            />
-                            <IconButton
-                              icon="skip-next"
-                              onPress={onNextPressed}
-                            />
-                          </>
-                        ) : (
-                            <>
-                              <ThemedButton
-                                mode={MODE.CONTAINED}
-                                onPress={() => openOverlay(PartyOverlayType.RequestASong)}
-                              >
-                                REQUEST A SONG
-                                            </ThemedButton>
-                              {/* <Button
-                                                mode='contained'
-                                                onPress={() => openOverlay(PartyOverlayType.RequestASong)}
-                                            >
-                                                Request a song
-                                            </Button> */}
-                            </>
-                          )}
-                      </View>
-                    </View>
-                    <View style={styles.edgeRow}>
-                      <IconButton
-                        icon="account-group"
-                        onPress={() => openOverlay(PartyOverlayType.PartyMembers)}
-                      />
-                      <IconButton
-                        icon="playlist-music"
-                        onPress={() => openOverlay(PartyOverlayType.SongRequests)}
-                      />
-                    </View>
-                  </>
-                )}
-        </Animated.View>
-      )}
-    </>
+            </View>
+          </>
+        )}
+      </View>
+    </PartyNavigationContainer>
   );
 }
 

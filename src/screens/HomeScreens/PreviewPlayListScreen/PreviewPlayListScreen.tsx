@@ -38,7 +38,8 @@ export interface iSelectDefaultPlayListScreen {
   ignoreSafeArea?: true,
   onFinish?: (playlistId: string) => void,
   route: any,
-  createParty: (playlistId: string, provider: any) => any
+  createParty: (playlistId: string, provider: any) => any,
+  noHeader?: true
 };
 
 export interface iTracksSectionProps {
@@ -98,6 +99,7 @@ const PreviewPlayListScreen = (props: iSelectDefaultPlayListScreen) => {
     <BackgroundContainer
       navigation={props.navigation}
       ignoreSafeArea={props.ignoreSafeArea!}
+      noHeader={props.noHeader}
       title={
         <Text style={styles.headingText}>Preview PlayList</Text>
       }
