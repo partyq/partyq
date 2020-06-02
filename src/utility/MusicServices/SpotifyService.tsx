@@ -76,7 +76,11 @@ class SpotifyService {
           'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
         }
       });
-      this._session = debugAuthResult.data;
+      this._session = {
+        ...this._session,
+        accessToken: debugAuthResult.data.access_token,
+        refreshToken: debugAuthResult.data.refresh_token
+      };
     } else {
       try {
         await SpotifyRemote.disconnect();

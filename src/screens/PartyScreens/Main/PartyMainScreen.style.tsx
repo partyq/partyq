@@ -1,29 +1,29 @@
 import { StyleSheet } from 'react-native';
 
 export default (theme: any) => StyleSheet.create({
-    slider: {
-        elevation: 3,
-        padding: 20,
-        width: '100%',
-        position: 'absolute',
-        display: 'flex',
-        flexDirection: 'column',
-        shadowColor: '#ccc',
-        shadowRadius: 8,
-        shadowOpacity: 0.9,
-        backgroundColor: 'white'
-    },
-    topSlider: {
-        top: 0,
-        paddingTop: 40,
-        borderBottomLeftRadius: 30,
-        borderBottomRightRadius: 30,
-    },
-    bottomSlider: {
-        bottom: 0,
-        borderTopLeftRadius: 30,
-        borderTopRightRadius: 30,
-    },
+    // slider: {
+    //     elevation: 3,
+    //     padding: 20,
+    //     width: '100%',
+    //     position: 'absolute',
+    //     display: 'flex',
+    //     flexDirection: 'column',
+    //     shadowColor: '#ccc',
+    //     shadowRadius: 8,
+    //     shadowOpacity: 0.9,
+    //     backgroundColor: 'white'
+    // },
+    // topSlider: {
+    //     top: 0,
+    //     paddingTop: 40,
+    //     borderBottomLeftRadius: 30,
+    //     borderBottomRightRadius: 30,
+    // },
+    // bottomSlider: {
+    //     bottom: 0,
+    //     borderTopLeftRadius: 30,
+    //     borderTopRightRadius: 30,
+    // },
     edgeRow: {
         display: 'flex',
         flexDirection: 'row',

@@ -24,7 +24,8 @@ export interface iSelectDefaultPlayListScreen {
   getProviderInstance: () => any,
   setProviderId: (providerId: string) => void,
   ignoreSafeArea?: true,
-  onBeforeBack?: () => void
+  onBeforeBack?: () => void,
+  noHeader?: true
 };
 
 const SelectDefaultPlayListScreen = (props: iSelectDefaultPlayListScreen) => {
@@ -128,6 +129,7 @@ const SelectDefaultPlayListScreen = (props: iSelectDefaultPlayListScreen) => {
       navigation={props.navigation}
       onBeforeBack={props.onBeforeBack || onBeforeBack}
       ignoreSafeArea={props.ignoreSafeArea!}
+      noHeader={props.noHeader}
       title={
         <Text style={styles.headingText}>Select a Playlist</Text>
       }
