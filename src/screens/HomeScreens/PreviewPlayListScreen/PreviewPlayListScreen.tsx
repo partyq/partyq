@@ -5,6 +5,7 @@ import {
   FlatList,
   Image,
   Dimensions,
+  Alert,
 } from 'react-native';
 import {
   withTheme,
@@ -52,6 +53,7 @@ export interface iPlayListDescription {
   playList: PlayListDetails,
   onPress: () => void,
   buttonWidth: number,
+  disabled: boolean,
 };
 
 const PreviewPlayListScreen = (props: iSelectDefaultPlayListScreen) => {
@@ -61,6 +63,7 @@ const PreviewPlayListScreen = (props: iSelectDefaultPlayListScreen) => {
   const playListId = props.route.params.playListId;
   const [playList, setPlayList] = useState<PlayListDetails | undefined>(undefined);
   const [spinner, setSpinner] = useState<boolean>(true);
+  const [isFinishPressed, setIsFinishPressed] = useState<boolean>(false);
 
   useEffect(() => {
     getPlayList();
@@ -84,14 +87,18 @@ const PreviewPlayListScreen = (props: iSelectDefaultPlayListScreen) => {
   };
 
   const finish = async(): Promise<void> => {
+    setIsFinishPressed(true);
     if (props.onFinish) {
       props.onFinish(playListId);
     } else {
-      const instance = props.getProviderInstance();
-      const initialId = await props.createParty(playListId, instance);
-      console.log({initialId, playListId})
-      instance.playTrack(initialId);
-      props.navigation.navigate('PartyMain');
+      try {
+        const instance = props.getProviderInstance();
+        await props.createParty(playListId, instance);
+        props.navigation.navigate('PartyMain');
+      }
+      catch (error) {
+        Alert.alert(error);
+      }
     }
   };
 
@@ -112,6 +119,7 @@ const PreviewPlayListScreen = (props: iSelectDefaultPlayListScreen) => {
           playList={playList}
           onPress={finish}
           buttonWidth={buttonWidth}
+          disabled={isFinishPressed}
         />
         : null
       }
@@ -123,12 +131,12 @@ const PreviewPlayListScreen = (props: iSelectDefaultPlayListScreen) => {
   );
 };
 
-const PlayListDescription = ({ styles, playList, onPress, buttonWidth }: iPlayListDescription) => (
+const PlayListDescription = ({ styles, playList, onPress, buttonWidth, disabled }: iPlayListDescription) => (
   <View style={styles.playListDescriptionContainer}>
     <View style={styles.panel}>
       <Image
         source={{
-          uri: playList.image,
+          uri: playList.imageUri,
         }}
         style={styles.image}
       />
@@ -148,6 +156,7 @@ const PlayListDescription = ({ styles, playList, onPress, buttonWidth }: iPlayLi
           onPress={onPress}
           width={buttonWidth}
           size='sm'
+          disabled={disabled}
         >
           SELECT PLAYLIST
         </ThemedButton>
@@ -171,13 +180,13 @@ const Tracks = ({ style, tracks }: iTracksSectionProps) => (
       data={tracks}
       renderItem={({ item }) => (
         <PlayListItem
-          image={item.image}
+          image={item.imageUri}
           title={item.title}
           description={`By: ${item.artists}`}
-          key={item.id}
+          key={item.trackUri}
         />
       )}
-      keyExtractor={(item: Track) => item.id}
+      keyExtractor={(item: Track) => item.trackUri}
     />
   </View>
 );

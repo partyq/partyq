@@ -1,8 +1,10 @@
 import firestore from '@react-native-firebase/firestore';
 
 import store from '../store/store';
+import { Alert } from 'react-native';
 
 export const PARTIES_COLLECTION = 'parties';
+export const PLAYLISTS_COLLECTION = 'playlists';
 export const SONG_REQUESTS_COLLECTION = 'songRequests';
 export const USERS_COLLECTION = 'users';
 export const VOTES_COLLECTION = 'votes';
@@ -25,23 +27,14 @@ export interface SongVote {
     value: number
 }
 
-export const createParty = (playlistId: string, provider: any) => {
-    return new Promise<{
-        partyId: string,
-        initialId: string
-    }>(async (resolve, reject) => {
-        let querySnapshot = await firestore()
-            .collection(PARTIES_COLLECTION)
-            .orderBy('created', 'desc')
-            .limit(1)
-            .get()
-        let lastPartyId;
-        if (querySnapshot.empty) {
-            lastPartyId = 0;
-        } else {
-            lastPartyId = parseInt(querySnapshot.docs[0].get('id'));
-        }
+export const createParty = async (playlistId: string, provider: any): Promise<any> => {
+
+    const getPartyId = async (querySnapshot: any): Promise<any> => {
         let partyId;
+        const lastPartyId = querySnapshot.empty ?
+            0 :
+            parseInt(querySnapshot.docs[0].get('id'));
+
         if (lastPartyId === 9999) {
             querySnapshot = await firestore()
                 .collection(PARTIES_COLLECTION)
@@ -54,31 +47,71 @@ export const createParty = (playlistId: string, provider: any) => {
         } else {
             partyId = `0000${lastPartyId + 1}`.slice(-5);
         }
-        const playlist = await provider.getPlayList(playlistId);
-        if (playlist.tracks.length === 0) {
-            return reject('The playlist you selected has no songs.');
-        }
-        const initialId = playlist.tracks[0].id;
-        let nextSongId = null;
-        if (playlist.tracks.length > 1) {
-            nextSongId = playlist.tracks[1].id;
-        }
-        const userProfile = await provider.getUserProfile();
-        await firestore()
-            .collection(PARTIES_COLLECTION)
-            .add({
-                id: partyId,
-                hostName: userProfile.displayName,
-                currentSongTimeElapsed: 0,
-                previousSongId: null,
-                currentSongId: initialId,
-                nextSongId: nextSongId,
-                token: provider.getToken(),
-                created: new Date()
-            })
-        return resolve({partyId, initialId});
-    });
-}
+
+        return partyId;
+    };
+
+    let querySnapshot = await firestore()
+        .collection(PARTIES_COLLECTION)
+        .orderBy('created', 'desc')
+        .limit(1)
+        .get();
+
+    const partyId = await getPartyId(querySnapshot);
+    const playlist = await provider.getPlayList(playlistId);
+    if (playlist.tracks.length === 0) {
+        throw 'The playlist you selected has no songs.'
+    }
+    const userProfile = await provider.getUserProfile();
+    const partyRecord = await firestore()
+        .collection(PLAYLISTS_COLLECTION)
+        .add(playlist);
+        
+    const newParty = await firestore()
+        .collection(PARTIES_COLLECTION)
+        .add({
+            id: partyId,
+            created: new Date(),
+            hostName: userProfile.displayName,
+            token: provider.getToken(),
+            playlistId: partyRecord.id,
+            currentPlayListSongIndex: 0,
+        });
+
+    const docId = await newParty.id;
+
+    return {partyId, docId};
+};
+export const changeDefaultPlayList = async (playlistId: string, partyId: string, docId: string, provider: any): Promise<void> => {
+    
+    const oldPlayListId = await firestore()
+        .collection(PARTIES_COLLECTION)
+        .where('id', '==', partyId)
+        .limit(1)
+        .get();   
+            
+    await firestore()
+        .collection(PLAYLISTS_COLLECTION)
+        .doc(oldPlayListId.docs[0].data().playlistId)
+        .delete();
+    
+    const playlist = await provider.getPlayList(playlistId);
+    if (playlist.tracks.length === 0) {
+        throw 'The playlist you selected has no songs.'
+    }
+    const partyRecord = await firestore()
+        .collection(PLAYLISTS_COLLECTION)
+        .add(playlist);
+    
+    await firestore()
+        .collection(PARTIES_COLLECTION)
+        .doc(docId)
+        .update({
+            playlistId: partyRecord.id,
+            currentPlayListSongIndex: 0,
+        });
+    
+};
 
 export const getPartyById = (id: string) => {
     return new Promise<string | null>(async (resolve) => {
@@ -173,7 +206,7 @@ export const endParty = (partyId: string) => {
 }
 
 export const partyMembersListener: Function = (
-    partyId: string, 
+    partyId: string,
     handler: (members: PartyMember[]) => void
 ) => {
     const subscriber = firestore()
@@ -228,8 +261,8 @@ export const votesListener: Function = (
 }
 
 export const voteOnSong = async (
-    partyId: string, 
-    songId: string, 
+    partyId: string,
+    songId: string,
     username: string,
     value: 1 | -1
 ) => {

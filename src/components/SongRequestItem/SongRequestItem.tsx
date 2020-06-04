@@ -69,7 +69,7 @@ const SongRequestItem = (props: SongRequestItemProps) => {
     return (
         <PlayListItem
             title={song.title}
-            image={song.image}
+            image={song.imageUri}
             description={`By: ${song.artists}`}
             right={() => (
                 <View style={styles.votesContainer}>
@@ -100,7 +100,7 @@ const SongRequestItem = (props: SongRequestItemProps) => {
 }
 
 const mapStateToProps = (state: any) => ({
-    partyId: state.partyReducer.id,
+    partyId: state.partyReducer.partyId,
     username: state.userReducer.username
 });
 

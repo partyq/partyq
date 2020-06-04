@@ -12,19 +12,19 @@ export interface PlayList {
 };
 
 export interface Track {
-    id: string,
-    image: string,
+    trackUri: string,
+    imageUri: string,
     artists: string,
     title: string,
     durationMs: number
 }
 
 export interface PlayListDetails {
-    id: string,
+    playlistId: string,
     title: string,
     description: string,
+    imageUri: string,
     tracks: Track[],
-    image: string,
 }
 
 export interface UserProfile {
@@ -62,9 +62,9 @@ interface _MusicService {
     next: () => void,
     previous: () => void,
     getUserProfile: () => Promise<UserProfile>,
-    getTrack: (id: string) => Promise<Track>,
+    getTrack: (trackUri: string) => Promise<Track>,
     getPlayerState: () => Promise<PlayerState>,
-    queueTrack: () => Promise<void>,
+    queueTrack: (trackUri: string) => Promise<void>,
     getCrossfadeState: () => Promise<CrossfadeState>,
 }
 

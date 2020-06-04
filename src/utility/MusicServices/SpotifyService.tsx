@@ -116,7 +116,7 @@ class SpotifyService {
   getPlayList = async( playListId: string ): Promise<PlayListDetails> => {
     const URL = `https://api.spotify.com/v1/playlists/${playListId}`;
     const config = { 
-      params: { fields: "description,name,images,tracks.items.track(name,album.images,artists,id)" }, 
+      params: { fields: "description,name,images,tracks.items.track(name,album.images,artists,id,duration_ms)" }, 
       headers: { Authorization: `Bearer ${this._session.accessToken}` },
     };
     const result = await axios.get(URL, config);
@@ -126,10 +126,10 @@ class SpotifyService {
     const parsedTracks = this.parseTracks(tracks.items);
 
     const playList: PlayListDetails = {
-      id,
+      playlistId: id,
       title: name,
       description,
-      image: images ? images[0].url : undefined,
+      imageUri: images ? images[0].url : undefined,
       tracks: parsedTracks,
     };
 
@@ -163,9 +163,9 @@ class SpotifyService {
       const pos = stringOfArtists.lastIndexOf(',');
 
       parsedTracks.push({
-        id,
+        trackUri: id,
         title: name,
-        image: album.images ? album.images[0].url : undefined,
+        imageUri: album.images ? album.images[0].url : undefined,
         artists: stringOfArtists.slice(0, pos),
         durationMs: duration_ms
       });
@@ -252,8 +252,8 @@ class SpotifyService {
     return searchResults;
   }
 
-  getTrack = async (id: string): Promise<Track> => {
-    const URL = `https://api.spotify.com/v1/tracks/${id}`;
+  getTrack = async (trackUri: string): Promise<Track> => {
+    const URL = `https://api.spotify.com/v1/tracks/${trackUri}`;
     const config = { headers: { Authorization: `Bearer ${this._session.accessToken}` } };
     const result = await axios.get(URL, config);
 
@@ -262,7 +262,7 @@ class SpotifyService {
     return this.parseTracks([{track: trackData}])[0];
   }
 
-  queueTrack = (id: string) => SpotifyRemote.queueUri(`spotify:track:${id}`)
+  queueTrack = (trackUri: string) => SpotifyRemote.queueUri(`spotify:track:${trackUri}`)
 
   getPlayerState = () => SpotifyRemote.getPlayerState()
 
