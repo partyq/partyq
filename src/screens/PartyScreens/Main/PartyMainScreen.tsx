@@ -33,6 +33,7 @@ import SettingsNavigationContainer from '../SliderScreens/Settings/SettingsNavig
 import PartyMembersScreen from '../SliderScreens/PartyMembersScreen/PartyMembersScreen';
 import SongRequestsScreen from '../SliderScreens/SongRequestsScreen/SongRequestsScreen';
 import RequestASongScreen from '../SliderScreens/RequestASongScreen/RequestASongScreen';
+import useInterval from '../../../utility/useInterval';
 
 interface PartyMainScreenProps {
   theme: any,
@@ -332,6 +333,7 @@ const PartyMainScreen = (props: PartyMainScreenProps) => {
   const [currentSong, setCurrentSong] = useState<Track | null>(null);
   const [previousSong, setPreviousSong] = useState<Track | null>(null);
   const [nextSong, setNextSong] = useState<Track | null>(null);
+  const [isReadyToQueue, setIsReadyToQueue] = useState<Boolean>(false);
 
   const styles = jsx(props.theme);
 
@@ -357,11 +359,12 @@ const PartyMainScreen = (props: PartyMainScreenProps) => {
     )
 
   useEffect(() => {
+    const providerInstance = props.getProviderInstance();
+
     const query = firestore()
       .collection(PARTIES_COLLECTION)
       .where('id', '==', props.partyId)
       .limit(1);
-    const providerInstance = props.getProviderInstance();
     if (isPartyHost) {
       query
         .get()
@@ -380,6 +383,7 @@ const PartyMainScreen = (props: PartyMainScreenProps) => {
             }
           }
         )
+
     } else {
       const subscriber = query
         .onSnapshot(
@@ -400,9 +404,32 @@ const PartyMainScreen = (props: PartyMainScreenProps) => {
             }
           }
         )
-      return () => subscriber();
+      return () => subscriber()
     }
   }, []);
+
+  useInterval(async() => {
+    const providerInstance = props.getProviderInstance();
+    const playerState = await providerInstance.getPlayerState();
+    const crossfadeState = await providerInstance.getCrossfadeState();
+    const crossfadeDuration = crossfadeState.enabled ? crossfadeState.duration : 0;
+    const durationLeft = Math.floor((playerState.track.duration - playerState.playbackPosition)/1000)*1000;
+
+    if (durationLeft <= (crossfadeDuration + 5000) && !isReadyToQueue) {
+      console.warn('setIsReadyToQueue')
+      setIsReadyToQueue(true);
+    }
+    else if (durationLeft > (crossfadeDuration + 5000) && isReadyToQueue) {
+      setIsReadyToQueue(false);
+    }
+  }, 2000)
+
+  useEffect(() => {
+    if (isReadyToQueue) {
+      const providerInstance = props.getProviderInstance();
+      providerInstance.queueTrack(nextSong?.id);
+    }
+  }, [isReadyToQueue]);
 
   let carouselTracks: Track[] = [];
   [previousSong, currentSong, nextSong].forEach(track => {
