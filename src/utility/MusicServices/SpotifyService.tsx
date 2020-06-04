@@ -90,6 +90,7 @@ class SpotifyService {
         await SpotifyRemote.connect(this._session.accessToken);
       }
       catch(error) {
+        console.warn(error)
         throw 'Please try again'
       }
     }
@@ -260,6 +261,12 @@ class SpotifyService {
 
     return this.parseTracks([{track: trackData}])[0];
   }
+
+  queueTrack = (id: string) => SpotifyRemote.queueUri(`spotify:track:${id}`)
+
+  getPlayerState = () => SpotifyRemote.getPlayerState()
+
+  getCrossfadeState = () => SpotifyRemote.getCrossfadeState()
 
 };
 

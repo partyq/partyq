@@ -1,5 +1,6 @@
 import {
-    PlayerState
+    PlayerState,
+    CrossfadeState,
 } from 'react-native-spotify-remote';
 
 export interface PlayList {
@@ -61,7 +62,10 @@ interface _MusicService {
     next: () => void,
     previous: () => void,
     getUserProfile: () => Promise<UserProfile>,
-    getTrack: (id: string) => Promise<Track>
+    getTrack: (id: string) => Promise<Track>,
+    getPlayerState: () => Promise<PlayerState>,
+    queueTrack: () => Promise<void>,
+    getCrossfadeState: () => Promise<CrossfadeState>,
 }
 
 export interface MusicService {
