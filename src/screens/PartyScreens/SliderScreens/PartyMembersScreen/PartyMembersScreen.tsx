@@ -56,7 +56,7 @@ const PartyMembersScreen = (props: iPartyMembersScreenProps) => {
 }
 
 const mapStateToProps = (state: any) => ({
-    partyId: state.partyReducer.id
+    partyId: state.partyReducer.partyId
 });
 
 export default connect(

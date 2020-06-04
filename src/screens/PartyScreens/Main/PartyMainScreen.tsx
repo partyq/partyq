@@ -353,60 +353,60 @@ const PartyMainScreen = (props: PartyMainScreenProps) => {
       <View style={styles.carouselImageView}>
         <Image
           style={styles.carouselImage}
-          source={{ uri: item.item.image }}
+          source={{ uri: item.item.imageUri }}
         />
       </View>
     )
 
-  useEffect(() => {
-    const providerInstance = props.getProviderInstance();
+  // useEffect(() => {
+  //   const providerInstance = props.getProviderInstance();
 
-    const query = firestore()
-      .collection(PARTIES_COLLECTION)
-      .where('id', '==', props.partyId)
-      .limit(1);
-    if (isPartyHost) {
-      query
-        .get()
-        .then(
-          async (documentSnapshot) => {
-            const partyData = documentSnapshot.docs[0].data();
-            if (partyData.previousSongId !== null) {
-              setPreviousSong(
-                await providerInstance.getTrack(partyData.previousSongId));
-            }
-            setCurrentSong(
-              await providerInstance.getTrack(partyData.currentSongId));
-            if (partyData.nextSongId !== null) {
-              setNextSong(
-                await providerInstance.getTrack(partyData.nextSongId));
-            }
-          }
-        )
+  //   const query = firestore()
+  //     .collection(PARTIES_COLLECTION)
+  //     .where('id', '==', props.partyId)
+  //     .limit(1);
+  //   if (isPartyHost) {
+  //     query
+  //       .get()
+  //       .then(
+  //         async (documentSnapshot) => {
+  //           const partyData = documentSnapshot.docs[0].data();
+  //           if (partyData.previousSongId !== null) {
+  //             setPreviousSong(
+  //               await providerInstance.getTrack(partyData.previousSongId));
+  //           }
+  //           setCurrentSong(
+  //             await providerInstance.getTrack(partyData.currentSongId));
+  //           if (partyData.nextSongId !== null) {
+  //             setNextSong(
+  //               await providerInstance.getTrack(partyData.nextSongId));
+  //           }
+  //         }
+  //       )
 
-    } else {
-      const subscriber = query
-        .onSnapshot(
-          async (documentSnapshot) => {
-            const partyData = documentSnapshot.docs[0].data();
-            setHostName(partyData.hostName);
-            // setTimeElapsed(partyData.currentSongTimeElapsed);
-            providerInstance.setToken(partyData.token);
-            if (partyData.previousSongId !== null) {
-              setPreviousSong(
-                await providerInstance.getTrack(partyData.previousSongId));
-            }
-            setCurrentSong(
-              await providerInstance.getTrack(partyData.currentSongId));
-            if (partyData.nextSongId !== null) {
-              setNextSong(
-                await providerInstance.getTrack(partyData.nextSongId));
-            }
-          }
-        )
-      return () => subscriber()
-    }
-  }, []);
+  //   } else {
+  //     const subscriber = query
+  //       .onSnapshot(
+  //         async (documentSnapshot) => {
+  //           const partyData = documentSnapshot.docs[0].data();
+  //           setHostName(partyData.hostName);
+  //           // setTimeElapsed(partyData.currentSongTimeElapsed);
+  //           providerInstance.setToken(partyData.token);
+  //           if (partyData.previousSongId !== null) {
+  //             setPreviousSong(
+  //               await providerInstance.getTrack(partyData.previousSongId));
+  //           }
+  //           setCurrentSong(
+  //             await providerInstance.getTrack(partyData.currentSongId));
+  //           if (partyData.nextSongId !== null) {
+  //             setNextSong(
+  //               await providerInstance.getTrack(partyData.nextSongId));
+  //           }
+  //         }
+  //       )
+  //     return () => subscriber()
+  //   }
+  // }, []);
 
   useInterval(async() => {
     const providerInstance = props.getProviderInstance();
@@ -416,7 +416,6 @@ const PartyMainScreen = (props: PartyMainScreenProps) => {
     const durationLeft = Math.floor((playerState.track.duration - playerState.playbackPosition)/1000)*1000;
 
     if (durationLeft <= (crossfadeDuration + 5000) && !isReadyToQueue) {
-      console.warn('setIsReadyToQueue')
       setIsReadyToQueue(true);
     }
     else if (durationLeft > (crossfadeDuration + 5000) && isReadyToQueue) {
@@ -427,7 +426,7 @@ const PartyMainScreen = (props: PartyMainScreenProps) => {
   useEffect(() => {
     if (isReadyToQueue) {
       const providerInstance = props.getProviderInstance();
-      providerInstance.queueTrack(nextSong?.id);
+      providerInstance.queueTrack(nextSong?.trackUri);
     }
   }, [isReadyToQueue]);
 
@@ -490,7 +489,7 @@ const PartyMainScreen = (props: PartyMainScreenProps) => {
 }
 
 const mapStateToProps = (state: any) => ({
-  partyId: state.partyReducer.id,
+  partyId: state.partyReducer.partyId,
   username: state.userReducer.username
 });
 

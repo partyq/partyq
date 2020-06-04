@@ -1,3 +1,4 @@
 export default interface PartyState {
-    id: string
+    partyId: string,
+    docId: string,
 }
