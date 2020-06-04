@@ -3,7 +3,7 @@ import {
     joinParty as _joinParty,
     leaveParty as _leaveParty,
     endParty as _endParty,
-    setDefaultPlayList as _setDefaultPlayList
+    changeDefaultPlayList as _changeDefaultPlayList
 } from '../utility/backend';
 import store from '../store/store';
 
@@ -28,10 +28,10 @@ export const createParty = (playListId: string, provider: any) => {
     }
 }
 
-export const setDefaultPlayList = (playListId: string, provider: any) => {
+export const changeDefaultPlayList = (playListId: string, provider: any) => {
     return async () => {
         const { partyId, docId } = store.getState().partyReducer;
-        await _setDefaultPlayList(playListId, partyId, docId, provider);
+        await _changeDefaultPlayList(playListId, partyId, docId, provider);
     }
 }
 

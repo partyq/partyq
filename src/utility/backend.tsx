@@ -82,7 +82,7 @@ export const createParty = async (playlistId: string, provider: any): Promise<an
 
     return {partyId, docId};
 };
-export const setDefaultPlayList = async (playlistId: string, partyId: string, docId: string, provider: any): Promise<void> => {
+export const changeDefaultPlayList = async (playlistId: string, partyId: string, docId: string, provider: any): Promise<void> => {
     
     const oldPlayListId = await firestore()
         .collection(PARTIES_COLLECTION)
