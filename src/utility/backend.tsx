@@ -4,7 +4,6 @@ import store from '../store/store';
 import { Alert } from 'react-native';
 
 export const PARTIES_COLLECTION = 'parties';
-export const PLAYLISTS_COLLECTION = 'playlists';
 export const SONG_REQUESTS_COLLECTION = 'songRequests';
 export const USERS_COLLECTION = 'users';
 export const VOTES_COLLECTION = 'votes';
@@ -58,14 +57,7 @@ export const createParty = async (playlistId: string, provider: any): Promise<an
         .get();
 
     const partyId = await getPartyId(querySnapshot);
-    const playlist = await provider.getPlayList(playlistId);
-    if (playlist.tracks.length === 0) {
-        throw 'The playlist you selected has no songs.'
-    }
     const userProfile = await provider.getUserProfile();
-    const partyRecord = await firestore()
-        .collection(PLAYLISTS_COLLECTION)
-        .add(playlist);
         
     const newParty = await firestore()
         .collection(PARTIES_COLLECTION)
@@ -74,43 +66,20 @@ export const createParty = async (playlistId: string, provider: any): Promise<an
             created: new Date(),
             hostName: userProfile.displayName,
             token: provider.getToken(),
-            playlistId: partyRecord.id,
-            currentPlayListSongIndex: 0,
+            playlistId: playlistId,
         });
 
     const docId = await newParty.id;
 
     return {partyId, docId};
 };
-export const changeDefaultPlayList = async (playlistId: string, partyId: string, docId: string, provider: any): Promise<void> => {
-    
-    const oldPlayListId = await firestore()
-        .collection(PARTIES_COLLECTION)
-        .where('id', '==', partyId)
-        .limit(1)
-        .get();   
-            
-    await firestore()
-        .collection(PLAYLISTS_COLLECTION)
-        .doc(oldPlayListId.docs[0].data().playlistId)
-        .delete();
-    
-    const playlist = await provider.getPlayList(playlistId);
-    if (playlist.tracks.length === 0) {
-        throw 'The playlist you selected has no songs.'
-    }
-    const partyRecord = await firestore()
-        .collection(PLAYLISTS_COLLECTION)
-        .add(playlist);
-    
+export const changeDefaultPlayList = async (playlistId: string, docId: string): Promise<void> => {
     await firestore()
         .collection(PARTIES_COLLECTION)
         .doc(docId)
         .update({
-            playlistId: partyRecord.id,
-            currentPlayListSongIndex: 0,
+            playlistId: playlistId,
         });
-    
 };
 
 export const getPartyById = (id: string) => {
