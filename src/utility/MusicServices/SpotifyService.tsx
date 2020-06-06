@@ -25,8 +25,7 @@ import DeviceInfo from 'react-native-device-info';
 import {
   MusicService,
   staticImplements,
-  PlayList,
-  PlayListDetails,
+  PlaylistDetails,
   Track,
   UserProfile,
   SearchType,
@@ -113,29 +112,6 @@ class SpotifyService {
     }
   };
 
-  getPlayList = async( playListId: string ): Promise<PlayListDetails> => {
-    const URL = `https://api.spotify.com/v1/playlists/${playListId}`;
-    const config = { 
-      params: { fields: "description,name,images,tracks.items.track(name,album.images,artists,id,duration_ms)" }, 
-      headers: { Authorization: `Bearer ${this._session.accessToken}` },
-    };
-    const result = await axios.get(URL, config);
-
-    const {id, name, description, images, tracks} = result.data;
-
-    const parsedTracks = this.parseTracks(tracks.items);
-
-    const playList: PlayListDetails = {
-      playlistId: id,
-      title: name,
-      description,
-      imageUri: images ? images[0].url : undefined,
-      tracks: parsedTracks,
-    };
-
-    return playList;
-  };
-
   playTrack = (id: string) => SpotifyRemote.playUri(`spotify:track:${id}`)
 
   registerCallbacks = (callbacks: SpotifyCallbacks): void => {
@@ -186,41 +162,42 @@ class SpotifyService {
   /**
    * Get featured spotify playlists. Defaults to USA UTC time.
    */
-  getPartyPlayLists = async(): Promise<PlayList[]> => {
-    const playLists: PlayList[] = [];
+  getPartyPlayLists = async(): Promise<PlaylistDetails[]> => {
+    const playLists: PlaylistDetails[] = [];
     const URL = 'https://api.spotify.com/v1/browse/categories/party/playlists';
     const config = { headers: { Authorization: `Bearer ${this._session.accessToken}` } };
     const result = await axios.get(URL, config);
 
+
     result.data.playlists.items.forEach((item: any) => {
       playLists.push({
-        id: item.id,
-        uri: item.uri,
-        image: item.images.length ? item.images[0].url : undefined,
+        playlistId: item.id,
+        imageUri: item.images.length ? item.images[0].url : undefined,
         title: item.name,
-        numSongs: item.tracks.total,
+        totalTracks: Number(item.tracks.total),
+        description: item.description,
       });
     });
-    
+        
     return playLists;
   };
 
   /**
    * Get users library playlists.
    */
-  getLibraryPlayLists = async(): Promise<PlayList[]> => {
-    const playLists: PlayList[] = [];
+  getLibraryPlayLists = async(): Promise<PlaylistDetails[]> => {
+    const playLists: PlaylistDetails[] = [];
     const URL = 'https://api.spotify.com/v1/me/playlists';
     const config = { headers: { Authorization: `Bearer ${this._session.accessToken}` } };
     const result = await axios.get(URL, config);
 
     result.data.items.forEach((item: any) => {
       playLists.push({
-        id: item.id,
-        uri: item.uri,
-        image: item.images.length ? item.images[0].url : null,
+        playlistId: item.id,
         title: item.name,
-        numSongs: item.tracks.total,
+        description: item.description,
+        imageUri: item.images.length ? item.images[0].url : null,
+        totalTracks: Number(item.tracks.total),
       });
     });
 
@@ -241,18 +218,18 @@ class SpotifyService {
 
     result.data.playlists.items.forEach((item: any) => {
       searchResults.push({
-        id: item.id,
-        uri: item.uri,
-        image: item.images.length ? item.images[0].url : null,
+        playlistId: item.id,
+        imageUri: item.images.length ? item.images[0].url : null,
         title: item.name,
-        numSongs: item.tracks.total,
+        description: item.description,
+        totalTracks: Number(item.tracks.total)
       });
     });
 
     return searchResults;
   }
 
-  getTrack = async (trackUri: string): Promise<Track> => {
+  getTrack = async(trackUri: string): Promise<Track> => {
     const URL = `https://api.spotify.com/v1/tracks/${trackUri}`;
     const config = { headers: { Authorization: `Bearer ${this._session.accessToken}` } };
     const result = await axios.get(URL, config);
@@ -260,7 +237,25 @@ class SpotifyService {
     const trackData = result.data;
 
     return this.parseTracks([{track: trackData}])[0];
-  }
+  };
+
+  getTracks = async( playListId: string, pageNumber: number ): Promise<Track[]> => {
+    const limit = 20;
+    const offset = pageNumber * 20 - 20;
+    console.warn({offset, limit})
+    const URL = `https://api.spotify.com/v1/playlists/${playListId}/tracks`;
+    const config = { 
+      params: {
+        fields: "items.track(name,album.images,artists,id,duration_ms)",
+        limit,
+        offset,
+      }, 
+      headers: { Authorization: `Bearer ${this._session.accessToken}` },
+    };
+    const result = await axios.get(URL, config);
+
+    return this.parseTracks(result.data.items);
+  };
 
   queueTrack = (trackUri: string) => SpotifyRemote.queueUri(`spotify:track:${trackUri}`)
 

@@ -7,7 +7,7 @@ export const initialState: UserState = {
     username: ''
 };
 
-const reducer = (state: UserState = initialState, action: any) => {
+const userReducer = (state: UserState = initialState, action: any) => {
     switch (action.type) {
         case SET_USER_NAME:
             const {username} = action;
@@ -19,4 +19,4 @@ const reducer = (state: UserState = initialState, action: any) => {
     }
 }
 
-export default reducer;
+export default userReducer;

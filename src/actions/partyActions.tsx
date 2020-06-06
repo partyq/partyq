@@ -16,6 +16,7 @@ import {
 } from '../utility/backend';
 import store from '../store/store';
 import { setListeners } from '.';
+import { PlaylistDetails } from '../utility/MusicServices/MusicService';
 
 export const SET_PARTY_ID = 'SET_PARTY_ID';
 export const SET_DOC_ID = 'SET_DOC_ID';
@@ -23,10 +24,11 @@ export const SET_PARTY = 'SET_PARTY';
 export const SET_SONG_REQUESTS = 'SET_SONG_REQUESTS';
 export const SET_REQUEST_VOTES = 'SET_REQUEST_VOTES';
 export const SET_PARTY_MEMBERS = 'SET_PARTY_MEMBERS';
+export const SET_PLAYLIST_DETAILS = 'SET_PLAYLIST_DETAILS';
 
 export const setPartyId = (partyId: string) => ({
     type: SET_PARTY_ID,
-    partyId
+    partyId,
 });
 
 export const setDocId = (docId: string) => ({
@@ -53,6 +55,11 @@ export const setPartyMembers = (members: PartyMember[]) => ({
     type: SET_PARTY_MEMBERS,
     members
 });
+
+export const setPlaylistDetails = (playlistDetails: PlaylistDetails) => ({
+    type: SET_PLAYLIST_DETAILS,
+    playlistDetails,
+})
 
 const startPartyReduxListeners = (partyId: string) => {
     return (dispatch: Function) => {

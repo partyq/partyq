@@ -3,6 +3,7 @@ import {
     SongVote, 
     PartyMember
 } from "../utility/backend";
+import { PlaylistDetails } from "src/utility/MusicServices/MusicService";
 
 export default interface PartyState {
     partyId: string,
@@ -13,4 +14,5 @@ export default interface PartyState {
     requests: SongRequest[],
     votes: SongVote[],
     members: PartyMember[]
+    playlistDetails: PlaylistDetails | undefined
 }

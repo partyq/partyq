@@ -5,7 +5,7 @@ import {
 import {
   initialState as userInitialState
 } from './userReducer';
-import { SET_PROVIDER_ID, SET_LISTENERS } from '../actions';
+import { SET_PROVIDER_ID, SET_LISTENERS } from '../actions/miscActions';
 
 const initialState: State = {
   providerId: '',
@@ -25,7 +25,7 @@ const setListeners = (state: State = initialState, action: any) => {
   })
 }
 
-const reducer = (state: State = initialState, action: any) => {
+const miscReducer = (state: State = initialState, action: any) => {
   switch (action.type) {
     case SET_PROVIDER_ID: return setProviderId(state, action)
     case SET_LISTENERS: return setListeners(state, action)
@@ -33,4 +33,4 @@ const reducer = (state: State = initialState, action: any) => {
   }
 }
 
-export default reducer;
+export default miscReducer;

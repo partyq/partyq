@@ -6,6 +6,7 @@ import {
     SET_SONG_REQUESTS,
     SET_REQUEST_VOTES,
     SET_PARTY_MEMBERS,
+    SET_PLAYLIST_DETAILS
 } from '../actions/partyActions';
 
 export const initialState: PartyState = {
@@ -16,10 +17,11 @@ export const initialState: PartyState = {
     token: '',
     requests: [],
     votes: [],
-    members: []
+    members: [],
+    playlistDetails: undefined
 };
 
-const reducer = (state: PartyState = initialState, action: any) => {
+const partyReducer = (state: PartyState = initialState, action: any) => {
     switch (action.type) {
         case SET_PARTY_ID:
             const { partyId } = action;
@@ -54,9 +56,14 @@ const reducer = (state: PartyState = initialState, action: any) => {
             return Object.assign({}, state, {
                 members
             });
+        case SET_PLAYLIST_DETAILS:
+            const { playlistDetails } = action;
+            return Object.assign({}, state, {
+                playlistDetails
+            })
         default: 
             return state
     }
 }
 
-export default reducer;
+export default partyReducer;
