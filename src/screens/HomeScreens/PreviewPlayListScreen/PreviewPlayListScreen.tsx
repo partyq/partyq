@@ -46,7 +46,8 @@ export interface iTracksSectionProps {
   style: any,
   tracks: Track[],
   handleLoadMore: () => void,
-  totalTracks: number
+  totalTracks: number,
+  pageNumber: number,
 };
 
 export interface iPlayListDescription {
@@ -63,7 +64,7 @@ const PreviewPlayListScreen = (props: iSelectDefaultPlayListScreen) => {
 
   const [tracks, setTracks] = useState<Track[] | undefined>(undefined);
   const [isFinishPressed, setIsFinishPressed] = useState<boolean>(false);
-  const [pageNumber, setPageNumber] = useState<number>(1);
+  const [pageNumber, setPageNumber] = useState<number>(0);
 
   useEffect(() => {
     if (props.playlistDetails.playlistId) {
@@ -75,6 +76,7 @@ const PreviewPlayListScreen = (props: iSelectDefaultPlayListScreen) => {
   }, [pageNumber, props.playlistDetails]);
 
   const getTracks = async (pageNumber: number): Promise<void> => {
+    console.log(pageNumber);
     try {
       const instance = props.getProviderInstance();
       if (instance !== undefined) {
@@ -96,6 +98,10 @@ const PreviewPlayListScreen = (props: iSelectDefaultPlayListScreen) => {
   };
 
   const handleLoadMore = () => {
+    console.log('handleLoadMore', {
+      totalTracks: props.playlistDetails.totalTracks,
+      tracksLength: tracks?.length,
+    })
     setPageNumber(pageNumber + 1);
   };
 
@@ -140,6 +146,7 @@ const PreviewPlayListScreen = (props: iSelectDefaultPlayListScreen) => {
           tracks={tracks}
           handleLoadMore={handleLoadMore}
           totalTracks={props.playlistDetails.totalTracks}
+          pageNumber={pageNumber}
         />
       }
     </BackgroundContainer>
@@ -188,7 +195,7 @@ const PlayListDescription = ({ styles, playlistDetails, onPress, buttonWidth, di
   </View>
 );
 
-const Tracks = ({ style, tracks, handleLoadMore, totalTracks }: iTracksSectionProps) => {
+const Tracks = ({ style, tracks, handleLoadMore, totalTracks, pageNumber }: iTracksSectionProps) => {
   return (
     <View style={style}>
       <Divider />
@@ -203,8 +210,8 @@ const Tracks = ({ style, tracks, handleLoadMore, totalTracks }: iTracksSectionPr
           />
         )}
         keyExtractor={(item: Track) => item.trackUri}
-        ListFooterComponent={totalTracks !== tracks?.length ? <LoadingIndicator/> : null}
-        onEndReached={() => totalTracks !== tracks?.length ? handleLoadMore() : null}
+        ListFooterComponent={pageNumber * 10 <= totalTracks ? <LoadingIndicator/> : null}
+        onEndReached={() => pageNumber * 10 <= totalTracks ? handleLoadMore() : null}
         onEndReachedThreshold={0}
       />
     </View>

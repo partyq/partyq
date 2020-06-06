@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Text } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { List, withTheme } from 'react-native-paper';
@@ -6,28 +6,27 @@ import { connect } from 'react-redux';
 
 import jsx from './SongRequestsScreen.style';
 import NavigationHeader from '../../../../components/NavigationHeader/NavigationHeader';
-import { SongRequest, songRequestsListener, votesListener, SongVote } from '../../../../utility/backend';
+import { SongRequest, SongVote } from '../../../../utility/backend';
 import SongRequestItem from '../../../../components/SongRequestItem/SongRequestItem';
 
 interface iSongRequestsScreenProps {
     theme: any,
-    partyId: string
+    requests: SongRequest[],
+    votes: SongVote[]
 }
 
 const SongRequestsScreen = (props: iSongRequestsScreenProps) => {
     const {
         theme,
-        partyId
+        requests,
+        votes
     } = props;
-
-    const [songRequests, setSongRequests] = useState<SongRequest[]>([]);
-    const [songVotes, setSongVotes] = useState<SongVote[]>([]);
 
     const styles = jsx(theme);
 
     let upvotes: { [key: string]: number } = {};
     let downvotes: { [key: string]: number } = {};
-    songVotes.forEach(vote => {
+    votes.forEach(vote => {
         if (vote.value === 1) {
             if (!(vote.songId in upvotes)) {
                 upvotes[vote.songId] = 1;
@@ -43,36 +42,22 @@ const SongRequestsScreen = (props: iSongRequestsScreenProps) => {
         }
     });
 
-    const getScore = (songRequest: SongRequest): number => {
-        let score = 0;
-        if (songRequest.songId in upvotes) {
-            score += upvotes[songRequest.songId];
-        }
-        if (songRequest.songId in downvotes) {
-            score -= downvotes[songRequest.songId];
-        }
-        return score;
-    }
+    // const getScore = (songRequest: SongRequest): number => {
+    //     let score = 0;
+    //     if (songRequest.songId in upvotes) {
+    //         score += upvotes[songRequest.songId];
+    //     }
+    //     if (songRequest.songId in downvotes) {
+    //         score -= downvotes[songRequest.songId];
+    //     }
+    //     return score;
+    // }
 
-    const compareSongRequests = (a: SongRequest, b: SongRequest): number => {
-        return getScore(a) - getScore(b);
-    }
+    // const compareSongRequests = (a: SongRequest, b: SongRequest): number => {
+    //     return getScore(a) - getScore(b);
+    // }
 
-    useEffect(() => {
-        return songRequestsListener(partyId,
-            (requests: SongRequest[]) => {
-                setSongRequests(requests);
-            })
-    }, []);
-
-    useEffect(() => {
-        return votesListener(partyId,
-            (votes: SongVote[]) => {
-                setSongVotes(votes);
-            })
-    }, []);
-
-    const _songRequests = [...songRequests];
+    // const _songRequests = [...songRequests];
     // _songRequests.sort(compareSongRequests);
 
     return (
@@ -85,11 +70,11 @@ const SongRequestsScreen = (props: iSongRequestsScreenProps) => {
             <Text
                 style={styles.count}
             >
-                Songs Requested: {songRequests.length}
+                Songs Requested: {requests.length}
             </Text>
             <ScrollView>
                 <List.Section>
-                    {_songRequests.map((request: SongRequest, i: number) => (
+                    {requests.map((request: SongRequest, i: number) => (
                         <SongRequestItem
                             key={i}
                             songId={request.songId}
@@ -105,7 +90,8 @@ const SongRequestsScreen = (props: iSongRequestsScreenProps) => {
 }
 
 const mapStateToProps = (state: any) => ({
-    partyId: state.partyReducer.partyId
+    requests: state.partyReducer.requests,
+    votes: state.partyReducer.votes
 });
 
 export default connect(

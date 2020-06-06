@@ -1,34 +1,25 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Text } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { List, withTheme } from 'react-native-paper';
 import { connect } from 'react-redux';
 
 import jsx from './PartyMembersScreen.style';
-import { PartyMember, partyMembersListener } from '../../../../utility/backend';
+import { PartyMember } from '../../../../utility/backend';
 import NavigationHeader from '../../../../components/NavigationHeader/NavigationHeader';
 
 interface iPartyMembersScreenProps {
     theme: any,
-    partyId: string
+    members: PartyMember[]
 }
 
 const PartyMembersScreen = (props: iPartyMembersScreenProps) => {
     const {
         theme,
-        partyId
+        members
     } = props;
 
-    const [partyMembers, setPartyMembers] = useState<PartyMember[]>([]);
-
     const styles = jsx(theme);
-
-    useEffect(() => {
-        return partyMembersListener(partyId,
-            (members: PartyMember[]) => {
-                setPartyMembers(members);
-            })
-    }, []);
 
     return (
         <>
@@ -39,11 +30,11 @@ const PartyMembersScreen = (props: iPartyMembersScreenProps) => {
             <Text
                 style={styles.count}
             >
-                Total Members: {partyMembers.length}
+                Total Members: {members.length}
             </Text>
             <ScrollView>
                 <List.Section>
-                    {partyMembers.map((member: PartyMember, i: number) => (
+                    {members.map((member: PartyMember, i: number) => (
                         <List.Item
                             key={i}
                             title={member.name}
@@ -56,7 +47,7 @@ const PartyMembersScreen = (props: iPartyMembersScreenProps) => {
 }
 
 const mapStateToProps = (state: any) => ({
-    partyId: state.partyReducer.partyId
+    members: state.partyReducer.members
 });
 
 export default connect(

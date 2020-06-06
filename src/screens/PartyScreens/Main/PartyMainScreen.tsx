@@ -46,6 +46,7 @@ interface PartyMainScreenProps {
   setPlaylistDetails: (playlistDetails: PlaylistDetails) => void,
   playlistDetails: PlaylistDetails,
 }
+import PartyState from '../../../states/partyState';
 
 interface iTopSliderProps {
   partyId: string,
@@ -236,9 +237,8 @@ const BottomSlider = (props: iBottomSliderProps) => {
 
 interface iPartyNavigationContainerProps {
   children: React.ReactElement[] | React.ReactElement,
-  partyId: string,
+  partyState: PartyState,
   isPartyHost: boolean,
-  hostName: string,
   styles: any,
   playerState: any,
   setPlayerState: (state: any) => void,
@@ -247,9 +247,8 @@ interface iPartyNavigationContainerProps {
 
 const PartyNavigationContainer = (props: iPartyNavigationContainerProps) => {
   const {
-    partyId,
+    partyState,
     isPartyHost,
-    hostName,
     styles,
     children,
     playerState,
@@ -278,9 +277,9 @@ const PartyNavigationContainer = (props: iPartyNavigationContainerProps) => {
   return (
     <>
       <TopSlider
-        partyId={partyId}
+        partyId={partyState.partyId}
         isPartyHost={isPartyHost}
-        hostName={hostName}
+        hostName={partyState.hostName}
         styles={styles}
         hidden={openSlider === 'bottom'}
         onOverlayChange={onTopOverlayChanged}
@@ -299,8 +298,19 @@ const PartyNavigationContainer = (props: iPartyNavigationContainerProps) => {
   )
 }
 
+interface PartyMainScreenProps {
+  theme: any,
+  partyState: PartyState,
+  username: string,
+  getProviderInstance: () => any
+}
+
 const PartyMainScreen = (props: PartyMainScreenProps) => {
   let carouselRef = useRef();
+  const {
+    partyState
+  } = props;
+
   const [playerState, setPlayerState] = useState<PlayerState>({
     isPaused: false,
     playbackOptions: {
@@ -345,7 +355,6 @@ const PartyMainScreen = (props: PartyMainScreenProps) => {
   const [pageNumber, setPageNumber] = useState<number>(0);
 
   const styles = jsx(props.theme);
-
   const isPartyHost = props.username === '';
 
   const secondsToTime = (seconds: number): string => {
@@ -372,11 +381,11 @@ const PartyMainScreen = (props: PartyMainScreenProps) => {
 
   useEffect(() => {
 
-    if (props.playlistDetails) {
+    if (partyState.playlistDetails) {
       getTracks(pageNumber);
     }
 
-  }, [props.playlistDetails]);
+  }, [partyState.playlistDetails]);
 
   useEffect(() => {
     console.log(tracks)
@@ -394,7 +403,7 @@ const PartyMainScreen = (props: PartyMainScreenProps) => {
     try {
       const instance = props.getProviderInstance();
       if (instance !== undefined) {
-        const data: Track[] = await instance.getTracks(props.playlistDetails.playlistId, pageNumber);
+        const data: Track[] = await instance.getTracks(partyState.playlistDetails?.playlistId, pageNumber);
 
         const newTracks: Track[] | undefined = tracks !== undefined ?
           [...tracks, ...data]:
@@ -443,35 +452,34 @@ const PartyMainScreen = (props: PartyMainScreenProps) => {
     }
   }, []);
 
-  useInterval(async() => {
-    const providerInstance = props.getProviderInstance();
-    const playerState = await providerInstance.getPlayerState();
-    const crossfadeState = await providerInstance.getCrossfadeState();
-    const crossfadeDuration = crossfadeState.enabled ? crossfadeState.duration : 0;
-    const durationLeft = Math.floor((playerState.track.duration - playerState.playbackPosition)/1000)*1000;
+  // useInterval(async() => {
+  //   const providerInstance = props.getProviderInstance();
+  //   const playerState = await providerInstance.getPlayerState();
+  //   const crossfadeState = await providerInstance.getCrossfadeState();
+  //   const crossfadeDuration = crossfadeState.enabled ? crossfadeState.duration : 0;
+  //   const durationLeft = Math.floor((playerState.track.duration - playerState.playbackPosition)/1000)*1000;
 
-    // if within safe duration, queue next song
-    if (durationLeft <= (crossfadeDuration + 5000) && !isReadyToQueue) {
-      setIsReadyToQueue(true);
-    }
-    // don't queue next song if current song still has plenty of time to play
-    else if (durationLeft > (crossfadeDuration + 5000) && isReadyToQueue) {
-      setIsReadyToQueue(false);
-    }
-  }, 2000)
+  //   // if within safe duration, queue next song
+  //   if (durationLeft <= (crossfadeDuration + 5000) && !isReadyToQueue) {
+  //     setIsReadyToQueue(true);
+  //   }
+  //   // don't queue next song if current song still has plenty of time to play
+  //   else if (durationLeft > (crossfadeDuration + 5000) && isReadyToQueue) {
+  //     setIsReadyToQueue(false);
+  //   }
+  // }, 2000)
 
-  useEffect(() => {
-    if (isReadyToQueue) {
-      const providerInstance = props.getProviderInstance();
-      providerInstance.queueTrack(nextSong?.trackUri);
-    }
-  }, [isReadyToQueue]);
+  // useEffect(() => {
+  //   if (isReadyToQueue) {
+  //     const providerInstance = props.getProviderInstance();
+  //     providerInstance.queueTrack(nextSong?.trackUri);
+  //   }
+  // }, [isReadyToQueue]);
 
   return (
     <PartyNavigationContainer
-      partyId={props.partyId}
+      partyState={partyState}
       isPartyHost={isPartyHost}
-      hostName={hostName}
       styles={styles}
       playerState={playerState}
       setPlayerState={setPlayerState}
@@ -531,7 +539,7 @@ const PartyMainScreen = (props: PartyMainScreenProps) => {
 const mapStateToProps = (state: any) => ({
   partyId: state.partyReducer.partyId,
   username: state.userReducer.username,
-  playlistDetails: state.partyReducer.playlistDetails
+  partyState: state.partyReducer
 });
 
 const mapDispatchToProps = (dispatch: Function) => ({
