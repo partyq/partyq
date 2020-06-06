@@ -3,14 +3,6 @@ import {
     CrossfadeState,
 } from 'react-native-spotify-remote';
 
-export interface PlayList {
-    id: string,
-    uri: string,
-    image: string,
-    title: string,
-    numSongs: string,
-};
-
 export interface Track {
     trackUri: string,
     imageUri: string,
@@ -19,12 +11,12 @@ export interface Track {
     durationMs: number
 }
 
-export interface PlayListDetails {
+export interface PlaylistDetails {
     playlistId: string,
     title: string,
     description: string,
     imageUri: string,
-    tracks: Track[],
+    totalTracks: number,
 }
 
 export interface UserProfile {
@@ -36,9 +28,7 @@ export enum SearchType {
     TRACK = 'track' 
 };
 
-export type SearchResult = 
-    Track |
-    PlayList;
+export type SearchResult = Track | PlaylistDetails;
 
 export interface SpotifyCallbacks {
     onPlayerStateChanged: (playerState: PlayerState) => void
@@ -49,13 +39,13 @@ export type ServiceCallbacks =
 
 interface _MusicService {
     authorize: () => void,
-    getPartyPlayLists: () => Promise<PlayList[]>,
-    getLibraryPlayLists: () => Promise<PlayList[]>,
+    getPartyPlayLists: () => Promise<PlaylistDetails[]>,
+    getLibraryPlayLists: () => Promise<PlaylistDetails[]>,
     getSearchResults: (query: string, type: SearchType) => Promise<SearchResult[]>,
     getToken: () => string | undefined,
     setToken: (token: string) => void,
-    getPlayList: (playlistId: string) => Promise<PlayListDetails>,
     playTrack: (id: string) => void,
+    getTracks: (playlistId: string, pageNumber: number) => Promise<Track[]>,
     registerCallbacks: (callbacks: ServiceCallbacks) => void,
     resume: () => void,
     pause: () => void,

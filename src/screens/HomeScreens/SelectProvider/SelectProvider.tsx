@@ -215,7 +215,7 @@ const RenderProviders = ({ styles, providers, onPress }: iRenderProviders) => (
 
 const mapStateToProps = (state: any) => {
   return {
-    providerId: state.reducer.providerId,
+    providerId: state.providerReducer.providerId,
   }
 };
 

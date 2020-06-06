@@ -16,11 +16,11 @@ const setProviderId = ( state: State = initialState, { providerId }: any) => {
   return Object.assign({}, state, { providerId });
 };
 
-const reducer = (state: State = initialState, action: any) => {
+const providerReducer = (state: State = initialState, action: any) => {
   switch (action.type) {
     case 'SET_PROVIDER_ID': return setProviderId(state, action)
     default: return state
   }
 }
 
-export default reducer;
+export default providerReducer;

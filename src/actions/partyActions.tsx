@@ -6,18 +6,25 @@ import {
     changeDefaultPlayList as _changeDefaultPlayList
 } from '../utility/backend';
 import store from '../store/store';
+import { PlaylistDetails } from 'src/utility/MusicServices/MusicService';
 
 export const SET_PARTY_ID = 'SET_PARTY_ID';
 export const SET_DOC_ID = 'SET_DOC_ID';
+export const SET_PLAYLIST_DETAILS = 'SET_PLAYLIST_DETAILS';
 
 export const setPartyId = (partyId: string) => ({
     type: SET_PARTY_ID,
-    partyId
+    partyId,
 });
 
 export const setDocId = (docId: string) => ({
     type: SET_DOC_ID,
-    docId
+    docId,
+});
+
+export const setPlaylistDetails = (playlistDetails: PlaylistDetails) => ({
+    type: SET_PLAYLIST_DETAILS,
+    playlistDetails,
 })
 
 export const createParty = (playListId: string, provider: any) => {

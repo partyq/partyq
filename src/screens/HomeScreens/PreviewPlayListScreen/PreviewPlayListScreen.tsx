@@ -6,6 +6,7 @@ import {
   Image,
   Dimensions,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
 import {
   withTheme,
@@ -13,29 +14,27 @@ import {
   Divider,
 } from 'react-native-paper';
 import { connect } from 'react-redux';
-import Spinner from 'react-native-loading-spinner-overlay';
 
 import jsx from './PreviewPlayListScreen.style';
 import PlayListItem from '../../../components/PlayListItem/PlayListItem';
 import BackgroundContainer from '../../../hoc/BackgroundContainer';
 import {
-  PlayList,
   Track,
-  PlayListDetails,
+  PlaylistDetails,
 } from '../../../utility/MusicServices/MusicService';
 import {
   getProviderInstance,
   setProviderId,
 } from '../../../actions';
 import ThemedButton, { MODE } from '../../../components/Button/ThemedButton';
-import { createParty } from '../../../actions/partyActions';
+import { createParty, setPlaylistDetails } from '../../../actions/partyActions';
 
 export interface iSelectDefaultPlayListScreen {
   theme: any,
   navigation: any,
   getProviderInstance: () => any,
   setProviderId: (providerId: string) => void,
-  // playListDetails: PlayList,
+  playlistDetails: PlaylistDetails,
   ignoreSafeArea?: true,
   onFinish?: (playlistId: string) => void,
   route: any,
@@ -46,11 +45,13 @@ export interface iSelectDefaultPlayListScreen {
 export interface iTracksSectionProps {
   style: any,
   tracks: Track[],
+  handleLoadMore: () => void,
+  totalTracks: number
 };
 
 export interface iPlayListDescription {
   styles: any,
-  playList: PlayListDetails,
+  playlistDetails: PlaylistDetails,
   onPress: () => void,
   buttonWidth: number,
   disabled: boolean,
@@ -60,25 +61,33 @@ const PreviewPlayListScreen = (props: iSelectDefaultPlayListScreen) => {
   const styles = jsx(props.theme);
   const buttonWidth = Dimensions.get('window').width * 0.5;
 
-  const playListId = props.route.params.playListId;
-  const [playList, setPlayList] = useState<PlayListDetails | undefined>(undefined);
-  const [spinner, setSpinner] = useState<boolean>(true);
+  const [tracks, setTracks] = useState<Track[] | undefined>(undefined);
   const [isFinishPressed, setIsFinishPressed] = useState<boolean>(false);
+  const [pageNumber, setPageNumber] = useState<number>(1);
 
   useEffect(() => {
-    getPlayList();
-  }, []);
+    if (props.playlistDetails.playlistId) {
+      getTracks(pageNumber);
+    }
+    else {
+      Alert.alert('Something went wrong');
+    }
+  }, [pageNumber, props.playlistDetails]);
 
-  const getPlayList = async (): Promise<void> => {
+  const getTracks = async (pageNumber: number): Promise<void> => {
     try {
       const instance = props.getProviderInstance();
       if (instance !== undefined) {
-        const data = await instance.getPlayList(playListId);
-        setPlayList(data);
-        setSpinner(false);
+        const data: Track[] = await instance.getTracks(props.playlistDetails.playlistId, pageNumber);
+
+        const newTracks: Track[] | undefined = tracks !== undefined ?
+          [...tracks, ...data]:
+          [...data];
+
+        setTracks(newTracks);
       }
       else {
-        setPlayList(undefined);
+        setTracks(undefined);
       }
     }
     catch (error) {
@@ -86,14 +95,18 @@ const PreviewPlayListScreen = (props: iSelectDefaultPlayListScreen) => {
     }
   };
 
+  const handleLoadMore = () => {
+    setPageNumber(pageNumber + 1);
+  };
+
   const finish = async(): Promise<void> => {
     setIsFinishPressed(true);
     if (props.onFinish) {
-      props.onFinish(playListId);
+      props.onFinish(props.playlistDetails.playlistId);
     } else {
       try {
         const instance = props.getProviderInstance();
-        await props.createParty(playListId, instance);
+        await props.createParty(props.playlistDetails.playlistId, instance);
         props.navigation.navigate('PartyMain');
       }
       catch (error) {
@@ -111,32 +124,34 @@ const PreviewPlayListScreen = (props: iSelectDefaultPlayListScreen) => {
         <Text style={styles.headingText}>Preview PlayList</Text>
       }
     >
-      <Spinner visible={spinner} />
 
-      {playList ?
+      {props.playlistDetails &&
         <PlayListDescription 
           styles={styles}
-          playList={playList}
+          playlistDetails={props.playlistDetails}
           onPress={finish}
           buttonWidth={buttonWidth}
           disabled={isFinishPressed}
         />
-        : null
       }
-      {playList ?
-        <Tracks style={styles.listContainer} tracks={playList.tracks} />
-        : null
+      {tracks !== undefined &&
+        <Tracks
+          style={styles.listContainer}
+          tracks={tracks}
+          handleLoadMore={handleLoadMore}
+          totalTracks={props.playlistDetails.totalTracks}
+        />
       }
     </BackgroundContainer>
   );
 };
 
-const PlayListDescription = ({ styles, playList, onPress, buttonWidth, disabled }: iPlayListDescription) => (
+const PlayListDescription = ({ styles, playlistDetails, onPress, buttonWidth, disabled }: iPlayListDescription) => (
   <View style={styles.playListDescriptionContainer}>
     <View style={styles.panel}>
       <Image
         source={{
-          uri: playList.imageUri,
+          uri: playlistDetails.imageUri,
         }}
         style={styles.image}
       />
@@ -147,9 +162,9 @@ const PlayListDescription = ({ styles, playList, onPress, buttonWidth, disabled 
             ellipsizeMode='tail'
             numberOfLines={1}
           >
-            {playList.title}
+            {playlistDetails.title}
           </Text>
-          <Text style={styles.numSongs}>{`${playList.tracks.length} Songs`}</Text>
+          <Text style={styles.numSongs}>{`${playlistDetails.totalTracks} Songs`}</Text>
         </View>
         <ThemedButton
           mode={MODE.CONTAINED}
@@ -163,40 +178,53 @@ const PlayListDescription = ({ styles, playList, onPress, buttonWidth, disabled 
       </View>
     </View>
     {
-      playList.description ? 
+      playlistDetails.description ? 
       <>
         <Divider />
-        <Text style={styles.description}>{playList.description}</Text>
+        <Text style={styles.description}>{playlistDetails.description}</Text>
       </>
       : null
     }
   </View>
 );
 
-const Tracks = ({ style, tracks }: iTracksSectionProps) => (
-  <View style={style}>
-    <Divider />
-    <FlatList
-      data={tracks}
-      renderItem={({ item }) => (
-        <PlayListItem
-          image={item.imageUri}
-          title={item.title}
-          description={`By: ${item.artists}`}
-          key={item.trackUri}
-        />
-      )}
-      keyExtractor={(item: Track) => item.trackUri}
-    />
-  </View>
+const RenderFooter = () => (
+  <ActivityIndicator animating size='small' />
 );
+
+const Tracks = ({ style, tracks, handleLoadMore, totalTracks }: iTracksSectionProps) => {
+  return (
+    <View style={style}>
+      <Divider />
+      <FlatList
+        data={tracks}
+        renderItem={({ item }) => (
+          <PlayListItem
+            image={item.imageUri}
+            title={item.title}
+            description={`By: ${item.artists}`}
+            key={item.trackUri}
+          />
+        )}
+        keyExtractor={(item: Track) => item.trackUri}
+        ListFooterComponent={totalTracks !== tracks?.length ? RenderFooter : null}
+        onEndReached={() => totalTracks !== tracks?.length ? handleLoadMore() : null}
+        onEndReachedThreshold={0}
+      />
+    </View>
+  )
+};
+
+const mapStateToProps = (state: any) => ({
+  playlistDetails: state.partyReducer.playlistDetails,
+});
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
     getProviderInstance: () => dispatch(getProviderInstance()),
     setProviderId: (providerId: string) => dispatch(setProviderId(providerId)),
-    createParty: (playlistId: string, provider: any) => dispatch(createParty(playlistId, provider))
+    createParty: (playlistId: string, provider: any) => dispatch(createParty(playlistId, provider)),
   }
 };
 
-export default connect(null, mapDispatchToProps)(withTheme(PreviewPlayListScreen));
+export default connect(mapStateToProps, mapDispatchToProps)(withTheme(PreviewPlayListScreen));

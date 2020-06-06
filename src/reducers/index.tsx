@@ -1,11 +1,11 @@
 import { combineReducers } from 'redux';
 
-import reducer from './reducer';
+import providerReducer from './providerReducer';
 import partyReducer from './partyReducer';
 import userReducer from './userReducer';
 
 export default combineReducers({
-  reducer,
+  providerReducer,
   partyReducer,
   userReducer
 });
