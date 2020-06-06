@@ -98,10 +98,6 @@ const PreviewPlayListScreen = (props: iSelectDefaultPlayListScreen) => {
   };
 
   const handleLoadMore = () => {
-    console.log('handleLoadMore', {
-      totalTracks: props.playlistDetails.totalTracks,
-      tracksLength: tracks?.length,
-    })
     setPageNumber(pageNumber + 1);
   };
 

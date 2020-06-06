@@ -389,6 +389,7 @@ const PartyMainScreen = (props: PartyMainScreenProps) => {
 
   useEffect(() => {
     console.log(tracks)
+
   }, [tracks]);
 
   const handleLoadMore = () => {
@@ -472,7 +473,9 @@ const PartyMainScreen = (props: PartyMainScreenProps) => {
   // useEffect(() => {
   //   if (isReadyToQueue) {
   //     const providerInstance = props.getProviderInstance();
-  //     providerInstance.queueTrack(nextSong?.trackUri);
+  //     if (tracks && currentPlayingTrackIndex < tracks.length) {
+  //       providerInstance.queueTrack(tracks[currentPlayingTrackIndex + 1]?.trackUri);
+  //     }
   //   }
   // }, [isReadyToQueue]);
 
@@ -489,14 +492,14 @@ const PartyMainScreen = (props: PartyMainScreenProps) => {
         {tracks !== undefined && (
           <>
             <Carousel
+              slideStyle={styles.slideStyle}
               ref={(ref: any) => carouselRef = ref}
               data={tracks}
               renderItem={renderTrackCarouselItem}
               sliderWidth={Dimensions.get('window').width}
-              itemWidth={Dimensions.get('window').width}
+              itemWidth={Dimensions.get('window').width * .6}
               lockScrollWhileSnapping={true}
-              snapToAlignment={'center'}
-              swipeThreshold={20}
+              inactiveSlideScale={0.7}
               onBeforeSnapToItem={(index) => onBeforeSnapToTrack(index)}
               // ListFooterComponent={props.playlistDetails.totalTracks !== tracks?.length ? <LoadingIndicator/> : null}
               // onEndReached={() => props.playlistDetails.totalTracks !== tracks?.length ? handleLoadMore() : null}
@@ -516,7 +519,7 @@ const PartyMainScreen = (props: PartyMainScreenProps) => {
                 By: {tracks[currentTrackInView].artists}
               </Text>
               {
-                currentTrackInView === currentPlayingTrackIndex &&
+                currentTrackInView === currentPlayingTrackIndex && isPartyHost &&
                   <View style={styles.songProgressView}>
                   <View style={styles.edgeRow}>
                     <Text>0:00</Text>

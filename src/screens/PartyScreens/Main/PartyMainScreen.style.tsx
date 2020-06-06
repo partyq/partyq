@@ -65,13 +65,17 @@ export default (theme: any) => StyleSheet.create({
         width: Dimensions.get('window').width,
         height: Dimensions.get('window').width * .6,
         padding: 10,
-        justifyContent: 'center',
-        flexDirection: 'row',
+        display: 'flex',
+        alignItems: 'center',
+    },
+    slideStyle: {
+        display: 'flex',
+        alignItems: 'center',
     },
     carouselImage: {
-        width: Dimensions.get('window').width * .5,
-        height: Dimensions.get('window').width * .5,
-        borderRadius: 140
+        width: Dimensions.get('window').width * .55,
+        height: Dimensions.get('window').width * .55,
+        borderRadius: 140,
     },
     carouselImageActive: {
         borderWidth: 5,
