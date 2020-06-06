@@ -1181,10 +1181,10 @@
     "@types/react" "*"
     "@types/react-native" "*"
 
-"@types/react-native-snap-carousel@^3.8.0":
-  version "3.8.0"
-  resolved "https://registry.yarnpkg.com/@types/react-native-snap-carousel/-/react-native-snap-carousel-3.8.0.tgz#35612815b7d88cc86b904415466836ffa017051d"
-  integrity sha512-koLkoeGz1FddnG9PP0pGY7aT+C46yIc6wUBUEWi5LpnFcjEhHxb+Lk3tGhFM7fyv+4wcFWAiK6MXpZofioIM/w==
+"@types/react-native-snap-carousel@^3.9.1":
+  version "3.8.1"
+  resolved "https://registry.yarnpkg.com/@types/react-native-snap-carousel/-/react-native-snap-carousel-3.8.1.tgz#1fabbae6053c2c234f11cec6e5622086677b4da4"
+  integrity sha512-nKpCGtyvi0RB7iyrMf3Zyl9r4fvEVMnhBnHNWZe5FPvTiJ+XPPJw3lo9HOoqZIySVvYoASQdGnFLgWnugiUmHw==
   dependencies:
     "@types/react" "*"
     "@types/react-native" "*"

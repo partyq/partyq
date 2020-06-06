@@ -6,7 +6,6 @@ import {
   Image,
   Dimensions,
   Alert,
-  ActivityIndicator,
 } from 'react-native';
 import {
   withTheme,
@@ -18,6 +17,7 @@ import { connect } from 'react-redux';
 import jsx from './PreviewPlayListScreen.style';
 import PlayListItem from '../../../components/PlayListItem/PlayListItem';
 import BackgroundContainer from '../../../hoc/BackgroundContainer';
+import LoadingIndicator from '../../../components/LoadingIndicator/LoadingIndicator';
 import {
   Track,
   PlaylistDetails,
@@ -27,7 +27,7 @@ import {
   setProviderId,
 } from '../../../actions';
 import ThemedButton, { MODE } from '../../../components/Button/ThemedButton';
-import { createParty, setPlaylistDetails } from '../../../actions/partyActions';
+import { createParty } from '../../../actions/partyActions';
 
 export interface iSelectDefaultPlayListScreen {
   theme: any,
@@ -38,7 +38,7 @@ export interface iSelectDefaultPlayListScreen {
   ignoreSafeArea?: true,
   onFinish?: (playlistId: string) => void,
   route: any,
-  createParty: (playlistId: string, provider: any) => any,
+  createParty: (playlistDetails: PlaylistDetails, provider: any) => any,
   noHeader?: true
 };
 
@@ -106,7 +106,7 @@ const PreviewPlayListScreen = (props: iSelectDefaultPlayListScreen) => {
     } else {
       try {
         const instance = props.getProviderInstance();
-        await props.createParty(props.playlistDetails.playlistId, instance);
+        await props.createParty(props.playlistDetails, instance);
         props.navigation.navigate('PartyMain');
       }
       catch (error) {
@@ -188,10 +188,6 @@ const PlayListDescription = ({ styles, playlistDetails, onPress, buttonWidth, di
   </View>
 );
 
-const RenderFooter = () => (
-  <ActivityIndicator animating size='small' />
-);
-
 const Tracks = ({ style, tracks, handleLoadMore, totalTracks }: iTracksSectionProps) => {
   return (
     <View style={style}>
@@ -207,7 +203,7 @@ const Tracks = ({ style, tracks, handleLoadMore, totalTracks }: iTracksSectionPr
           />
         )}
         keyExtractor={(item: Track) => item.trackUri}
-        ListFooterComponent={totalTracks !== tracks?.length ? RenderFooter : null}
+        ListFooterComponent={totalTracks !== tracks?.length ? <LoadingIndicator/> : null}
         onEndReached={() => totalTracks !== tracks?.length ? handleLoadMore() : null}
         onEndReachedThreshold={0}
       />
@@ -223,7 +219,7 @@ const mapDispatchToProps = (dispatch: any) => {
   return {
     getProviderInstance: () => dispatch(getProviderInstance()),
     setProviderId: (providerId: string) => dispatch(setProviderId(providerId)),
-    createParty: (playlistId: string, provider: any) => dispatch(createParty(playlistId, provider)),
+    createParty: (playlistDetails: PlaylistDetails, provider: any) => dispatch(createParty(playlistDetails, provider)),
   }
 };
 

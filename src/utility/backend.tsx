@@ -2,6 +2,7 @@ import firestore from '@react-native-firebase/firestore';
 
 import store from '../store/store';
 import { Alert } from 'react-native';
+import { PlaylistDetails } from './MusicServices/MusicService';
 
 export const PARTIES_COLLECTION = 'parties';
 export const SONG_REQUESTS_COLLECTION = 'songRequests';
@@ -26,7 +27,7 @@ export interface SongVote {
     value: number
 }
 
-export const createParty = async (playlistId: string, provider: any): Promise<any> => {
+export const createParty = async (playlistDetails: PlaylistDetails, provider: any): Promise<any> => {
 
     const getPartyId = async (querySnapshot: any): Promise<any> => {
         let partyId;
@@ -66,7 +67,8 @@ export const createParty = async (playlistId: string, provider: any): Promise<an
             created: new Date(),
             hostName: userProfile.displayName,
             token: provider.getToken(),
-            playlistId: playlistId,
+            playlistDetails: playlistDetails,
+            currentPlayingTrackIndex: 0
         });
 
     const docId = await newParty.id;

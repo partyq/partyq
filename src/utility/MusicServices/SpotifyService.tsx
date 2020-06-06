@@ -240,9 +240,8 @@ class SpotifyService {
   };
 
   getTracks = async( playListId: string, pageNumber: number ): Promise<Track[]> => {
-    const limit = 20;
-    const offset = pageNumber * 20 - 20;
-    console.warn({offset, limit})
+    const limit = 10;
+    const offset = pageNumber * limit;
     const URL = `https://api.spotify.com/v1/playlists/${playListId}/tracks`;
     const config = { 
       params: {

@@ -27,9 +27,9 @@ export const setPlaylistDetails = (playlistDetails: PlaylistDetails) => ({
     playlistDetails,
 })
 
-export const createParty = (playListId: string, provider: any) => {
+export const createParty = (playlistDetails: PlaylistDetails, provider: any) => {
     return async (dispatch: Function): Promise<void> => {
-        const {partyId, docId} = await _createParty(playListId, provider);
+        const {partyId, docId} = await _createParty(playlistDetails, provider);
         dispatch(setPartyId(partyId));
         dispatch(setDocId(docId));
     }
