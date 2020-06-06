@@ -2,11 +2,21 @@ import PartyState from '../states/partyState';
 import {
     SET_PARTY_ID,
     SET_DOC_ID,
+    SET_PARTY,
+    SET_SONG_REQUESTS,
+    SET_REQUEST_VOTES,
+    SET_PARTY_MEMBERS,
 } from '../actions/partyActions';
 
 export const initialState: PartyState = {
     partyId: '',
     docId: '',
+    hostName: '',
+    playlistId: '',
+    token: '',
+    requests: [],
+    votes: [],
+    members: []
 };
 
 const reducer = (state: PartyState = initialState, action: any) => {
@@ -20,7 +30,30 @@ const reducer = (state: PartyState = initialState, action: any) => {
             const { docId } = action;
             return Object.assign({}, state, {
                 docId
-            }) 
+            });
+        case SET_PARTY:
+            const { party } = action;
+            return Object.assign({}, state, {
+                partyId: party.id,
+                hostName: party.hostName,
+                playlistId: party.playlistId,
+                token: party.token
+            });
+        case SET_SONG_REQUESTS:
+            const { requests } = action;
+            return Object.assign({}, state, {
+                requests
+            });
+        case SET_REQUEST_VOTES:
+            const { votes } = action;
+            return Object.assign({}, state, {
+                votes
+            });
+        case SET_PARTY_MEMBERS:
+            const { members } = action;
+            return Object.assign({}, state, {
+                members
+            });
         default: 
             return state
     }

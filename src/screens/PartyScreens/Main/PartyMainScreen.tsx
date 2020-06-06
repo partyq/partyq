@@ -22,9 +22,6 @@ import firestore from '@react-native-firebase/firestore';
 import { connect } from 'react-redux';
 
 import jsx from './PartyMainScreen.style';
-import {
-  PARTIES_COLLECTION
-} from '../../../utility/backend';
 import { Track } from '../../../utility/MusicServices/MusicService';
 import { getProviderInstance } from '../../../actions';
 import ThemedButton, { MODE } from '../../../components/Button/ThemedButton';
@@ -34,13 +31,7 @@ import PartyMembersScreen from '../SliderScreens/PartyMembersScreen/PartyMembers
 import SongRequestsScreen from '../SliderScreens/SongRequestsScreen/SongRequestsScreen';
 import RequestASongScreen from '../SliderScreens/RequestASongScreen/RequestASongScreen';
 import useInterval from '../../../utility/useInterval';
-
-interface PartyMainScreenProps {
-  theme: any,
-  partyId: string,
-  username: string,
-  getProviderInstance: () => any
-}
+import PartyState from '../../../states/partyState';
 
 interface iTopSliderProps {
   partyId: string,
@@ -231,9 +222,8 @@ const BottomSlider = (props: iBottomSliderProps) => {
 
 interface iPartyNavigationContainerProps {
   children: React.ReactElement[] | React.ReactElement,
-  partyId: string,
+  partyState: PartyState,
   isPartyHost: boolean,
-  hostName: string,
   styles: any,
   playerState: any,
   setPlayerState: (state: any) => void,
@@ -242,9 +232,8 @@ interface iPartyNavigationContainerProps {
 
 const PartyNavigationContainer = (props: iPartyNavigationContainerProps) => {
   const {
-    partyId,
+    partyState,
     isPartyHost,
-    hostName,
     styles,
     children,
     playerState,
@@ -273,9 +262,9 @@ const PartyNavigationContainer = (props: iPartyNavigationContainerProps) => {
   return (
     <>
       <TopSlider
-        partyId={partyId}
+        partyId={partyState.partyId}
         isPartyHost={isPartyHost}
-        hostName={hostName}
+        hostName={partyState.hostName}
         styles={styles}
         hidden={openSlider === 'bottom'}
         onOverlayChange={onTopOverlayChanged}
@@ -294,7 +283,18 @@ const PartyNavigationContainer = (props: iPartyNavigationContainerProps) => {
   )
 }
 
+interface PartyMainScreenProps {
+  theme: any,
+  partyState: PartyState,
+  username: string,
+  getProviderInstance: () => any
+}
+
 const PartyMainScreen = (props: PartyMainScreenProps) => {
+  const {
+    partyState
+  } = props;
+
   const [playerState, setPlayerState] = useState<PlayerState>({
     isPaused: false,
     playbackOptions: {
@@ -329,14 +329,9 @@ const PartyMainScreen = (props: PartyMainScreenProps) => {
     }
   });
 
-  const [hostName, setHostName] = useState('');
-  const [currentSong, setCurrentSong] = useState<Track | null>(null);
-  const [previousSong, setPreviousSong] = useState<Track | null>(null);
-  const [nextSong, setNextSong] = useState<Track | null>(null);
   const [isReadyToQueue, setIsReadyToQueue] = useState<Boolean>(false);
 
   const styles = jsx(props.theme);
-
   const isPartyHost = props.username === '';
 
   const secondsToTime = (seconds: number): string => {
@@ -350,13 +345,13 @@ const PartyMainScreen = (props: PartyMainScreenProps) => {
     item: Track,
     index: number
   }) => (
-      <View style={styles.carouselImageView}>
-        <Image
-          style={styles.carouselImage}
-          source={{ uri: item.item.imageUri }}
-        />
-      </View>
-    )
+    <View style={styles.carouselImageView}>
+      <Image
+        style={styles.carouselImage}
+        source={{ uri: item.item.imageUri }}
+      />
+    </View>
+  )
 
   // useEffect(() => {
   //   const providerInstance = props.getProviderInstance();
@@ -423,32 +418,31 @@ const PartyMainScreen = (props: PartyMainScreenProps) => {
     }
   }, 2000)
 
-  useEffect(() => {
-    if (isReadyToQueue) {
-      const providerInstance = props.getProviderInstance();
-      providerInstance.queueTrack(nextSong?.trackUri);
-    }
-  }, [isReadyToQueue]);
+  // useEffect(() => {
+  //   if (isReadyToQueue) {
+  //     const providerInstance = props.getProviderInstance();
+  //     providerInstance.queueTrack(nextSong?.trackUri);
+  //   }
+  // }, [isReadyToQueue]);
 
-  let carouselTracks: Track[] = [];
-  [previousSong, currentSong, nextSong].forEach(track => {
-    if (track !== null) {
-      carouselTracks.push(track);
-    }
-  });
+  // let carouselTracks: Track[] = [];
+  // [previousSong, currentSong, nextSong].forEach(track => {
+  //   if (track !== null) {
+  //     carouselTracks.push(track);
+  //   }
+  // });
 
   return (
     <PartyNavigationContainer
-      partyId={props.partyId}
+      partyState={partyState}
       isPartyHost={isPartyHost}
-      hostName={hostName}
       styles={styles}
       playerState={playerState}
       setPlayerState={setPlayerState}
       getProviderInstance={props.getProviderInstance}
     >
       <View style={styles.main}>
-        {currentSong !== null && (
+        {/* {currentSong !== null && (
           <>
             <Carousel
               data={carouselTracks}
@@ -482,19 +476,19 @@ const PartyMainScreen = (props: PartyMainScreenProps) => {
               </View>
             </View>
           </>
-        )}
+        )} */}
       </View>
     </PartyNavigationContainer>
   );
 }
 
 const mapStateToProps = (state: any) => ({
-  partyId: state.partyReducer.partyId,
+  partyState: state.partyReducer,
   username: state.userReducer.username
 });
 
 const mapDispatchToProps = (dispatch: Function) => ({
-  getProviderInstance: () => dispatch(getProviderInstance()),
+  getProviderInstance: () => dispatch(getProviderInstance())
 });
 
 export default connect(

@@ -1,12 +1,17 @@
 import firestore from '@react-native-firebase/firestore';
 
-import store from '../store/store';
-import { Alert } from 'react-native';
-
 export const PARTIES_COLLECTION = 'parties';
 export const SONG_REQUESTS_COLLECTION = 'songRequests';
 export const USERS_COLLECTION = 'users';
 export const VOTES_COLLECTION = 'votes';
+
+export interface Party {
+    id: string,
+    hostName: string,
+    playlistId: string,
+    token: string,
+    created: Date
+}
 
 export interface PartyMember {
     name: string
@@ -73,6 +78,7 @@ export const createParty = async (playlistId: string, provider: any): Promise<an
 
     return {partyId, docId};
 };
+
 export const changeDefaultPlayList = async (playlistId: string, docId: string): Promise<void> => {
     await firestore()
         .collection(PARTIES_COLLECTION)
@@ -174,7 +180,27 @@ export const endParty = (partyId: string) => {
     })
 }
 
-export const partyMembersListener: Function = (
+export const addPartyListener: Function = (
+    partyId: string,
+    handler: (party: Party) => void
+) => {
+    const subscriber = firestore()
+        .collection(PARTIES_COLLECTION)
+        .where('id', '==', partyId)
+        .limit(1)
+        .onSnapshot(
+            (documentSnapshot) => {
+                if (documentSnapshot.empty) {
+                    return;
+                }
+                const party = documentSnapshot.docs[0].data() as Party;
+                handler(party);
+            }
+        )
+    return () => subscriber();
+}
+
+export const addPartyMembersListener: Function = (
     partyId: string,
     handler: (members: PartyMember[]) => void
 ) => {
@@ -195,7 +221,7 @@ export const partyMembersListener: Function = (
     return () => subscriber();
 }
 
-export const songRequestsListener: Function = (
+export const addSongRequestsListener: Function = (
     partyId: string,
     handler: (songRequests: SongRequest[]) => void
 ) => {
@@ -212,7 +238,7 @@ export const songRequestsListener: Function = (
     return () => subscriber();
 }
 
-export const votesListener: Function = (
+export const addVotesListener: Function = (
     partyId: string,
     handler: (votes: SongVote[]) => void
 ) => {
@@ -227,6 +253,21 @@ export const votesListener: Function = (
             }
         )
     return () => subscriber();
+}
+
+export const addSongRequest = async (
+    songId: string,
+    partyId: string,
+    username: string
+) => {
+    await firestore()
+        .collection(SONG_REQUESTS_COLLECTION)
+        .add({
+            partyId,
+            songId,
+            requester: username,
+            requestedAt: new Date()
+        })
 }
 
 export const voteOnSong = async (
@@ -253,7 +294,6 @@ export const voteOnSong = async (
             });
     } else {
         const doc = querySnapshot.docs[0];
-        const data = doc.data();
         await firestore()
             .collection(VOTES_COLLECTION)
             .doc(doc.id)
