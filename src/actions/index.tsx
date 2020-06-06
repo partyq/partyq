@@ -1,3 +1,3 @@
 export *  from './partyActions';
-export * from './providerActions';
+export * from './miscActions';
 export * from './userActions';
