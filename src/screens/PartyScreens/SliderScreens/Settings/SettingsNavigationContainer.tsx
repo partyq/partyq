@@ -7,6 +7,7 @@ import SettingsMainScreen from './SettingsMainScreen/SettingsMainScreen';
 import SettingsSelectDefaultPlaylistScreen from './SettingsSelectDefaultPlaylistScreen/SettingsSelectDefaultPlaylistScreen';
 import SettingsPreviewPlaylistScreen from './SettingsPreviewPlaylistScreen/SettingsPreviewPlaylistScreen';
 import { NavigationContainer } from '@react-navigation/native';
+import SettingsSongRequestsScreen from './SettingsSongRequestsScreen/SettingsSongRequestsScreen';
 
 type SettingsStackParamList = {
     Main: undefined,
@@ -45,6 +46,10 @@ const SettingsNavigator = () => {
                 <SettingsStack.Screen
                     name='PreviewPlayList'
                     component={SettingsPreviewPlaylistScreen}
+                />
+                <SettingsStack.Screen
+                    name='SongRequests'
+                    component={SettingsSongRequestsScreen}
                 />
             </SettingsStack.Navigator>
         </NavigationContainer>

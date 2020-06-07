@@ -16,14 +16,13 @@ import SearchView from '../../../components/SearchView/SearchView';
 import BackgroundContainer from '../../../hoc/BackgroundContainer';
 import ThemedButton, { MODE } from '../../../components/Button/ThemedButton';
 import { PlaylistDetails, SearchType } from '../../../utility/MusicServices/MusicService';
-import { getProviderInstance, setProviderId, setPlaylistDetails } from '../../../actions';
+import { getProviderInstance, setProviderId } from '../../../actions';
 
 export interface iSelectDefaultPlayListScreen {
   theme: any,
   navigation: any,
   getProviderInstance: () => any,
   setProviderId: (providerId: string) => void,
-  setPlaylistDetails: (PlaylistDetails: PlaylistDetails) => void,
   ignoreSafeArea?: true,
   onBeforeBack?: () => void,
   noHeader?: true
@@ -122,8 +121,10 @@ const SelectDefaultPlayListScreen = (props: iSelectDefaultPlayListScreen) => {
   };
 
   const onPlayListPress = async (playlistDetails: PlaylistDetails): Promise<void> => {
-    props.setPlaylistDetails(playlistDetails)
-    props.navigation.navigate('PreviewPlayList');
+    props.navigation.navigate('PreviewPlayList', {
+      playlistDetails: playlistDetails,
+      readOnly: false
+    });
   };
 
   return (
@@ -192,7 +193,6 @@ const mapDispatchToProps = (dispatch: any) => {
   return {
     getProviderInstance: () => dispatch(getProviderInstance()),
     setProviderId: (providerId: string) => dispatch(setProviderId(providerId)),
-    setPlaylistDetails: (playlistDetails: PlaylistDetails) => dispatch(setPlaylistDetails(playlistDetails)),
   }
 };
 

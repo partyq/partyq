@@ -6,7 +6,9 @@ import {
     SET_SONG_REQUESTS,
     SET_REQUEST_VOTES,
     SET_PARTY_MEMBERS,
-    SET_PLAYLIST_DETAILS
+    SET_PLAYLIST_DETAILS,
+    SET_REQUEST_THRESHOLD,
+    SET_QUEUE_BY_VOTE_COUNT
 } from '../actions/partyActions';
 
 export const initialState: PartyState = {
@@ -15,10 +17,13 @@ export const initialState: PartyState = {
     hostName: '',
     playlistId: '',
     token: '',
+    created: null,
     requests: [],
     votes: [],
     members: [],
-    playlistDetails: undefined
+    playlistDetails: undefined,
+    requestsThreshold: null,
+    queueByVoteCount: false
 };
 
 const partyReducer = (state: PartyState = initialState, action: any) => {
@@ -39,7 +44,8 @@ const partyReducer = (state: PartyState = initialState, action: any) => {
                 partyId: party.id,
                 hostName: party.hostName,
                 playlistId: party.playlistId,
-                token: party.token
+                token: party.token,
+                created: party.created.toDate()
             });
         case SET_SONG_REQUESTS:
             const { requests } = action;
@@ -60,7 +66,17 @@ const partyReducer = (state: PartyState = initialState, action: any) => {
             const { playlistDetails } = action;
             return Object.assign({}, state, {
                 playlistDetails
-            })
+            });
+        case SET_REQUEST_THRESHOLD:
+            const { threshold } = action;
+            return Object.assign({}, state, {
+                requestsThreshold: threshold
+            });
+        case SET_QUEUE_BY_VOTE_COUNT:
+            const { queueByVoteCount } = action;
+            return Object.assign({}, state, {
+                queueByVoteCount
+            });
         default: 
             return state
     }

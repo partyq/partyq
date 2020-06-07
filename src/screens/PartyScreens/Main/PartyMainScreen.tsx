@@ -405,18 +405,20 @@ const PartyMainScreen = (props: PartyMainScreenProps) => {
 
   useInterval(async() => {
     const providerInstance = props.getProviderInstance();
-    const playerState = await providerInstance.getPlayerState();
-    const crossfadeState = await providerInstance.getCrossfadeState();
-    const crossfadeDuration = crossfadeState.enabled ? crossfadeState.duration : 0;
-    const durationLeft = Math.floor((playerState.track.duration - playerState.playbackPosition)/1000)*1000;
+    if (providerInstance.playerIsReady()) {
+      const playerState = await providerInstance.getPlayerState();
+      const crossfadeState = await providerInstance.getCrossfadeState();
+      const crossfadeDuration = crossfadeState.enabled ? crossfadeState.duration : 0;
+      const durationLeft = Math.floor((playerState.track.duration - playerState.playbackPosition)/1000)*1000;
 
-    if (durationLeft <= (crossfadeDuration + 5000) && !isReadyToQueue) {
-      setIsReadyToQueue(true);
+      if (durationLeft <= (crossfadeDuration + 5000) && !isReadyToQueue) {
+        setIsReadyToQueue(true);
+      }
+      else if (durationLeft > (crossfadeDuration + 5000) && isReadyToQueue) {
+        setIsReadyToQueue(false);
+      }
     }
-    else if (durationLeft > (crossfadeDuration + 5000) && isReadyToQueue) {
-      setIsReadyToQueue(false);
-    }
-  }, 2000)
+  }, 2000);
 
   // useEffect(() => {
   //   if (isReadyToQueue) {

@@ -34,11 +34,11 @@ export interface iSelectDefaultPlayListScreen {
   navigation: any,
   getProviderInstance: () => any,
   setProviderId: (providerId: string) => void,
-  playlistDetails: PlaylistDetails,
   ignoreSafeArea?: true,
   onFinish?: (playlistId: string) => void,
   route: any,
   createParty: (playlistId: string, provider: any) => any,
+  setPlaylistDetails: (playlistDetails: PlaylistDetails) => void,
   noHeader?: true
 };
 
@@ -55,6 +55,7 @@ export interface iPlayListDescription {
   onPress: () => void,
   buttonWidth: number,
   disabled: boolean,
+  readOnly: boolean
 };
 
 const PreviewPlayListScreen = (props: iSelectDefaultPlayListScreen) => {
@@ -65,20 +66,29 @@ const PreviewPlayListScreen = (props: iSelectDefaultPlayListScreen) => {
   const [isFinishPressed, setIsFinishPressed] = useState<boolean>(false);
   const [pageNumber, setPageNumber] = useState<number>(1);
 
+  const {
+    setPlaylistDetails
+  } = props;
+
+  const {
+    playlistDetails,
+    readOnly
+  } = props.route.params;
+
   useEffect(() => {
-    if (props.playlistDetails.playlistId) {
+    if (playlistDetails.playlistId) {
       getTracks(pageNumber);
     }
     else {
       Alert.alert('Something went wrong');
     }
-  }, [pageNumber, props.playlistDetails]);
+  }, [pageNumber, playlistDetails]);
 
   const getTracks = async (pageNumber: number): Promise<void> => {
     try {
       const instance = props.getProviderInstance();
       if (instance !== undefined) {
-        const data: Track[] = await instance.getTracks(props.playlistDetails.playlistId, pageNumber);
+        const data: Track[] = await instance.getTracks(playlistDetails.playlistId, pageNumber);
 
         const newTracks: Track[] | undefined = tracks !== undefined ?
           [...tracks, ...data]:
@@ -101,12 +111,13 @@ const PreviewPlayListScreen = (props: iSelectDefaultPlayListScreen) => {
 
   const finish = async(): Promise<void> => {
     setIsFinishPressed(true);
+    setPlaylistDetails(playlistDetails)
     if (props.onFinish) {
-      props.onFinish(props.playlistDetails.playlistId);
+      props.onFinish(playlistDetails.playlistId);
     } else {
       try {
         const instance = props.getProviderInstance();
-        await props.createParty(props.playlistDetails.playlistId, instance);
+        await props.createParty(playlistDetails.playlistId, instance);
         props.navigation.navigate('PartyMain');
       }
       catch (error) {
@@ -125,13 +136,14 @@ const PreviewPlayListScreen = (props: iSelectDefaultPlayListScreen) => {
       }
     >
 
-      {props.playlistDetails &&
+      {playlistDetails &&
         <PlayListDescription 
           styles={styles}
-          playlistDetails={props.playlistDetails}
+          playlistDetails={playlistDetails}
           onPress={finish}
           buttonWidth={buttonWidth}
           disabled={isFinishPressed}
+          readOnly={readOnly}
         />
       }
       {tracks !== undefined &&
@@ -139,14 +151,14 @@ const PreviewPlayListScreen = (props: iSelectDefaultPlayListScreen) => {
           style={styles.listContainer}
           tracks={tracks}
           handleLoadMore={handleLoadMore}
-          totalTracks={props.playlistDetails.totalTracks}
+          totalTracks={playlistDetails.totalTracks}
         />
       }
     </BackgroundContainer>
   );
 };
 
-const PlayListDescription = ({ styles, playlistDetails, onPress, buttonWidth, disabled }: iPlayListDescription) => (
+const PlayListDescription = ({ styles, playlistDetails, onPress, buttonWidth, disabled, readOnly }: iPlayListDescription) => (
   <View style={styles.playListDescriptionContainer}>
     <View style={styles.panel}>
       <Image
@@ -166,15 +178,17 @@ const PlayListDescription = ({ styles, playlistDetails, onPress, buttonWidth, di
           </Text>
           <Text style={styles.numSongs}>{`${playlistDetails.totalTracks} Songs`}</Text>
         </View>
-        <ThemedButton
-          mode={MODE.CONTAINED}
-          onPress={onPress}
-          width={buttonWidth}
-          size='sm'
-          disabled={disabled}
-        >
-          SELECT PLAYLIST
-        </ThemedButton>
+        {!readOnly && (
+          <ThemedButton
+            mode={MODE.CONTAINED}
+            onPress={onPress}
+            width={buttonWidth}
+            size='sm'
+            disabled={disabled}
+          >
+            SELECT PLAYLIST
+          </ThemedButton>
+        )}
       </View>
     </View>
     {
@@ -216,7 +230,7 @@ const Tracks = ({ style, tracks, handleLoadMore, totalTracks }: iTracksSectionPr
 };
 
 const mapStateToProps = (state: any) => ({
-  playlistDetails: state.partyReducer.playlistDetails,
+  // playlistDetails: state.partyReducer.playlistDetails
 });
 
 const mapDispatchToProps = (dispatch: any) => {
@@ -224,6 +238,7 @@ const mapDispatchToProps = (dispatch: any) => {
     getProviderInstance: () => dispatch(getProviderInstance()),
     setProviderId: (providerId: string) => dispatch(setProviderId(providerId)),
     createParty: (playlistId: string, provider: any) => dispatch(createParty(playlistId, provider)),
+    setPlaylistDetails: (playlistDetails: PlaylistDetails) => dispatch(setPlaylistDetails(playlistDetails))
   }
 };
 
