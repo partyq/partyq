@@ -55,6 +55,7 @@ export interface iPlayListDescription {
   onPress: () => void,
   buttonWidth: number,
   disabled: boolean,
+  readOnly: boolean
 };
 
 const PreviewPlayListScreen = (props: iSelectDefaultPlayListScreen) => {
@@ -70,7 +71,8 @@ const PreviewPlayListScreen = (props: iSelectDefaultPlayListScreen) => {
   } = props;
 
   const {
-    playlistDetails
+    playlistDetails,
+    readOnly
   } = props.route.params;
 
   useEffect(() => {
@@ -141,6 +143,7 @@ const PreviewPlayListScreen = (props: iSelectDefaultPlayListScreen) => {
           onPress={finish}
           buttonWidth={buttonWidth}
           disabled={isFinishPressed}
+          readOnly={readOnly}
         />
       }
       {tracks !== undefined &&
@@ -155,7 +158,7 @@ const PreviewPlayListScreen = (props: iSelectDefaultPlayListScreen) => {
   );
 };
 
-const PlayListDescription = ({ styles, playlistDetails, onPress, buttonWidth, disabled }: iPlayListDescription) => (
+const PlayListDescription = ({ styles, playlistDetails, onPress, buttonWidth, disabled, readOnly }: iPlayListDescription) => (
   <View style={styles.playListDescriptionContainer}>
     <View style={styles.panel}>
       <Image
@@ -175,15 +178,17 @@ const PlayListDescription = ({ styles, playlistDetails, onPress, buttonWidth, di
           </Text>
           <Text style={styles.numSongs}>{`${playlistDetails.totalTracks} Songs`}</Text>
         </View>
-        <ThemedButton
-          mode={MODE.CONTAINED}
-          onPress={onPress}
-          width={buttonWidth}
-          size='sm'
-          disabled={disabled}
-        >
-          SELECT PLAYLIST
-        </ThemedButton>
+        {!readOnly && (
+          <ThemedButton
+            mode={MODE.CONTAINED}
+            onPress={onPress}
+            width={buttonWidth}
+            size='sm'
+            disabled={disabled}
+          >
+            SELECT PLAYLIST
+          </ThemedButton>
+        )}
       </View>
     </View>
     {
@@ -225,7 +230,7 @@ const Tracks = ({ style, tracks, handleLoadMore, totalTracks }: iTracksSectionPr
 };
 
 const mapStateToProps = (state: any) => ({
-  // playlistDetails: state.partyReducer.playlistDetails,
+  // playlistDetails: state.partyReducer.playlistDetails
 });
 
 const mapDispatchToProps = (dispatch: any) => {

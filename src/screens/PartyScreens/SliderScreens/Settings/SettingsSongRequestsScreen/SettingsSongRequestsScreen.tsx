@@ -14,7 +14,8 @@ interface iSettingsSongRequestsScreenProps {
     requestsThreshold: number | null,
     setRequestThreshold: (threshold: number | null) => void,
     queueByVoteCount: boolean,
-    setQueueByVoteCount: (queueByVoteCount: boolean) => void
+    setQueueByVoteCount: (queueByVoteCount: boolean) => void,
+    username: string
 }
 
 const SettingsSongRequestsScreen = (props: iSettingsSongRequestsScreenProps) => {
@@ -23,18 +24,28 @@ const SettingsSongRequestsScreen = (props: iSettingsSongRequestsScreenProps) => 
         requestsThreshold,
         setRequestThreshold,
         queueByVoteCount,
-        setQueueByVoteCount
+        setQueueByVoteCount,
+        username
     } = props;
 
     const styles = jsx(theme);
 
     const useVotingThreshold = requestsThreshold !== null;
+    const isHost = username === '';
 
     const onUseRequestsThresholdChange = () => {
         if (useVotingThreshold) {
             setRequestThreshold(null);
         } else {
             setRequestThreshold(0);
+        }
+    }
+
+    const onVoteNumberChange = (text: string) => {
+        if (text === '') {
+            setRequestThreshold(0);
+        } else {
+            setRequestThreshold(parseInt(text));
         }
     }
 
@@ -48,21 +59,27 @@ const SettingsSongRequestsScreen = (props: iSettingsSongRequestsScreenProps) => 
             <ScrollView>
                 <List.Section>
                     <List.Item
+                        style={[
+                            !isHost
+                            ? styles.disabled
+                            : null
+                        ]}
                         title='Use Voting Threshold'
                         description='Enable this to set a number of votes that a request needs before it plays.'
                         right={() => (
                             <Switch
                                 value={useVotingThreshold}
                                 onValueChange={onUseRequestsThresholdChange}
+                                disabled={!isHost}
                             />
                         )}
                     />
                     <View
-                        style={
-                            useVotingThreshold
+                        style={[
+                            useVotingThreshold && isHost
                             ? null
                             : styles.disabled
-                        }
+                        ]}
                     >
                         <List.Item
                             title='Number of Votes'
@@ -73,6 +90,9 @@ const SettingsSongRequestsScreen = (props: iSettingsSongRequestsScreenProps) => 
                                         styles.textField,
                                         styles.digitTextField
                                     ]}
+                                    editable={isHost && useVotingThreshold}
+                                    value={requestsThreshold?.toString()}
+                                    onChangeText={onVoteNumberChange}
                                 />
                             )}
                         />
@@ -80,12 +100,18 @@ const SettingsSongRequestsScreen = (props: iSettingsSongRequestsScreenProps) => 
                 </List.Section>
                 <List.Section>
                     <List.Item
+                        style={[
+                            !isHost
+                            ? styles.disabled
+                            : null
+                        ]}
                         title='Queue Songs by Vote Count'
                         description='Enabling this will play the songs with the most votes first.'
                         right={() => (
                             <Switch
                                 value={queueByVoteCount}
                                 onValueChange={() => setQueueByVoteCount(!queueByVoteCount)}
+                                disabled={!isHost}
                             />
                         )}
                     />
@@ -97,7 +123,8 @@ const SettingsSongRequestsScreen = (props: iSettingsSongRequestsScreenProps) => 
 
 const mapStateToProps = (state: any) => ({
     requestsThreshold: state.partyReducer.requestsThreshold,
-    queueByVoteCount: state.partyReducer.queueByVoteCount
+    queueByVoteCount: state.partyReducer.queueByVoteCount,
+    username: state.userReducer.username
 });
 
 const mapDispatchToProps = (dispatch: Function) => ({

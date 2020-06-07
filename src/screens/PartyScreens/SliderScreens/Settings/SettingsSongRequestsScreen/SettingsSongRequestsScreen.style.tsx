@@ -3,9 +3,9 @@ import { StyleSheet } from 'react-native';
 export default (theme: any) => StyleSheet.create({
     textField: {
         // backgroundColor: 'red',
-        backgroundColor: 'rgba(0, 0, 0, 0.05)',
+        backgroundColor: 'rgba(0, 0, 0, 0.02)',
         padding: 10,
-        borderColor: 'rgba(0, 0, 0, 0.7)',
+        borderColor: 'rgba(0, 0, 0, 0.3)',
         borderWidth: 1,
         borderRadius: 10
     },

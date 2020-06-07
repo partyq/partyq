@@ -14,7 +14,8 @@ interface SettingsMenuNavItemProps {
     icon: string,
     screenName: string,
     navigation: any,
-    style?: any
+    style?: any,
+    disabled?: boolean
 }
 
 const SettingsMenuNavItem = (props: SettingsMenuNavItemProps) => {
@@ -23,7 +24,8 @@ const SettingsMenuNavItem = (props: SettingsMenuNavItemProps) => {
         icon,
         screenName,
         navigation,
-        style
+        style,
+        disabled
     } = props;
 
     const onPress = () => {
@@ -32,11 +34,19 @@ const SettingsMenuNavItem = (props: SettingsMenuNavItemProps) => {
 
     return (
         <List.Item
-            style={style}
+            style={[
+                style,
+                disabled
+                ? {
+                    opacity: 0.5
+                }
+                : null
+            ]}
             title={title}
             left={() => <List.Icon icon={icon} />}
             right={() => <List.Icon icon='chevron-right' />}
             onPress={onPress}
+            disabled={disabled}
         />
     );
 }
@@ -56,7 +66,8 @@ const SettingsPlaylistDetailsItem = (props: iSettingsPlaylistDetailsProps) => {
 
     const onPress = () => {
         navigation.navigate('PreviewPlayList', {
-            playlistDetails: data
+            playlistDetails: data,
+            readOnly: true
         });
     }
 
@@ -87,9 +98,9 @@ const SettingsPlaylistDetailsItem = (props: iSettingsPlaylistDetailsProps) => {
 interface iSettingsMainScreenProps {
     navigation: any,
     theme: any,
-    isHost: boolean,
     partyCreated: Date | null,
-    playlistDetails: PlaylistDetails
+    playlistDetails: PlaylistDetails,
+    username: string
 }
 
 const SettingsMainScreen = (props: iSettingsMainScreenProps) => {
@@ -97,10 +108,13 @@ const SettingsMainScreen = (props: iSettingsMainScreenProps) => {
         navigation,
         theme,
         partyCreated,
-        playlistDetails
+        playlistDetails,
+        username
     } = props;
 
     const styles = jsx(theme);
+
+    const isHost = username === '';
 
     return (
         <>
@@ -130,11 +144,12 @@ const SettingsMainScreen = (props: iSettingsMainScreenProps) => {
                         Main Settings
                     </List.Subheader>
                     <SettingsMenuNavItem
-                        title='Default Playlist'
+                        title='Change Default Playlist'
                         icon='playlist-music'
                         screenName='DefaultPlaylist'
                         navigation={navigation}
                         style={styles.listItem}
+                        disabled={!isHost}
                     />
                     <SettingsMenuNavItem
                         title='Song Requests'
@@ -152,12 +167,23 @@ const SettingsMainScreen = (props: iSettingsMainScreenProps) => {
                     </List.Subheader>
                 </List.Section>
                 <List.Section>
-                    <ThemedButton
-                        mode={MODE.CONTAINED}
-                        onPress={() => null}
-                    >
-                        END PARTY
-                    </ThemedButton>
+                    {username === ''
+                    ? (
+                        <ThemedButton
+                            mode={MODE.CONTAINED}
+                            onPress={() => null}
+                        >
+                            END PARTY
+                        </ThemedButton>
+                    )
+                    : (
+                        <ThemedButton
+                            mode={MODE.CONTAINED}
+                            onPress={() => null}
+                        >
+                            LEAVE PARTY
+                        </ThemedButton>
+                    )}
                 </List.Section>
             </ScrollView>
         </>
@@ -166,7 +192,8 @@ const SettingsMainScreen = (props: iSettingsMainScreenProps) => {
 
 const mapStateToProps = (state: any) => ({
     partyCreated: state.partyReducer.created,
-    playlistDetails: state.partyReducer.playlistDetails
+    playlistDetails: state.partyReducer.playlistDetails,
+    username: state.userReducer.username
 });
 
 export default connect(
