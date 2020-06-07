@@ -25,6 +25,8 @@ export const SET_SONG_REQUESTS = 'SET_SONG_REQUESTS';
 export const SET_REQUEST_VOTES = 'SET_REQUEST_VOTES';
 export const SET_PARTY_MEMBERS = 'SET_PARTY_MEMBERS';
 export const SET_PLAYLIST_DETAILS = 'SET_PLAYLIST_DETAILS';
+export const SET_REQUEST_THRESHOLD = 'SET_REQUEST_THRESHOLD';
+export const SET_QUEUE_BY_VOTE_COUNT = 'SET_QUEUE_BY_VOTE_COUNT';
 
 export const setPartyId = (partyId: string) => ({
     type: SET_PARTY_ID,
@@ -59,7 +61,17 @@ export const setPartyMembers = (members: PartyMember[]) => ({
 export const setPlaylistDetails = (playlistDetails: PlaylistDetails) => ({
     type: SET_PLAYLIST_DETAILS,
     playlistDetails,
-})
+});
+
+export const setRequestThreshold = (threshold: number | null) => ({
+    type: SET_REQUEST_THRESHOLD,
+    threshold
+});
+
+export const setQueueByVoteCount = (queueByVoteCount: boolean) => ({
+    type: SET_QUEUE_BY_VOTE_COUNT,
+    queueByVoteCount
+});
 
 const startPartyReduxListeners = (partyId: string) => {
     return (dispatch: Function) => {
