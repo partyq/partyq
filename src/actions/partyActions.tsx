@@ -16,7 +16,7 @@ import {
 } from '../utility/backend';
 import store from '../store/store';
 import { setListeners } from '.';
-import { PlaylistDetails } from '../utility/MusicServices/MusicService';
+import { PlaylistDetails, Track } from '../utility/MusicServices/MusicService';
 
 export const SET_PARTY_ID = 'SET_PARTY_ID';
 export const SET_DOC_ID = 'SET_DOC_ID';
@@ -25,6 +25,9 @@ export const SET_SONG_REQUESTS = 'SET_SONG_REQUESTS';
 export const SET_REQUEST_VOTES = 'SET_REQUEST_VOTES';
 export const SET_PARTY_MEMBERS = 'SET_PARTY_MEMBERS';
 export const SET_PLAYLIST_DETAILS = 'SET_PLAYLIST_DETAILS';
+export const APPEND_PLAYLIST_TRACKS = 'APPEND_TRACKS';
+export const SET_PLAYLIST_TRACKS = 'SET_TRACKS'
+export const SET_PAGE_NUMBER = 'SET_PAGE_NUMBER';
 
 export const setPartyId = (partyId: string) => ({
     type: SET_PARTY_ID,
@@ -56,9 +59,27 @@ export const setPartyMembers = (members: PartyMember[]) => ({
     members
 });
 
-export const setPlaylistDetails = (playlistDetails: PlaylistDetails) => ({
+export const setPlaylistDetails = (playlistDetails: PlaylistDetails | undefined) => ({
     type: SET_PLAYLIST_DETAILS,
     playlistDetails,
+});
+
+export const setPlaylistTracks = (tracksToSet: Track[] | undefined) => {
+    console.log({tracksToSet: tracksToSet === undefined})
+    return {
+            type: SET_PLAYLIST_TRACKS,
+            tracksToSet,
+        }
+};
+
+export const appendPlaylistTracks = (tracksToAppend: Track[]) => ({
+    type: APPEND_PLAYLIST_TRACKS,
+    tracksToAppend,
+});
+
+export const setPageNumber = (pageNumber: number) => ({
+    type: SET_PAGE_NUMBER,
+    pageNumber,
 })
 
 const startPartyReduxListeners = (partyId: string) => {

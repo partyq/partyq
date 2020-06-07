@@ -122,7 +122,7 @@ const SelectDefaultPlayListScreen = (props: iSelectDefaultPlayListScreen) => {
   };
 
   const onPlayListPress = async (playlistDetails: PlaylistDetails): Promise<void> => {
-    props.setPlaylistDetails(playlistDetails)
+    props.setPlaylistDetails(playlistDetails);
     props.navigation.navigate('PreviewPlayList');
   };
 
@@ -176,7 +176,6 @@ const SelectDefaultPlayListScreen = (props: iSelectDefaultPlayListScreen) => {
                   title={item.title}
                   description={`${item.totalTracks} Songs`}
                   key={index}
-                  // onPress={() => onPlayListPress(item.id)}
                 />
               </TouchableOpacity>
             </View>
@@ -192,7 +191,7 @@ const mapDispatchToProps = (dispatch: any) => {
   return {
     getProviderInstance: () => dispatch(getProviderInstance()),
     setProviderId: (providerId: string) => dispatch(setProviderId(providerId)),
-    setPlaylistDetails: (playlistDetails: PlaylistDetails) => dispatch(setPlaylistDetails(playlistDetails)),
+    setPlaylistDetails: (playlistDetails: PlaylistDetails | undefined) => dispatch(setPlaylistDetails(playlistDetails)),
   }
 };
 

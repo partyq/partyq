@@ -6,7 +6,10 @@ import {
     SET_SONG_REQUESTS,
     SET_REQUEST_VOTES,
     SET_PARTY_MEMBERS,
-    SET_PLAYLIST_DETAILS
+    SET_PLAYLIST_DETAILS,
+    APPEND_PLAYLIST_TRACKS,
+    SET_PAGE_NUMBER,
+    SET_PLAYLIST_TRACKS
 } from '../actions/partyActions';
 
 export const initialState: PartyState = {
@@ -18,7 +21,9 @@ export const initialState: PartyState = {
     requests: [],
     votes: [],
     members: [],
-    playlistDetails: undefined
+    playlistDetails: undefined,
+    playlistTracks: undefined,
+    pageNumber: 0,
 };
 
 const partyReducer = (state: PartyState = initialState, action: any) => {
@@ -60,7 +65,25 @@ const partyReducer = (state: PartyState = initialState, action: any) => {
             const { playlistDetails } = action;
             return Object.assign({}, state, {
                 playlistDetails
-            })
+            });
+        case APPEND_PLAYLIST_TRACKS:
+            const { tracksToAppend } = action;
+            const newTracks = state.playlistTracks !== undefined ?
+                [...state.playlistTracks, ...tracksToAppend] :
+                tracksToAppend;
+            return Object.assign({}, state, {
+                playlistTracks: newTracks
+            });
+        case SET_PLAYLIST_TRACKS:
+            const { tracksToSet } = action;
+            return Object.assign({}, state, {
+                playlistTracks: tracksToSet
+            });
+        case SET_PAGE_NUMBER:
+            const { pageNumber } = action;
+            return Object.assign({}, state, {
+                pageNumber
+            });
         default: 
             return state
     }

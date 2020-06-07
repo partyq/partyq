@@ -7,7 +7,20 @@ import { View, StatusBar } from 'react-native';
 
 import InternetStatus from '../components/InternetStatus/InternetStatus';
 
-const BackgroundContainer = (props: any) => {
+export interface iBackgroundContainer {
+  theme: any,
+  onBeforeBack?: () => void,
+  navigation: any,
+  disableBack?: boolean,
+  title?: any,
+  noHeader?: boolean,
+  style?: any,
+  children?: any,
+  ignoreSafeArea?: boolean,
+  statusBarStyle?: any
+}
+
+const BackgroundContainer = (props: iBackgroundContainer) => {
   const { theme } = props;
 
   const handleNavigate = async(): Promise<void> => {

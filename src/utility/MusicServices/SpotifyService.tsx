@@ -141,7 +141,7 @@ class SpotifyService {
       parsedTracks.push({
         trackUri: id,
         title: name,
-        imageUri: album.images ? album.images[0].url : undefined,
+        imageUri: album.images ? album?.images[0]?.url : undefined,
         artists: stringOfArtists.slice(0, pos),
         durationMs: duration_ms
       });

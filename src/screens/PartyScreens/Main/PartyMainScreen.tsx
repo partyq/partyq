@@ -347,7 +347,7 @@ const PartyMainScreen = (props: PartyMainScreenProps) => {
 
   const [hostName, setHostName] = useState('');
   const [currentPlayingTrackIndex, setCurrentPlayingTrackIndex] = useState<number | undefined>(undefined);
-  const [currentTrackInView, setCurrentTrackInView] = useState<number>(0);
+  const [currentTrackInViewIndex, setcurrentTrackInViewIndex] = useState<number>(0);
   const [isReadyToQueue, setIsReadyToQueue] = useState<Boolean>(false);
   const [tracks, setTracks] = useState<Track[] | undefined>(undefined);
   const [pageNumber, setPageNumber] = useState<number>(0);
@@ -378,49 +378,28 @@ const PartyMainScreen = (props: PartyMainScreenProps) => {
     );
 
   useEffect(() => {
-
     if (partyState.playlistDetails) {
       getTracks(pageNumber);
     }
-
   }, [pageNumber, partyState.playlistDetails]);
-
-  useEffect(() => {
-    console.log({
-      tracks,
-      currentPlayingTrackIndex,
-      isPartyHost
-    })
-    if (tracks && currentPlayingTrackIndex !== undefined && isPartyHost) {
-      console.log('playTrack')
-      const provider = props.getProviderInstance();
-      provider.playTrack(tracks[currentPlayingTrackIndex].trackUri);
-    }
-  }, [tracks, currentPlayingTrackIndex]);
   
-  const onBeforeSnapToTrack = (index: number) => {
-    setCurrentTrackInView(index);
-
-    if (index + 1 === tracks?.length) {
-      setPageNumber(pageNumber + 1);
-    }
-  };
+  // const onBeforeSnapToTrack = (index: number) => {
+  //   setcurrentTrackInViewIndex(index);
+  //   if (index + 1 === tracks?.length) {
+  //     setPageNumber(pageNumber + 1);
+  //   }
+  // };
 
   const getTracks = async (pageNumber: number): Promise<void> => {
     try {
       const instance = props.getProviderInstance();
-      if (instance !== undefined) {
-        const data: Track[] = await instance.getTracks(partyState.playlistDetails?.playlistId, pageNumber);
+      const data: Track[] = await instance.getTracks(partyState.playlistDetails?.playlistId, pageNumber);
 
-        const newTracks: Track[] | undefined = tracks !== undefined ?
-          [...tracks, ...data]:
-          [...data];
+      const newTracks: Track[] | undefined = tracks !== undefined ?
+        [...tracks, ...data]:
+        [...data];
 
-        setTracks(newTracks);
-      }
-      else {
-        setTracks(undefined);
-      }
+      setTracks(newTracks);
     }
     catch (error) {
       console.error(error);
@@ -507,9 +486,10 @@ const PartyMainScreen = (props: PartyMainScreenProps) => {
               renderItem={renderTrackCarouselItem}
               sliderWidth={Dimensions.get('window').width}
               itemWidth={Dimensions.get('window').width * .6}
+              scrollEnabled={false}
               lockScrollWhileSnapping={true}
               inactiveSlideScale={0.7}
-              onBeforeSnapToItem={(index) => onBeforeSnapToTrack(index)}
+              // onBeforeSnapToItem={(index) => onBeforeSnapToTrack(index)}
               // ListFooterComponent={props.playlistDetails.totalTracks !== tracks?.length ? <LoadingIndicator/> : null}
               // onEndReached={() => props.playlistDetails.totalTracks !== tracks?.length ? handleLoadMore() : null}
               // onEndReachedThreshold={0}
@@ -520,19 +500,19 @@ const PartyMainScreen = (props: PartyMainScreenProps) => {
                 numberOfLines={2}
                 ellipsizeMode='tail'
               >
-                {tracks[currentTrackInView].title}
+                {tracks[currentTrackInViewIndex].title}
               </Text>
               <Text
                 style={styles.songArtist}
               >
-                By: {tracks[currentTrackInView].artists}
+                By: {tracks[currentTrackInViewIndex].artists}
               </Text>
               {
-                currentTrackInView === currentPlayingTrackIndex && isPartyHost &&
+                currentTrackInViewIndex === currentPlayingTrackIndex && isPartyHost &&
                   <View style={styles.songProgressView}>
                   <View style={styles.edgeRow}>
                     <Text>0:00</Text>
-                    <Text>{secondsToTime(tracks[currentTrackInView].durationMs / 1000)}</Text>
+                    <Text>{secondsToTime(tracks[currentTrackInViewIndex].durationMs / 1000)}</Text>
                   </View>
                   <ProgressBar
                     style={styles.progressBar}
