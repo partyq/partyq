@@ -346,12 +346,10 @@ const PartyMainScreen = (props: PartyMainScreenProps) => {
   });
 
   const [hostName, setHostName] = useState('');
-  const [currentPlayingTrackIndex, setCurrentPlayingTrackIndex] = useState<number>(0);
+  const [currentPlayingTrackIndex, setCurrentPlayingTrackIndex] = useState<number | undefined>(undefined);
   const [currentTrackInView, setCurrentTrackInView] = useState<number>(0);
-  const [previousSong, setPreviousSong] = useState<Track | null>(null);
-  const [nextSong, setNextSong] = useState<Track | null>(null);
   const [isReadyToQueue, setIsReadyToQueue] = useState<Boolean>(false);
-  const [tracks, setTracks] = useState<Track[]>();
+  const [tracks, setTracks] = useState<Track[] | undefined>(undefined);
   const [pageNumber, setPageNumber] = useState<number>(0);
 
   const styles = jsx(props.theme);
@@ -385,19 +383,27 @@ const PartyMainScreen = (props: PartyMainScreenProps) => {
       getTracks(pageNumber);
     }
 
-  }, [partyState.playlistDetails]);
+  }, [pageNumber, partyState.playlistDetails]);
 
   useEffect(() => {
-    console.log(tracks)
-
-  }, [tracks]);
-
-  const handleLoadMore = () => {
-    setPageNumber(pageNumber + 1);
-  };
+    console.log({
+      tracks,
+      currentPlayingTrackIndex,
+      isPartyHost
+    })
+    if (tracks && currentPlayingTrackIndex !== undefined && isPartyHost) {
+      console.log('playTrack')
+      const provider = props.getProviderInstance();
+      provider.playTrack(tracks[currentPlayingTrackIndex].trackUri);
+    }
+  }, [tracks, currentPlayingTrackIndex]);
   
   const onBeforeSnapToTrack = (index: number) => {
     setCurrentTrackInView(index);
+
+    if (index + 1 === tracks?.length) {
+      setPageNumber(pageNumber + 1);
+    }
   };
 
   const getTracks = async (pageNumber: number): Promise<void> => {
@@ -434,6 +440,7 @@ const PartyMainScreen = (props: PartyMainScreenProps) => {
         .then(
           async (documentSnapshot) => {
             const partyData = documentSnapshot.docs[0].data();
+            setCurrentPlayingTrackIndex(partyData.currentPlayingTrackIndex);
           }
         )
 
@@ -443,7 +450,7 @@ const PartyMainScreen = (props: PartyMainScreenProps) => {
           async (documentSnapshot) => {
             const partyData = documentSnapshot.docs[0].data();
             setHostName(partyData.hostName);
-            setCurrentPlayingTrackIndex(partyData.currentPlayingTrackIndex)
+            setCurrentPlayingTrackIndex(partyData.currentPlayingTrackIndex);
             props.setPlaylistDetails(partyData.playlistDetails);
 
             providerInstance.setToken(partyData.token);
@@ -453,31 +460,33 @@ const PartyMainScreen = (props: PartyMainScreenProps) => {
     }
   }, []);
 
-  // useInterval(async() => {
-  //   const providerInstance = props.getProviderInstance();
-  //   const playerState = await providerInstance.getPlayerState();
-  //   const crossfadeState = await providerInstance.getCrossfadeState();
-  //   const crossfadeDuration = crossfadeState.enabled ? crossfadeState.duration : 0;
-  //   const durationLeft = Math.floor((playerState.track.duration - playerState.playbackPosition)/1000)*1000;
+  useInterval(async() => {
+    if (currentPlayingTrackIndex === undefined || !tracks) return;
 
-  //   // if within safe duration, queue next song
-  //   if (durationLeft <= (crossfadeDuration + 5000) && !isReadyToQueue) {
-  //     setIsReadyToQueue(true);
-  //   }
-  //   // don't queue next song if current song still has plenty of time to play
-  //   else if (durationLeft > (crossfadeDuration + 5000) && isReadyToQueue) {
-  //     setIsReadyToQueue(false);
-  //   }
-  // }, 2000)
+    const providerInstance = props.getProviderInstance();
+    const playerState = await providerInstance.getPlayerState();
+    const crossfadeState = await providerInstance.getCrossfadeState();
+    const crossfadeDuration = crossfadeState.enabled ? crossfadeState.duration : 0;
+    const durationLeft = Math.floor((playerState.track.duration - playerState.playbackPosition)/1000)*1000;
 
-  // useEffect(() => {
-  //   if (isReadyToQueue) {
-  //     const providerInstance = props.getProviderInstance();
-  //     if (tracks && currentPlayingTrackIndex < tracks.length) {
-  //       providerInstance.queueTrack(tracks[currentPlayingTrackIndex + 1]?.trackUri);
-  //     }
-  //   }
-  // }, [isReadyToQueue]);
+    // if within safe duration, queue next song
+    if (durationLeft <= (crossfadeDuration + 5000) && !isReadyToQueue) {
+      setIsReadyToQueue(true);
+    }
+    // don't queue next song if current song still has plenty of time to play
+    else if (durationLeft > (crossfadeDuration + 5000) && isReadyToQueue) {
+      setIsReadyToQueue(false);
+    }
+  }, 2000)
+
+  useEffect(() => {
+    if (isReadyToQueue) {
+      const providerInstance = props.getProviderInstance();
+      if (tracks && currentPlayingTrackIndex !== undefined && currentPlayingTrackIndex < tracks.length) {
+        providerInstance.queueTrack(tracks[currentPlayingTrackIndex + 1]?.trackUri);
+      }
+    }
+  }, [isReadyToQueue]);
 
   return (
     <PartyNavigationContainer
