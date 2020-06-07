@@ -11,10 +11,13 @@ export default interface PartyState {
     hostName: string,
     playlistId: string,
     token: string,
+    created: Date | null,
     requests: SongRequest[],
     votes: SongVote[],
     members: PartyMember[]
     playlistDetails: PlaylistDetails | undefined,
     playlistTracks: Track[] | undefined,
     pageNumber: number,
+    requestsThreshold: number | null,
+    queueByVoteCount: boolean,
 }

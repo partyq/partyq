@@ -23,10 +23,10 @@ export interface iSelectDefaultPlayListScreen {
   navigation: any,
   getProviderInstance: () => any,
   setProviderId: (providerId: string) => void,
-  setPlaylistDetails: (PlaylistDetails: PlaylistDetails) => void,
   ignoreSafeArea?: true,
   onBeforeBack?: () => void,
-  noHeader?: true
+  noHeader?: true,
+  setPlaylistDetails: (playlistDetails: PlaylistDetails | undefined) => void,
 };
 
 const SelectDefaultPlayListScreen = (props: iSelectDefaultPlayListScreen) => {
@@ -123,7 +123,10 @@ const SelectDefaultPlayListScreen = (props: iSelectDefaultPlayListScreen) => {
 
   const onPlayListPress = async (playlistDetails: PlaylistDetails): Promise<void> => {
     props.setPlaylistDetails(playlistDetails);
-    props.navigation.navigate('PreviewPlayList');
+    props.navigation.navigate('PreviewPlayList', {
+      playlistDetails: playlistDetails,
+      readOnly: false
+    });
   };
 
   return (

@@ -39,6 +39,7 @@ class SpotifyService {
   private static instance: SpotifyService;
   private _session: SpotifySession;
   private _spotifyConfig: ApiConfig;
+  private _playerReady: boolean;
 
   constructor() {
     this._spotifyConfig = {
@@ -55,6 +56,7 @@ class SpotifyService {
       scope: ApiScope.AppRemoteControlScope,
       expired: false,
     };
+    this._playerReady = false;
   };
 
   static getInstance = () => {
@@ -87,6 +89,7 @@ class SpotifyService {
 
         this._session = await SpotifyAuth.authorize(this._spotifyConfig);
         await SpotifyRemote.connect(this._session.accessToken);
+        this._playerReady = true;
       }
       catch(error) {
         console.warn(error)
@@ -96,6 +99,8 @@ class SpotifyService {
   };
 
   getToken = () => this._session?.accessToken;
+
+  playerIsReady = () => this._playerReady;
 
   setToken = (token: string) => {
     if (this._session) {
