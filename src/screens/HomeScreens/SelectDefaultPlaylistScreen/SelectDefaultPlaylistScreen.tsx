@@ -1,22 +1,17 @@
 /* eslint-disable no-unused-vars */
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import {
   View,
-  Text,
-  FlatList,
-  Dimensions,
   TouchableOpacity
 } from 'react-native';
-import { withTheme, Divider } from 'react-native-paper';
+import { withTheme } from 'react-native-paper';
 import { connect } from 'react-redux';
 
-import jsx from './SelectDefaultPlayListScreen.style';
+// import jsx from './SelectDefaultPlayListScreen.style';
 import PlayListItem from '../../../components/PlayListItem/PlayListItem';
-import SearchView from '../../../components/SearchView/SearchView';
-import BackgroundContainer from '../../../hoc/BackgroundContainer';
-import ThemedButton, { MODE } from '../../../components/Button/ThemedButton';
 import { PlaylistDetails, SearchType } from '../../../utility/MusicServices/MusicService';
 import { getProviderInstance, setProviderId } from '../../../actions';
+import SearchScreen from '../../../components/SearchScreen/SearchScreen';
 
 export interface iSelectDefaultPlayListScreen {
   theme: any,
@@ -29,91 +24,44 @@ export interface iSelectDefaultPlayListScreen {
 };
 
 const SelectDefaultPlayListScreen = (props: iSelectDefaultPlayListScreen) => {
-  const styles = jsx(props.theme);
-  const buttonWidth = Dimensions.get('window').width * 0.4;
-
-  const [spotifyPlayList, setSpotifyPlayList] = useState<PlaylistDetails[] | undefined>(undefined);
-  const [library, setLibrary] = useState<PlaylistDetails[] | undefined>(undefined);
-  const [playListQuery, setPlayListQuery] = useState<string>('');
-  const [searchResults, setSearchResults] = useState<PlaylistDetails[] | undefined>(undefined);
-  const [unselectButton, setUnselectedButton] = useState({
-    service: false,
-    library: true,
-  });
-
-  useEffect(() => {
-    getPartyPlayLists();
-  }, []);
-
-  const getPartyPlayLists = async (): Promise<void> => {
+  const getPartyPlayLists = async (): Promise<PlaylistDetails[]> => {
     try {
       const instance = props.getProviderInstance();
       if (instance !== undefined) {
-        const data = await instance.getPartyPlayLists();
-        setSpotifyPlayList(data);
-      }
-      else {
-        setSpotifyPlayList(undefined);
+        return await instance.getPartyPlayLists();
       }
     }
     catch (error) {
       console.log(error);
     }
+    return []
   };
 
-  const getLibraryPLaylists = async (): Promise<void> => {
+  const getLibraryPLaylists = async (): Promise<PlaylistDetails[]> => {
     try {
       const instance = props.getProviderInstance();
       if (instance !== undefined) {
-        const data = await instance.getLibraryPlayLists();
-        setLibrary(data);
-      }
-      else {
-        setLibrary(undefined);
+        return await instance.getLibraryPlayLists();
       }
     }
     catch (error) {
       console.log(error);
     }
+    return [];
   };
 
-  const handleButton = (id: string): void => {
-    setSearchResults(undefined);
-    setPlayListQuery('');
-
-    if (id === 'service') {
-      setUnselectedButton({ service: false, library: true });
-    } else if (id === 'library') {
-      setUnselectedButton({ service: true, library: false });
-      getLibraryPLaylists();
-    }
-  };
-
-  const handleQueryChange = (query: string): void => {
-    if (query) {
-      setPlayListQuery(query);
-    }
-    else {
-      setPlayListQuery('');
-      setSearchResults(undefined);
-    }
-  };
-
-  const handleSearchPlayList = async (): Promise<void> => {
-    if (!playListQuery) return;
+  const handleSearchPlayList = async (query: string): Promise<PlaylistDetails[]> => {
+    if (!query) return [];
     try {
       const instance = props.getProviderInstance();
       if (instance !== undefined) {
-        const data = await instance.getSearchResults(playListQuery, SearchType.PLAYLIST);
-        setSearchResults(data);
-      }
-      else {
-        setSearchResults(undefined);
+        return await instance.getSearchResults(query, SearchType.PLAYLIST);
       }
     }
     catch (error) {
       console.log(error);
     }
+    return [];
   };
 
   const onBeforeBack = async (): Promise<void> => {
@@ -128,64 +76,33 @@ const SelectDefaultPlayListScreen = (props: iSelectDefaultPlayListScreen) => {
   };
 
   return (
-    <BackgroundContainer
-      navigation={props.navigation}
+    <SearchScreen
+      search={handleSearchPlayList}
+      getServiceData={getPartyPlayLists}
+      getLibraryData={getLibraryPLaylists}
+      renderItem={({item, index}) => (
+        <View>
+          <TouchableOpacity
+            activeOpacity={0.5}
+            onPress={() => onPlayListPress(item)}
+          >
+            <PlayListItem
+              image={item.imageUri}
+              title={item.title}
+              description={`${item.totalTracks} Songs`}
+              key={index}
+              // onPress={() => onPlayListPress(item.id)}
+            />
+          </TouchableOpacity>
+        </View>
+      )}
       onBeforeBack={props.onBeforeBack || onBeforeBack}
+      navigation={props.navigation}
       ignoreSafeArea={props.ignoreSafeArea!}
       noHeader={props.noHeader}
-      title={
-        <Text style={styles.headingText}>Select a Playlist</Text>
-      }
-    >
-      <SearchView
-        onChangeText={handleQueryChange}
-        onEndEditing={handleSearchPlayList}
-        value={playListQuery}
-      />
-      <View style={styles.buttonsContainer}>
-        <ThemedButton
-          width={buttonWidth}
-          mode={unselectButton.service ? MODE.TEXT : MODE.CONTAINED}
-          onPress={() => handleButton('service')}
-        >
-          Spotify
-        </ThemedButton>
-        <ThemedButton
-          width={buttonWidth}
-          mode={unselectButton.library ? MODE.TEXT : MODE.CONTAINED}
-          onPress={() => handleButton('library')}
-        >
-          Library
-        </ThemedButton>
-      </View>
-
-      <View style={styles.listContainer}>
-        <Divider />
-        <FlatList
-          data={searchResults
-            ? searchResults : unselectButton.service === false
-              ? spotifyPlayList : library
-          }
-          renderItem={({ item, index }) => (
-            <View>
-              <TouchableOpacity
-                activeOpacity={0.5}
-                onPress={() => onPlayListPress(item)}
-              >
-                <PlayListItem
-                  image={item.imageUri}
-                  title={item.title}
-                  description={`${item.totalTracks} Songs`}
-                  key={index}
-                  // onPress={() => onPlayListPress(item.id)}
-                />
-              </TouchableOpacity>
-            </View>
-          )}
-          keyExtractor={(item: PlaylistDetails) => item.playlistId}
-        />
-      </View>
-    </BackgroundContainer>
+      title='Select a Playlist'
+      keyExtractor={(item: PlaylistDetails) => item.playlistId}
+    />
   );
 };
 

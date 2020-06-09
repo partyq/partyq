@@ -75,22 +75,12 @@ const TopSlider = (props: iTopSliderProps) => {
               <Text style={styles.partyId}>
                 {partyId}
               </Text>
-              {isPartyHost ? (
-                <IconButton
-                  icon="settings"
-                  onPress={() => setOverlay(
-                    <SettingsNavigationContainer />
-                  )}
-                />
-              ) : (
-                  <Button
-                    onPress={() => null}
-                  >
-                    <Text style={styles.leaveText}>
-                      Leave
-                    </Text>
-                  </Button>
+              <IconButton
+                icon="settings"
+                onPress={() => setOverlay(
+                  <SettingsNavigationContainer />
                 )}
+              />
             </View>
             <View style={styles.centerRow}>
               <Text style={styles.pageTitle}>
@@ -210,7 +200,11 @@ const BottomSlider = (props: iBottomSliderProps) => {
             <IconButton
               icon="playlist-music"
               onPress={() => setOverlay(
-                <SongRequestsScreen />
+                <SongRequestsScreen 
+                  onRequestASongPressed={() => setOverlay(
+                    <RequestASongScreen />
+                  )}
+                />
               )}
             />
           </View>

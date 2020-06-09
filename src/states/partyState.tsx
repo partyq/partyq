@@ -17,5 +17,6 @@ export default interface PartyState {
     members: PartyMember[]
     playlistDetails: PlaylistDetails | undefined,
     requestsThreshold: number | null,
-    queueByVoteCount: boolean
+    queueByVoteCount: boolean,
+    allowLibraryRequests: boolean
 }
