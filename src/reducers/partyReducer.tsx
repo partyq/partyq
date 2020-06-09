@@ -8,7 +8,8 @@ import {
     SET_PARTY_MEMBERS,
     SET_PLAYLIST_DETAILS,
     SET_REQUEST_THRESHOLD,
-    SET_QUEUE_BY_VOTE_COUNT
+    SET_QUEUE_BY_VOTE_COUNT,
+    SET_ALLOW_LIBRARY_REQUESTS
 } from '../actions/partyActions';
 
 export const initialState: PartyState = {
@@ -23,7 +24,8 @@ export const initialState: PartyState = {
     members: [],
     playlistDetails: undefined,
     requestsThreshold: null,
-    queueByVoteCount: false
+    queueByVoteCount: false,
+    allowLibraryRequests: false
 };
 
 const partyReducer = (state: PartyState = initialState, action: any) => {
@@ -76,6 +78,11 @@ const partyReducer = (state: PartyState = initialState, action: any) => {
             const { queueByVoteCount } = action;
             return Object.assign({}, state, {
                 queueByVoteCount
+            });
+        case SET_ALLOW_LIBRARY_REQUESTS:
+            const { allow } = action;
+            return Object.assign({}, state, {
+                allowLibraryRequests: allow
             });
         default: 
             return state
