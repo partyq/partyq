@@ -20,4 +20,5 @@ export default interface PartyState {
     pageNumber: number,
     requestsThreshold: number | null,
     queueByVoteCount: boolean,
+    allowLibraryRequests: boolean
 }

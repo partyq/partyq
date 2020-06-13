@@ -47,7 +47,11 @@ class SpotifyService {
       redirectURL: SPOTIFY_REDIRECT_URL,
       tokenRefreshURL: `http://${IP}:${PORT}/refresh`,
       tokenSwapURL: `http://${IP}:${PORT}/swap`,
-      scopes: [ApiScope.AppRemoteControlScope, ApiScope.PlaylistReadPrivateScope]
+      scopes: [
+        ApiScope.AppRemoteControlScope, 
+        ApiScope.PlaylistReadPrivateScope,
+        ApiScope.UserLibraryReadScope
+      ]
     };
     this._session = {
       accessToken: '',
@@ -164,6 +168,42 @@ class SpotifyService {
     };
   }
 
+  getServiceTracks = async(): Promise<Track[]> => {
+    const seedTrack = '0c6xIDDpzE81m2q797ordA';
+    const URL = 'https://api.spotify.com/v1/recommendations';
+    const config = {
+      params: {
+        seed_tracks: `${seedTrack}`
+      },
+      headers: {
+        Authorization: `Bearer ${this._session.accessToken}`
+      }
+    }
+
+    const result = await axios.get(URL, config);
+
+    return result.data.tracks.map((item: any) => ({
+      trackUri: item.id,
+      imageUri: item.album.images ? item.album.images[0].url : undefined,
+      artists: item.artists[0].name,
+      title: item.name,
+      durationMs: item.duration_ms
+    }));
+  }
+
+  getLibraryTracks = async(): Promise<Track[]> => {
+    const URL = 'https://api.spotify.com/v1/me/tracks';
+    const config = {
+      headers: {
+        Authorization: `Bearer ${this._session.accessToken}`
+      }
+    }
+
+    const result = await axios.get(URL, config);
+
+    return this.parseTracks(result.data.items);
+  }
+
   /**
    * Get featured spotify playlists. Defaults to USA UTC time.
    */
@@ -172,7 +212,6 @@ class SpotifyService {
     const URL = 'https://api.spotify.com/v1/browse/categories/party/playlists';
     const config = { headers: { Authorization: `Bearer ${this._session.accessToken}` } };
     const result = await axios.get(URL, config);
-
 
     result.data.playlists.items.forEach((item: any) => {
       playLists.push({
@@ -221,15 +260,27 @@ class SpotifyService {
     };
     const result = await axios.get(URL, config);
 
-    result.data.playlists.items.forEach((item: any) => {
-      searchResults.push({
-        playlistId: item.id,
-        imageUri: item.images.length ? item.images[0].url : null,
-        title: item.name,
-        description: item.description,
-        totalTracks: Number(item.tracks.total)
+    if (type === SearchType.PLAYLIST) {
+      result.data.playlists.items.forEach((item: any) => {
+        searchResults.push({
+          playlistId: item.id,
+          imageUri: item.images.length ? item.images[0].url : null,
+          title: item.name,
+          description: item.description,
+          totalTracks: Number(item.tracks.total)
+        });
       });
-    });
+    } else if (type === SearchType.TRACK) {
+      result.data.tracks.items.forEach((item: any) => {
+        searchResults.push({
+          trackUri: item.id,
+          imageUri: item.album.images ? item.album.images[0].url : undefined,
+          artists: item.artists[0].name,
+          title: item.name,
+          durationMs: item.duration_ms
+        })
+      })
+    }
 
     return searchResults;
   }

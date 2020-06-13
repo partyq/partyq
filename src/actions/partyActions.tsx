@@ -30,6 +30,7 @@ export const SET_PLAYLIST_TRACKS = 'SET_TRACKS'
 export const SET_PAGE_NUMBER = 'SET_PAGE_NUMBER';
 export const SET_REQUEST_THRESHOLD = 'SET_REQUEST_THRESHOLD';
 export const SET_QUEUE_BY_VOTE_COUNT = 'SET_QUEUE_BY_VOTE_COUNT';
+export const SET_ALLOW_LIBRARY_REQUESTS = 'SET_ALLOW_LIBRARY_REQUESTS';
 
 export const setPartyId = (partyId: string) => ({
     type: SET_PARTY_ID,
@@ -91,6 +92,11 @@ export const setRequestThreshold = (threshold: number | null) => ({
 export const setQueueByVoteCount = (queueByVoteCount: boolean) => ({
     type: SET_QUEUE_BY_VOTE_COUNT,
     queueByVoteCount
+});
+
+export const setAllowLibraryRequests = (allow: boolean) => ({
+    type: SET_ALLOW_LIBRARY_REQUESTS,
+    allow
 });
 
 const startPartyReduxListeners = (partyId: string) => {

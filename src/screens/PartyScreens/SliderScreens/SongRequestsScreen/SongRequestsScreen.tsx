@@ -8,18 +8,21 @@ import jsx from './SongRequestsScreen.style';
 import NavigationHeader from '../../../../components/NavigationHeader/NavigationHeader';
 import { SongRequest, SongVote } from '../../../../utility/backend';
 import SongRequestItem from '../../../../components/SongRequestItem/SongRequestItem';
+import ThemedButton, { MODE } from '../../../../components/Button/ThemedButton';
 
 interface iSongRequestsScreenProps {
     theme: any,
     requests: SongRequest[],
-    votes: SongVote[]
+    votes: SongVote[],
+    onRequestASongPressed: () => void
 }
 
 const SongRequestsScreen = (props: iSongRequestsScreenProps) => {
     const {
         theme,
         requests,
-        votes
+        votes,
+        onRequestASongPressed
     } = props;
 
     const styles = jsx(theme);
@@ -72,6 +75,13 @@ const SongRequestsScreen = (props: iSongRequestsScreenProps) => {
             >
                 Songs Requested: {requests.length}
             </Text>
+            <ThemedButton
+                mode={MODE.CONTAINED}
+                onPress={onRequestASongPressed}
+                size='sm'
+            >
+                REQUEST A SONG
+            </ThemedButton>
             <ScrollView>
                 <List.Section>
                     {requests.map((request: SongRequest, i: number) => (

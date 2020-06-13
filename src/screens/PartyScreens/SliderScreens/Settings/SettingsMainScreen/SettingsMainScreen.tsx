@@ -6,7 +6,7 @@ import jsx from './SettingsMainScreen.style';
 import ThemedButton, { MODE } from '../../../../../components/Button/ThemedButton';
 import NavigationHeader from '../../../../../components/NavigationHeader/NavigationHeader';
 import { connect } from 'react-redux';
-import { View, Image } from 'react-native';
+import { Image } from 'react-native';
 import { PlaylistDetails } from 'src/utility/MusicServices/MusicService';
 
 interface SettingsMenuNavItemProps {

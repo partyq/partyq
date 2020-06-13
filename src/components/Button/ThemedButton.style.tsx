@@ -28,5 +28,8 @@ export default (theme: any, width: string | number) => StyleSheet.create({
   },
   small: {
     fontSize: 14
+  },
+  extraSmall: {
+    fontSize: 12
   }
 });
