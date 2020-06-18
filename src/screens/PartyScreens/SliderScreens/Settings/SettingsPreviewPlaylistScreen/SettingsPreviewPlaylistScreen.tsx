@@ -6,14 +6,14 @@ import { changeDefaultPlayList } from '../../../../../actions/partyActions';
 import { connect } from 'react-redux';
 import { withSlider } from '../../../../../components/PartyViewSlider/PartyViewSlider';
 import NavigationHeader from '../../../../../components/NavigationHeader/NavigationHeader';
-// import { MusicService } from '../../../../../utility/MusicServices/MusicService';
+import { PlaylistDetails } from 'src/utility/MusicServices/MusicService';
 
 interface iSettingsPreviewPlaylistScreenProps {
     navigation: any,
     route: any,
     onCloseSlider: () => void,
     getProviderInstance: () => any
-    changeDefaultPlayList: (playlistId: string, provider: string) => Promise<void>
+    changeDefaultPlayList: (playlistDetails: PlaylistDetails) => Promise<void>
 }
 
 const SettingsPreviewPlaylistScreen = (props: iSettingsPreviewPlaylistScreenProps) => {
@@ -29,9 +29,8 @@ const SettingsPreviewPlaylistScreen = (props: iSettingsPreviewPlaylistScreenProp
                 route={props.route}
                 ignoreSafeArea
                 noHeader
-                onFinish={async (playlistId: string) => {
-                    const instance = props.getProviderInstance();
-                    await props.changeDefaultPlayList(playlistId, instance)
+                onFinish={async (playlistDetails: PlaylistDetails) => {
+                    await props.changeDefaultPlayList(playlistDetails);
                     props.onCloseSlider();
                 }}
             />
@@ -41,7 +40,7 @@ const SettingsPreviewPlaylistScreen = (props: iSettingsPreviewPlaylistScreenProp
 
 const mapDispatchToProps = (dispatch: Function) => ({
     getProviderInstance: () => dispatch(getProviderInstance()),
-    changeDefaultPlayList: (playlistId: string, provider: string) => dispatch(changeDefaultPlayList(playlistId, provider)),
+    changeDefaultPlayList: (playlistDetails: PlaylistDetails) => dispatch(changeDefaultPlayList(playlistDetails)),
 });
 
 export default connect(

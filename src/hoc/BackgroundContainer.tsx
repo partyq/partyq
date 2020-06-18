@@ -9,7 +9,7 @@ import InternetStatus from '../components/InternetStatus/InternetStatus';
 
 export interface iBackgroundContainer {
   theme: any,
-  onBeforeBack?: () => void,
+  onBeforeBack?: () => Promise<void>,
   navigation: any,
   disableBack?: boolean,
   title?: any,

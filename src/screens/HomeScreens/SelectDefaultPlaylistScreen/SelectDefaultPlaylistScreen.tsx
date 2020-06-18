@@ -15,13 +15,14 @@ import SearchScreen from '../../../components/SearchScreen/SearchScreen';
 
 export interface iSelectDefaultPlayListScreen {
   theme: any,
-  navigation: any,
+  navigation?: any,
   getProviderInstance: () => any,
   setProviderId: (providerId: string) => void,
   ignoreSafeArea?: true,
-  onBeforeBack?: () => void,
+  onBeforeBack?: () => Promise<void>,
   noHeader?: true,
   setPlaylistDetails: (playlistDetails: PlaylistDetails | undefined) => void,
+  oldDefaultPlaylistId?: string,
 };
 
 const SelectDefaultPlayListScreen = (props: iSelectDefaultPlayListScreen) => {
@@ -72,7 +73,6 @@ const SelectDefaultPlayListScreen = (props: iSelectDefaultPlayListScreen) => {
   const onPlayListPress = async (playlistDetails: PlaylistDetails): Promise<void> => {
     props.setPlaylistDetails(playlistDetails);
     props.navigation.navigate('PreviewPlayList', {
-      playlistDetails: playlistDetails,
       readOnly: false
     });
   };
@@ -98,7 +98,7 @@ const SelectDefaultPlayListScreen = (props: iSelectDefaultPlayListScreen) => {
         </View>
       )}
       onBeforeBack={props.onBeforeBack || onBeforeBack}
-      navigation={props.navigation}
+      navigation={props.navigation ? props.navigation : null}
       ignoreSafeArea={props.ignoreSafeArea!}
       noHeader={props.noHeader}
       title='Select a Playlist'

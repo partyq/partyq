@@ -27,7 +27,7 @@ export const initialState: PartyState = {
     members: [],
     playlistDetails: undefined,
     playlistTracks: undefined,
-    pageNumber: 0,
+    pageNumber: 1,
     requestsThreshold: null,
     queueByVoteCount: false,
     allowLibraryRequests: false

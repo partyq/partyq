@@ -12,7 +12,7 @@ export const VOTES_COLLECTION = 'votes';
 export interface Party {
     id: string,
     hostName: string,
-    playlistId: string,
+    playlistDetails: PlaylistDetails,
     token: string,
     created: Date
 }
@@ -84,12 +84,12 @@ export const createParty = async (playlistDetails: PlaylistDetails, provider: an
     return {partyId, docId};
 };
 
-export const changeDefaultPlayList = async (playlistId: string, docId: string): Promise<void> => {
+export const changeDefaultPlayList = async (playlistDetails: PlaylistDetails, docId: string): Promise<void> => {
     await firestore()
         .collection(PARTIES_COLLECTION)
         .doc(docId)
         .update({
-            playlistId: playlistId,
+            playlistDetails
         });
 };
 

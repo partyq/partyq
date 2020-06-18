@@ -371,11 +371,11 @@ const PartyMainScreen = (props: PartyMainScreenProps) => {
       </View>
     );
 
-  useEffect(() => {
-    if (partyState.playlistDetails) {
-      getTracks(pageNumber);
-    }
-  }, [pageNumber, partyState.playlistDetails]);
+  // useEffect(() => {
+  //   if (partyState.playlistDetails) {
+  //     getTracks(pageNumber);
+  //   }
+  // }, [pageNumber, partyState.playlistDetails]);
   
   // const onBeforeSnapToTrack = (index: number) => {
   //   setcurrentTrackInViewIndex(index);
@@ -386,6 +386,10 @@ const PartyMainScreen = (props: PartyMainScreenProps) => {
 
   const getTracks = async (pageNumber: number): Promise<void> => {
     try {
+      console.warn({
+        partyState,
+        pageNumber,
+      })
       const instance = props.getProviderInstance();
       const data: Track[] = await instance.getTracks(partyState.playlistDetails?.playlistId, pageNumber);
 
@@ -433,33 +437,33 @@ const PartyMainScreen = (props: PartyMainScreenProps) => {
     }
   }, []);
 
-  useInterval(async() => {
-    if (currentPlayingTrackIndex === undefined || !tracks) return;
-    const providerInstance = props.getProviderInstance();
+  // useInterval(async() => {
+  //   if (currentPlayingTrackIndex === undefined || !tracks) return;
+  //   const providerInstance = props.getProviderInstance();
     
-    if (providerInstance.playerIsReady()) {
-      const playerState = await providerInstance.getPlayerState();
-      const crossfadeState = await providerInstance.getCrossfadeState();
-      const crossfadeDuration = crossfadeState.enabled ? crossfadeState.duration : 0;
-      const durationLeft = Math.floor((playerState.track.duration - playerState.playbackPosition)/1000)*1000;
+  //   if (providerInstance.playerIsReady()) {
+  //     const playerState = await providerInstance.getPlayerState();
+  //     const crossfadeState = await providerInstance.getCrossfadeState();
+  //     const crossfadeDuration = crossfadeState.enabled ? crossfadeState.duration : 0;
+  //     const durationLeft = Math.floor((playerState.track.duration - playerState.playbackPosition)/1000)*1000;
 
-      if (durationLeft <= (crossfadeDuration + 5000) && !isReadyToQueue) {
-        setIsReadyToQueue(true);
-      }
-      else if (durationLeft > (crossfadeDuration + 5000) && isReadyToQueue) {
-        setIsReadyToQueue(false);
-      }
-    }
-  }, 2000);
+  //     if (durationLeft <= (crossfadeDuration + 5000) && !isReadyToQueue) {
+  //       setIsReadyToQueue(true);
+  //     }
+  //     else if (durationLeft > (crossfadeDuration + 5000) && isReadyToQueue) {
+  //       setIsReadyToQueue(false);
+  //     }
+  //   }
+  // }, 2000);
 
-  useEffect(() => {
-    if (isReadyToQueue) {
-      const providerInstance = props.getProviderInstance();
-      if (tracks && currentPlayingTrackIndex !== undefined && currentPlayingTrackIndex < tracks.length) {
-        providerInstance.queueTrack(tracks[currentPlayingTrackIndex + 1]?.trackUri);
-      }
-    }
-  }, [isReadyToQueue]);
+  // useEffect(() => {
+  //   if (isReadyToQueue) {
+  //     const providerInstance = props.getProviderInstance();
+  //     if (tracks && currentPlayingTrackIndex !== undefined && currentPlayingTrackIndex < tracks.length) {
+  //       providerInstance.queueTrack(tracks[currentPlayingTrackIndex + 1]?.trackUri);
+  //     }
+  //   }
+  // }, [isReadyToQueue]);
 
   return (
     <PartyNavigationContainer

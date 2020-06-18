@@ -11,7 +11,8 @@ interface iNavigationHeaderProps {
     title?: string,
     canGoBack?: boolean,
     isSlider?: boolean,
-    onCloseSlider: () => void
+    onCloseSlider: () => void,
+    onBeforeBack?: () => void,
 }
 
 const NavigationHeader = (props: iNavigationHeaderProps) => {
@@ -35,6 +36,10 @@ const NavigationHeader = (props: iNavigationHeaderProps) => {
     }
 
     const onBackPressed = () => {
+        if (props.onBeforeBack) {
+            props.onBeforeBack();
+        }
+
         if (canGoBack && navigation) {
             navigation.goBack();
         }

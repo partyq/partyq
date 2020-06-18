@@ -10,6 +10,7 @@ export interface iProvider {
   name: string,
   img: ImageSourcePropType,
   selected: boolean,
+  key: number,
 };
 
 export const Provider = {
@@ -21,6 +22,7 @@ export const Provider = {
       name: 'Spotify',
       img: require('../assets/img/Spotify_Icon_RGB_Green.png'),
       selected: false,
+      key: 1,
     },
     // {
     //   name: 'Apple Music',

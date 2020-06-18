@@ -28,6 +28,7 @@ import {
 } from '../../../actions';
 import ThemedButton, { MODE } from '../../../components/Button/ThemedButton';
 import { createParty, setPlaylistTracks, appendPlaylistTracks, setPageNumber, setPlaylistDetails } from '../../../actions/partyActions';
+import usePrevious from '../../../hooks/usePrevious';
 
 export interface iSelectDefaultPlayListScreen {
   theme: any,
@@ -36,7 +37,7 @@ export interface iSelectDefaultPlayListScreen {
   setProviderId: (providerId: string) => void,
   playlistDetails: PlaylistDetails | undefined,
   ignoreSafeArea?: true,
-  onFinish?: (playlistId: string) => void,
+  onFinish?: (playlistDetails: PlaylistDetails) => void,
   route: any,
   createParty: (playlistDetails: PlaylistDetails, provider: any) => any,
   noHeader?: true,
@@ -69,38 +70,42 @@ const PreviewPlayListScreen = (props: iSelectDefaultPlayListScreen) => {
   const styles = jsx(props.theme);
   const buttonWidth = Dimensions.get('window').width * 0.5;
   const [isFinishPressed, setIsFinishPressed] = useState<boolean>(false);
+  const prevPageNumber = usePrevious(props.pageNumber);
 
   const {
-    setPlaylistDetails
-  } = props;
-
-  const {
-    playlistDetails,
     readOnly
   } = props.route.params;
 
   useEffect(() => {
-    if (props.playlistDetails && props.pageNumber === 0 && props.playlistTracks === undefined) {
-      console.debug('getTracks', {
-        pageNumber: props.pageNumber
-      })
+    if (props.playlistDetails && props.pageNumber === 1 && props.playlistTracks === undefined) {
+      console.warn('Grab more tracks bitch');
       getTracks(props.pageNumber);
     }
   }, [props.pageNumber, props.playlistDetails, props.playlistTracks]);
 
   useEffect(() => {
-    if (props.pageNumber > 0) {
+    if (
+      props.pageNumber > 1 &&
+      props.playlistDetails !== undefined &&
+      props.playlistTracks &&
+      props.pageNumber * 20 > props.playlistTracks?.length &&
+      props.playlistTracks?.length < props.playlistDetails?.totalTracks &&
+      prevPageNumber !== props.pageNumber
+    ) {
+      console.warn('get more tracks: ', {
+        prevPageNumber,
+        currentPageNumber: props.pageNumber,
+      })
       getTracks(props.pageNumber);
     }
-  }, [props.pageNumber]);
+  }, [props.pageNumber, prevPageNumber]);
 
-  const getTracks = async(pageNumber: number): Promise<void> => {
-
+  const getTracks = async (pageNumber: number): Promise<void> => {
     try {
       const instance = props.getProviderInstance();
       const newTracks: Track[] = await instance.getTracks(props.playlistDetails?.playlistId, pageNumber);
-
       if (props.playlistTracks) {
+        console.warn('appending more tracks')
         props.appendPlaylistTracks(newTracks);
       }
       else {
@@ -116,22 +121,24 @@ const PreviewPlayListScreen = (props: iSelectDefaultPlayListScreen) => {
     props.setPageNumber(props.pageNumber + 1);
   };
 
-  const onBeforeBack = () => {
-    props.setPlaylistTracks(undefined);
-    props.setPageNumber(0);
-    props.setPlaylistDetails(undefined);
+  const onBeforeBack = async (): Promise<void> => {
+    if (!props.onFinish) {
+      props.setPlaylistTracks(undefined);
+      props.setPageNumber(1);
+      props.setPlaylistDetails(undefined);
+    }
   }
 
-  const finish = async(): Promise<void> => {
+  const finish = async (): Promise<void> => {
     if (props.playlistDetails === undefined) {
       Alert.alert('Something went wrong');
       return;
     }
 
     setIsFinishPressed(true);
-    setPlaylistDetails(playlistDetails)
+
     if (props.onFinish) {
-      props.onFinish(props.playlistDetails?.playlistId);
+      props.onFinish(props.playlistDetails);
     } else {
       try {
         const instance = props.getProviderInstance();
@@ -139,6 +146,7 @@ const PreviewPlayListScreen = (props: iSelectDefaultPlayListScreen) => {
         props.navigation.navigate('PartyMain');
       }
       catch (error) {
+        console.log(error)
         Alert.alert(error);
       }
     }
@@ -155,10 +163,10 @@ const PreviewPlayListScreen = (props: iSelectDefaultPlayListScreen) => {
       }
     >
 
-      {playlistDetails &&
-        <PlayListDescription 
+      {props.playlistDetails &&
+        <PlayListDescription
           styles={styles}
-          playlistDetails={playlistDetails}
+          playlistDetails={props.playlistDetails}
           onPress={finish}
           buttonWidth={buttonWidth}
           disabled={isFinishPressed}
@@ -211,13 +219,11 @@ const PlayListDescription = ({ styles, playlistDetails, onPress, buttonWidth, di
         )}
       </View>
     </View>
-    {
-      playlistDetails.description ? 
-      <>
-        <Divider />
-        <Text style={styles.description}>{playlistDetails.description}</Text>
-      </>
-      : null
+    {playlistDetails.description &&
+        <>
+          <Divider />
+          <Text style={styles.description}>{playlistDetails.description}</Text>
+        </>
     }
   </View>
 );
@@ -237,10 +243,9 @@ const Tracks = ({ style, tracks, handleLoadMore, totalTracks, pageNumber }: iTra
           />
         )}
         keyExtractor={(item: Track) => item.trackUri}
-        ListFooterComponent={pageNumber * 10 <= totalTracks ? <LoadingIndicator/> : null}
-        onEndReached={() => pageNumber * 10 <= totalTracks ? handleLoadMore() : null}
+        ListFooterComponent={pageNumber * 20 <= totalTracks ? <LoadingIndicator /> : null}
+        onEndReached={() => pageNumber * 20 <= totalTracks ? handleLoadMore() : null}
         onEndReachedThreshold={0}
-        initialNumToRender={10}
       />
     </View>
   )

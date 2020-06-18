@@ -67,13 +67,10 @@ export const setPlaylistDetails = (playlistDetails: PlaylistDetails | undefined)
     playlistDetails,
 });
 
-export const setPlaylistTracks = (tracksToSet: Track[] | undefined) => {
-    console.log({tracksToSet: tracksToSet === undefined})
-    return {
-            type: SET_PLAYLIST_TRACKS,
-            tracksToSet,
-        }
-};
+export const setPlaylistTracks = (tracksToSet: Track[] | undefined) => ({
+    type: SET_PLAYLIST_TRACKS,
+    tracksToSet,
+});
 
 export const appendPlaylistTracks = (tracksToAppend: Track[]) => ({
     type: APPEND_PLAYLIST_TRACKS,
@@ -139,10 +136,10 @@ export const createParty = (playlistDetails: PlaylistDetails, provider: any) => 
     }
 }
 
-export const changeDefaultPlayList = (playListId: string, provider: any) => {
+export const changeDefaultPlayList = (playlistDetails: PlaylistDetails) => {
     return async () => {
         const { docId } = store.getState().partyReducer;
-        await _changeDefaultPlayList(playListId, docId);
+        await _changeDefaultPlayList(playlistDetails, docId);
     }
 }
 
