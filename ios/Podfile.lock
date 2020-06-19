@@ -589,6 +589,8 @@ PODS:
     - RNFBApp
   - RNGestureHandler (1.6.0):
     - React
+  - RNIap (4.4.9):
+    - React
   - RNReanimated (1.7.0):
     - React
   - RNScreens (2.2.0):
@@ -639,6 +641,7 @@ DEPENDENCIES:
   - "RNFBFirestore (from `../node_modules/@react-native-firebase/firestore`)"
   - "RNFBFunctions (from `../node_modules/@react-native-firebase/functions`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
+  - RNIap (from `../node_modules/react-native-iap`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNSpotifyRemote (from `../node_modules/react-native-spotify-remote`)
@@ -740,6 +743,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-firebase/functions"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
+  RNIap:
+    :path: "../node_modules/react-native-iap"
   RNReanimated:
     :path: "../node_modules/react-native-reanimated"
   RNScreens:
@@ -809,6 +814,7 @@ SPEC CHECKSUMS:
   RNFBFirestore: b6209c3c80f6dc934e72443c007299f594041904
   RNFBFunctions: 709c2428f0ddd4b461af7eb39689a6b4270a950e
   RNGestureHandler: dde546180bf24af0b5f737c8ad04b6f3fa51609a
+  RNIap: 4c36518a34ab4cc3f5762037cc510c2e7290485c
   RNReanimated: 031fe8d9ea93c2bd689a40f05320ef9d96f74d7f
   RNScreens: 812b79d384e2bea7eebc4ec981469160d4948fd5
   RNSpotifyRemote: fbba4c63918ceb00f9ca20996e737c3f10613ca3
