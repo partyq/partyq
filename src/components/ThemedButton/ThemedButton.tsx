@@ -16,16 +16,22 @@ export enum MODE {
 
 export interface iThemedButton {
   theme: any,
-  width?: number,
+  width?: number | string,
   children?: any,
   disabled?: boolean,
   mode?: MODE | undefined,
-  size?: 'sm' | 'xs';
+  size?: 'sm' | 'xs',
+  color?: string,
+  textColor?: string,
   onPress?: () => void,
 }
 
 const ThemedButton = (props: iThemedButton) => {
-  const styles = jsx(props.theme, props.width ? props.width : '100%');
+  const styles = jsx(
+    props.theme, 
+    props.width ? props.width : '100%',
+    props.color ? props.color : props.theme.colors.primary
+  );
 
   const getLabelStyle = (): any => {
     if (props.mode === MODE.CONTAINED)
@@ -34,15 +40,23 @@ const ThemedButton = (props: iThemedButton) => {
       return styles.defaultLabelStyle;
   };
 
+  const getButtonStyle = (): any => {
+    if (props.mode === MODE.TEXT) {
+      return styles.defaultContainer;
+    } else if (props.mode === MODE.CONTAINED) {
+      return styles.containedContainer;
+    } else if (props.mode === MODE.OUTLINED) {
+      return styles.outlinedContainer;
+    }
+  }
+
   return (
     <Button
       mode={props.mode}
       disabled={props.disabled}
       onPress={props.onPress}
       style={[
-        props.mode === MODE.TEXT
-          ? styles.defaultContainer
-          : styles.styledContainer,
+        getButtonStyle(),
         props.disabled
           ? styles.disabledContainer
           : null,

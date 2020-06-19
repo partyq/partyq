@@ -24,13 +24,13 @@ import { connect } from 'react-redux';
 import jsx from './PartyMainScreen.style';
 import { Track } from '../../../utility/MusicServices/MusicService';
 import { getProviderInstance } from '../../../actions';
-import ThemedButton, { MODE } from '../../../components/Button/ThemedButton';
+import ThemedButton, { MODE } from '../../../components/ThemedButton/ThemedButton';
 import PartyViewSlider from '../../../components/PartyViewSlider/PartyViewSlider';
 import SettingsNavigationContainer from '../SliderScreens/Settings/SettingsNavigationContainer';
 import PartyMembersScreen from '../SliderScreens/PartyMembersScreen/PartyMembersScreen';
 import SongRequestsScreen from '../SliderScreens/SongRequestsScreen/SongRequestsScreen';
 import RequestASongScreen from '../SliderScreens/RequestASongScreen/RequestASongScreen';
-import useInterval from '../../../utility/useInterval';
+import { useInterval } from '../../../utility/hooks';
 import PartyState from '../../../states/partyState';
 
 interface iTopSliderProps {

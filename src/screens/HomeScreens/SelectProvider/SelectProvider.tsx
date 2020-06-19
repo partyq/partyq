@@ -22,7 +22,7 @@ import jsx from './SelectProvider.style';
 import BackgroundContainer from '../../../hoc/BackgroundContainer';
 import { Provider, iProvider } from '../../../config/RenderableData';
 import { setProviderId, getProviderInstance } from '../../../actions';
-import ThemedButton, { MODE } from '../../../components/Button/ThemedButton';
+import ThemedButton, { MODE } from '../../../components/ThemedButton/ThemedButton';
 
 export interface iSelectProvider {
   theme: any,

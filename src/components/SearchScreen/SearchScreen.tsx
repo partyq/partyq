@@ -6,7 +6,7 @@ import jsx from './SearchScreen.style';
 import BackgroundContainer from '../../hoc/BackgroundContainer';
 import SearchView from '../SearchView/SearchView';
 import { View, Dimensions } from 'react-native';
-import ThemedButton, { MODE } from '../Button/ThemedButton';
+import ThemedButton, { MODE } from '../ThemedButton/ThemedButton';
 import { FlatList } from 'react-native-gesture-handler';
 
 interface iSearchScreenProps {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 
-const useInterval = (callback: any, delay: any) => {
+export const useInterval = (callback: any, delay: any) => {
   const savedCallback: any = useRef();
 
   // Remember the latest callback.
@@ -18,6 +18,16 @@ const useInterval = (callback: any, delay: any) => {
       return () => clearInterval(id);
     }
   }, [delay]);
-}
+};
 
-export default useInterval;
+export const useValueUpdateEffect = (callback: any, input: any) => {
+  const initialValueRef = useRef(input);
+  const hasUpdatedRef = useRef(false);
+
+  useEffect(() => {
+    if (input !== initialValueRef.current || hasUpdatedRef.current) {
+      hasUpdatedRef.current = true;
+      callback();
+    }
+  }, [input]);
+};

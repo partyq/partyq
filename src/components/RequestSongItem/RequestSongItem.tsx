@@ -4,7 +4,7 @@ import { Image, View } from 'react-native';
 import { Icon } from 'react-native-elements';
 
 import jsx from './RequestSongItem.style';
-import ThemedButton, { MODE } from '../Button/ThemedButton';
+import ThemedButton, { MODE } from '../ThemedButton/ThemedButton';
 
 interface iRequestSongItemProps {
     id: string,

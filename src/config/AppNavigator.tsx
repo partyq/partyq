@@ -4,14 +4,19 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 // StackNavigation Screens
-import SplashScreen from '../screens/LoginScreens/SplashScreen';
-import Entrance from '../screens/HomeScreens/Entrance/Entrance';
+import SplashScreen from '../screens/SplashScreen';
+import EntranceScreen from '../screens/LoginScreens/EntranceScreen/EntranceScreen';
+import LoginScreen from '../screens/LoginScreens/LoginScreen/LoginScreen';
 import SelectProvider from '../screens/HomeScreens/SelectProvider/SelectProvider';
 import EnterPartyCode from '../screens/HomeScreens/EnterPartyCode/EnterPartyCode';
 import EnterUserName from '../screens/HomeScreens/EnterUserName/EnterUserName';
 import SelectDefaultPlaylistScreen from '../screens/HomeScreens/SelectDefaultPlaylistScreen/SelectDefaultPlaylistScreen';
 import PartyMainScreen from '../screens/PartyScreens/Main/PartyMainScreen';
 import PreviewPlayListScreen from '../screens/HomeScreens/PreviewPlayListScreen/PreviewPlayListScreen';
+import RegisterScreen from '../screens/LoginScreens/RegisterScreen/RegisterScreen';
+import VerifyEmailScreen from '../screens/LoginScreens/VerifyEmailScreen/VerifyEmailScreen';
+import ChoosePlanScreen from '../screens/LoginScreens/ChoosePlanScreen/ChoosePlanScreen';
+import HomeScreen from '../screens/HomeScreens/HomeScreen/HomeScreen';
 
 const Stack = createStackNavigator();
 
@@ -28,7 +33,27 @@ const AppNavigator = () => {
                 />
                 <Stack.Screen 
                     name='Entrance' 
-                    component={Entrance} 
+                    component={EntranceScreen} 
+                />
+                <Stack.Screen
+                    name='Login'
+                    component={LoginScreen}
+                />
+                <Stack.Screen
+                    name='Register'
+                    component={RegisterScreen}
+                />
+                <Stack.Screen
+                    name='VerifyEmail'
+                    component={VerifyEmailScreen}
+                />
+                <Stack.Screen
+                    name='ChoosePlan'
+                    component={ChoosePlanScreen}
+                />
+                <Stack.Screen
+                    name='Home'
+                    component={HomeScreen}
                 />
                 <Stack.Screen 
                     name='Services' 

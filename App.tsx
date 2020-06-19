@@ -1,7 +1,29 @@
 /* eslint-disable no-unused-vars */
 import React from 'react';
 import { Provider } from 'react-redux';
+import {
+  // @ts-ignore
+  FIRESTORE_HOST,
+  // @ts-ignore
+  CLOUD_FUNCTIONS_HOST,
+} from 'react-native-dotenv';
 
+import { firebase } from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
+import functions from '@react-native-firebase/functions';
+
+// Use a local emulator in development
+// if (__DEV__ && FIRESTORE_HOST) {
+//   firestore().settings({ 
+//     host: FIRESTORE_HOST,
+//     persistence: true,
+//     cacheSizeBytes: firebase.firestore.CACHE_SIZE_UNLIMITED,
+//     ssl: false
+//   });
+// }
+// if (__DEV__ && CLOUD_FUNCTIONS_HOST) {
+//   functions().useFunctionsEmulator(CLOUD_FUNCTIONS_HOST);
+// }
 
 // eslint-disable-next-line no-unused-vars
 import { AppContextProvider } from './src/config/AppContextProvider';

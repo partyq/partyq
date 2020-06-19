@@ -1,15 +1,21 @@
 import { StyleSheet } from 'react-native';
 
-export default (theme: any, width: string | number) => StyleSheet.create({
+export default (theme: any, width: string | number, color: any) => StyleSheet.create({
   defaultContainer: {
     width,
-    borderWidth: 3,
+    borderWidth: 2,
     borderColor: 'transparent',
   },
-  styledContainer: {
+  outlinedContainer: {
     width,
-    borderWidth: 3,
-    borderColor: theme.colors.primary,
+    borderWidth: 2,
+    borderColor: color,
+  },
+  containedContainer: {
+    width,
+    borderWidth: 2,
+    borderColor: color,
+    backgroundColor: color
   },
   disabledContainer: {
     borderColor: theme.colors.grey300,
@@ -17,11 +23,11 @@ export default (theme: any, width: string | number) => StyleSheet.create({
   },
   containedLabelStyle: {
     ...theme.fonts.regular,
-    color: theme.colors.white,
+    color: color === 'white' ? 'black' : theme.colors.white,
   },
   defaultLabelStyle: {
     ...theme.fonts.regular,
-    color: theme.colors.primary,
+    color: color,
   },
   disabledLabelStyle: {
     color: theme.colors.disabled,

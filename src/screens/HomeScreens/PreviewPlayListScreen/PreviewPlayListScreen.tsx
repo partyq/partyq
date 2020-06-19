@@ -26,7 +26,7 @@ import {
   getProviderInstance,
   setProviderId,
 } from '../../../actions';
-import ThemedButton, { MODE } from '../../../components/Button/ThemedButton';
+import ThemedButton, { MODE } from '../../../components/ThemedButton/ThemedButton';
 import { createParty, setPlaylistDetails } from '../../../actions/partyActions';
 
 export interface iSelectDefaultPlayListScreen {

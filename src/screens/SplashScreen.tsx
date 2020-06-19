@@ -35,18 +35,19 @@ const SplashScreen = (props: iSplashScreen) => {
   const styles = jsx(props.theme);
 
   React.useEffect(() => {
-    auth().signInAnonymously()
-      .then(
-        () => {
-          props.navigation.navigate('Entrance');
-        }
-      );
+    // auth().signInAnonymously()
+    //   .then(
+    //     () => {
+    //       props.navigation.navigate('Entrance');
+    //     }
+    //   );
+    props.navigation.navigate('Entrance');
   });
 
   return (
     <View style={styles.container}>
       <Image
-        source={require('../../assets/img/PartyQ_Dark.png')}
+        source={require('../assets/img/PartyQ_Dark.png')}
         style={{
           height: 150,
           width: 150,
