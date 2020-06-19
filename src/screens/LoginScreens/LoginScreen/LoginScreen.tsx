@@ -65,8 +65,11 @@ const LoginScreen = (props: iLoginScreenProps) => {
         const userSnapshot = await firestore()
             .collection('users')
             .doc(firebaseUser.uid)
+            // .where('email', '==', email)
+            // .limit(1)
             .get();
         const user = userSnapshot.data() as iUser;
+        // const user = userSnapshot.docs[0].data() as iUser;
         if (!user) {
             // TODO: Handle weird error
             console.log('User not found after logging in?');
