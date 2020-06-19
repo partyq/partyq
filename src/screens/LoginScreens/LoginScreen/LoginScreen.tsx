@@ -77,6 +77,10 @@ const LoginScreen = (props: iLoginScreenProps) => {
         navigation.navigate('Home');
     }
 
+    const onForgotPasswordPressed = () => {
+        navigation.navigate('ForgotPassword');
+    }
+
     const onRequiredTextFieldChange = (value: string, setError: (error: string) => void) => {
         if (value === '') {
             setError('You must provide this value.');
@@ -129,7 +133,7 @@ const LoginScreen = (props: iLoginScreenProps) => {
                 />
                 <Text
                     style={styles.forgotPassword}
-                    onPress={() => null}
+                    onPress={onForgotPasswordPressed}
                 >
                     Forgot Password?
                 </Text>

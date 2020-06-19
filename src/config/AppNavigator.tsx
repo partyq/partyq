@@ -17,6 +17,8 @@ import RegisterScreen from '../screens/LoginScreens/RegisterScreen/RegisterScree
 import VerifyEmailScreen from '../screens/LoginScreens/VerifyEmailScreen/VerifyEmailScreen';
 import ChoosePlanScreen from '../screens/LoginScreens/ChoosePlanScreen/ChoosePlanScreen';
 import HomeScreen from '../screens/HomeScreens/HomeScreen/HomeScreen';
+import ForgotPasswordScreen from '../screens/LoginScreens/ForgotPasswordScreen/ForgotPasswordScreen';
+import ForgotPasswordEmailSentScreen from '../screens/LoginScreens/ForgotPasswordEmailSentScreen/ForgotPasswordEmailSentScreen';
 
 const Stack = createStackNavigator();
 
@@ -46,6 +48,14 @@ const AppNavigator = () => {
                 <Stack.Screen
                     name='VerifyEmail'
                     component={VerifyEmailScreen}
+                />
+                <Stack.Screen
+                    name='ForgotPassword'
+                    component={ForgotPasswordScreen}
+                />
+                <Stack.Screen
+                    name='ForgotPasswordEmailSent'
+                    component={ForgotPasswordEmailSentScreen}
                 />
                 <Stack.Screen
                     name='ChoosePlan'

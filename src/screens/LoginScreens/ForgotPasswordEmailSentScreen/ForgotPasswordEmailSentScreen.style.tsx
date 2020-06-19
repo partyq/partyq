@@ -2,10 +2,11 @@ import { StyleSheet } from 'react-native';
 
 export default (theme: any) => StyleSheet.create({
     topPadding: {
-        flex: 0.35
+        flex: 0.45
     },
     headerContainer: {
-        width: '90%'
+        width: '90%',
+        marginBottom: 50
     },
     title: {
         fontWeight: '800',
@@ -19,8 +20,7 @@ export default (theme: any) => StyleSheet.create({
     grow: {
         flex: 1
     },
-    sendLinkContainer: {
-        marginTop: 35,
-        width: '90%'
-    }
+    email: {
+        fontWeight: '600'
+    },
 });
