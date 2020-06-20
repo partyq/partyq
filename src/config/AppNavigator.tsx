@@ -16,9 +16,9 @@ import PreviewPlayListScreen from '../screens/HomeScreens/PreviewPlayListScreen/
 import RegisterScreen from '../screens/LoginScreens/RegisterScreen/RegisterScreen';
 import VerifyEmailScreen from '../screens/LoginScreens/VerifyEmailScreen/VerifyEmailScreen';
 import ChoosePlanScreen from '../screens/LoginScreens/ChoosePlanScreen/ChoosePlanScreen';
-import HomeScreen from '../screens/HomeScreens/HomeScreen/HomeScreen';
 import ForgotPasswordScreen from '../screens/LoginScreens/ForgotPasswordScreen/ForgotPasswordScreen';
 import ForgotPasswordEmailSentScreen from '../screens/LoginScreens/ForgotPasswordEmailSentScreen/ForgotPasswordEmailSentScreen';
+import MainScreenWrapper from '../screens/MainScreens/MainScreenWrapper';
 
 const Stack = createStackNavigator();
 
@@ -62,8 +62,8 @@ const AppNavigator = () => {
                     component={ChoosePlanScreen}
                 />
                 <Stack.Screen
-                    name='Home'
-                    component={HomeScreen}
+                    name='Main'
+                    component={MainScreenWrapper}
                 />
                 <Stack.Screen 
                     name='Services' 

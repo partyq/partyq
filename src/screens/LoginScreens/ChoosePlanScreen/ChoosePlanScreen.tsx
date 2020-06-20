@@ -58,7 +58,7 @@ const ChoosePlanScreen = (props: iChoosePlanScreenProps) => {
     const styles = jsx(theme);
 
     const onNextPressed = () => {
-        navigation.navigate('Home');
+        navigation.navigate('Main');
     }
 
     const renderCarouselItem = ({item, index}: {item: iPlan, index: number}) => {

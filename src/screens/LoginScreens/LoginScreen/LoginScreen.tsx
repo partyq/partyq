@@ -77,7 +77,7 @@ const LoginScreen = (props: iLoginScreenProps) => {
             return;
         }
         setUser(user);
-        navigation.navigate('Home');
+        navigation.navigate('Main');
     }
 
     const onForgotPasswordPressed = () => {
