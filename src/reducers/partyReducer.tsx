@@ -7,6 +7,8 @@ import {
     SET_REQUEST_VOTES,
     SET_PARTY_MEMBERS,
     SET_PLAYLIST_DETAILS,
+    SET_PAGE_NUMBER,
+    SET_PLAYLIST_TRACKS,
     SET_REQUEST_THRESHOLD,
     SET_QUEUE_BY_VOTE_COUNT,
     SET_ALLOW_LIBRARY_REQUESTS
@@ -16,13 +18,14 @@ export const initialState: PartyState = {
     partyId: '',
     docId: '',
     hostName: '',
-    playlistId: '',
     token: '',
     created: null,
     requests: [],
     votes: [],
     members: [],
     playlistDetails: undefined,
+    playlistTracks: undefined,
+    pageNumber: 1,
     requestsThreshold: null,
     queueByVoteCount: false,
     allowLibraryRequests: false
@@ -45,7 +48,7 @@ const partyReducer = (state: PartyState = initialState, action: any) => {
             return Object.assign({}, state, {
                 partyId: party.id,
                 hostName: party.hostName,
-                playlistId: party.playlistId,
+                playlistDetails: party.playlistDetails,
                 token: party.token,
                 created: party.created.toDate()
             });
@@ -66,8 +69,24 @@ const partyReducer = (state: PartyState = initialState, action: any) => {
             });
         case SET_PLAYLIST_DETAILS:
             const { playlistDetails } = action;
+            console.warn("playlistDetails", playlistDetails)
             return Object.assign({}, state, {
                 playlistDetails
+            });
+        case SET_PLAYLIST_TRACKS:
+            const { tracksToAppend } = action;
+            const {tracks, tracksLeftToFetch} = tracksToAppend;
+            const newTracks = tracksToAppend !== undefined ? {
+                tracks: state.playlistTracks?.tracks !== undefined ? [...state.playlistTracks.tracks, ...tracks] : tracks,
+                tracksLeftToFetch,
+            } : undefined;
+            return Object.assign({}, state, {
+                playlistTracks: newTracks
+            });
+        case SET_PAGE_NUMBER:
+            const { pageNumber } = action;
+            return Object.assign({}, state, {
+                pageNumber
             });
         case SET_REQUEST_THRESHOLD:
             const { threshold } = action;

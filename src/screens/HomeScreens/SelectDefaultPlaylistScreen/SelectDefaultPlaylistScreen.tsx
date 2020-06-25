@@ -10,17 +10,19 @@ import { connect } from 'react-redux';
 // import jsx from './SelectDefaultPlayListScreen.style';
 import PlayListItem from '../../../components/PlayListItem/PlayListItem';
 import { PlaylistDetails, SearchType } from '../../../utility/MusicServices/MusicService';
-import { getProviderInstance, setProviderId } from '../../../actions';
+import { getProviderInstance, setProviderId, setPlaylistDetails } from '../../../actions';
 import SearchScreen from '../../../components/SearchScreen/SearchScreen';
 
 export interface iSelectDefaultPlayListScreen {
   theme: any,
-  navigation: any,
+  navigation?: any,
   getProviderInstance: () => any,
   setProviderId: (providerId: string) => void,
   ignoreSafeArea?: true,
-  onBeforeBack?: () => void,
-  noHeader?: true
+  onBeforeBack?: () => Promise<void>,
+  noHeader?: true,
+  setPlaylistDetails: (playlistDetails: PlaylistDetails | undefined) => void,
+  oldDefaultPlaylistId?: string,
 };
 
 const SelectDefaultPlayListScreen = (props: iSelectDefaultPlayListScreen) => {
@@ -69,8 +71,8 @@ const SelectDefaultPlayListScreen = (props: iSelectDefaultPlayListScreen) => {
   };
 
   const onPlayListPress = async (playlistDetails: PlaylistDetails): Promise<void> => {
+    props.setPlaylistDetails(playlistDetails);
     props.navigation.navigate('PreviewPlayList', {
-      playlistDetails: playlistDetails,
       readOnly: false
     });
   };
@@ -91,13 +93,12 @@ const SelectDefaultPlayListScreen = (props: iSelectDefaultPlayListScreen) => {
               title={item.title}
               description={`${item.totalTracks} Songs`}
               key={index}
-              // onPress={() => onPlayListPress(item.id)}
             />
           </TouchableOpacity>
         </View>
       )}
       onBeforeBack={props.onBeforeBack || onBeforeBack}
-      navigation={props.navigation}
+      navigation={props.navigation ? props.navigation : null}
       ignoreSafeArea={props.ignoreSafeArea!}
       noHeader={props.noHeader}
       title='Select a Playlist'
@@ -110,6 +111,7 @@ const mapDispatchToProps = (dispatch: any) => {
   return {
     getProviderInstance: () => dispatch(getProviderInstance()),
     setProviderId: (providerId: string) => dispatch(setProviderId(providerId)),
+    setPlaylistDetails: (playlistDetails: PlaylistDetails | undefined) => dispatch(setPlaylistDetails(playlistDetails)),
   }
 };
 

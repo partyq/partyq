@@ -10,3 +10,5 @@ export const NO_INTERNET_CONNECTION = 'NO INTERNET CONNECTION';
 
 // IDENTITY
 export const GENDER_IDENTITIES = ['Male', 'Female', 'Non-Binary'];
+
+export const GET_TRACK_LIMIT = 50;

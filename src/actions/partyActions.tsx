@@ -16,7 +16,7 @@ import {
 } from '../utility/backend';
 import store from '../store/store';
 import { setListeners } from '.';
-import { PlaylistDetails } from '../utility/MusicServices/MusicService';
+import { PlaylistDetails, PlaylistTracks } from '../utility/MusicServices/MusicService';
 
 export const SET_PARTY_ID = 'SET_PARTY_ID';
 export const SET_DOC_ID = 'SET_DOC_ID';
@@ -25,6 +25,9 @@ export const SET_SONG_REQUESTS = 'SET_SONG_REQUESTS';
 export const SET_REQUEST_VOTES = 'SET_REQUEST_VOTES';
 export const SET_PARTY_MEMBERS = 'SET_PARTY_MEMBERS';
 export const SET_PLAYLIST_DETAILS = 'SET_PLAYLIST_DETAILS';
+export const APPEND_PLAYLIST_TRACKS = 'APPEND_TRACKS';
+export const SET_PLAYLIST_TRACKS = 'SET_TRACKS'
+export const SET_PAGE_NUMBER = 'SET_PAGE_NUMBER';
 export const SET_REQUEST_THRESHOLD = 'SET_REQUEST_THRESHOLD';
 export const SET_QUEUE_BY_VOTE_COUNT = 'SET_QUEUE_BY_VOTE_COUNT';
 export const SET_ALLOW_LIBRARY_REQUESTS = 'SET_ALLOW_LIBRARY_REQUESTS';
@@ -59,11 +62,20 @@ export const setPartyMembers = (members: PartyMember[]) => ({
     members
 });
 
-export const setPlaylistDetails = (playlistDetails: PlaylistDetails) => ({
+export const setPlaylistDetails = (playlistDetails: PlaylistDetails | undefined) => ({
     type: SET_PLAYLIST_DETAILS,
     playlistDetails,
 });
 
+export const setPlaylistTracks = (tracksToAppend: PlaylistTracks | undefined) => ({
+    type: APPEND_PLAYLIST_TRACKS,
+    tracksToAppend,
+});
+
+export const setPageNumber = (pageNumber: number) => ({
+    type: SET_PAGE_NUMBER,
+    pageNumber,
+})
 export const setRequestThreshold = (threshold: number | null) => ({
     type: SET_REQUEST_THRESHOLD,
     threshold
@@ -110,19 +122,19 @@ const startPartyReduxListeners = (partyId: string) => {
     }
 }
 
-export const createParty = (playListId: string, provider: any) => {
+export const createParty = (playlistDetails: PlaylistDetails, provider: any) => {
     return async (dispatch: Function): Promise<void> => {
-        const {partyId, docId} = await _createParty(playListId, provider);
+        const {partyId, docId} = await _createParty(playlistDetails, provider);
         dispatch(setPartyId(partyId));
         dispatch(setDocId(docId));
         dispatch(startPartyReduxListeners(partyId));
     }
 }
 
-export const changeDefaultPlayList = (playListId: string, provider: any) => {
+export const changeDefaultPlayList = (playlistDetails: PlaylistDetails) => {
     return async () => {
         const { docId } = store.getState().partyReducer;
-        await _changeDefaultPlayList(playListId, docId);
+        await _changeDefaultPlayList(playlistDetails, docId);
     }
 }
 
@@ -142,7 +154,7 @@ export const leaveParty = () => {
         dispatch(setParty({
             id: '',
             hostName: '',
-            playlistId: '',
+            playlistDetails: undefined,
             token: '',
             created: new Date()
         }));
@@ -157,7 +169,7 @@ export const endParty = () => {
         dispatch(setParty({
             id: '',
             hostName: '',
-            playlistId: '',
+            playlistDetails: undefined,
             token: '',
             created: new Date()
         }));

@@ -148,9 +148,4 @@ const mapStateToProps = (state: any) => ({
     providerId: state.miscReducer.providerId
 });
 
-export default connect(
-    mapStateToProps,
-    null
-)(
-    withTheme(SearchScreen)
-);
+export default connect(mapStateToProps,null)(withTheme(SearchScreen));
