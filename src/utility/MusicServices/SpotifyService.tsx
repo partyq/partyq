@@ -32,6 +32,7 @@ import {
   SearchResult,
   SpotifyCallbacks
 } from './MusicService';
+import { GET_TRACK_LIMIT } from '../Constants';
 
 @staticImplements<MusicService>()
 class SpotifyService {
@@ -296,13 +297,12 @@ class SpotifyService {
   };
 
   getTracks = async( playListId: string, pageNumber: number ): Promise<Track[]> => {
-    const limit = 20;
-    const offset = (pageNumber - 1) * limit;
+    const offset = (pageNumber - 1) * GET_TRACK_LIMIT;
     const URL = `https://api.spotify.com/v1/playlists/${playListId}/tracks`;
     const config = { 
       params: {
         fields: "items.track(name,album.images,artists,id,duration_ms)",
-        limit,
+        limit: GET_TRACK_LIMIT,
         offset,
       }, 
       headers: { Authorization: `Bearer ${this._session.accessToken}` },

@@ -16,7 +16,7 @@ import {
 } from '../utility/backend';
 import store from '../store/store';
 import { setListeners } from '.';
-import { PlaylistDetails, Track } from '../utility/MusicServices/MusicService';
+import { PlaylistDetails, PlaylistTracks } from '../utility/MusicServices/MusicService';
 
 export const SET_PARTY_ID = 'SET_PARTY_ID';
 export const SET_DOC_ID = 'SET_DOC_ID';
@@ -67,12 +67,7 @@ export const setPlaylistDetails = (playlistDetails: PlaylistDetails | undefined)
     playlistDetails,
 });
 
-export const setPlaylistTracks = (tracksToSet: Track[] | undefined) => ({
-    type: SET_PLAYLIST_TRACKS,
-    tracksToSet,
-});
-
-export const appendPlaylistTracks = (tracksToAppend: Track[]) => ({
+export const setPlaylistTracks = (tracksToAppend: PlaylistTracks | undefined) => ({
     type: APPEND_PLAYLIST_TRACKS,
     tracksToAppend,
 });
@@ -159,7 +154,7 @@ export const leaveParty = () => {
         dispatch(setParty({
             id: '',
             hostName: '',
-            playlistId: '',
+            playlistDetails: undefined,
             token: '',
             created: new Date()
         }));
@@ -174,7 +169,7 @@ export const endParty = () => {
         dispatch(setParty({
             id: '',
             hostName: '',
-            playlistId: '',
+            playlistDetails: undefined,
             token: '',
             created: new Date()
         }));

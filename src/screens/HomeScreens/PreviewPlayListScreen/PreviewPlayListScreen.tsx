@@ -27,10 +27,11 @@ import {
   setProviderId,
 } from '../../../actions';
 import ThemedButton, { MODE } from '../../../components/Button/ThemedButton';
-import { createParty, setPlaylistTracks, appendPlaylistTracks, setPageNumber, setPlaylistDetails } from '../../../actions/partyActions';
+import { createParty, setPlaylistTracks, setPageNumber, setPlaylistDetails } from '../../../actions/partyActions';
 import usePrevious from '../../../hooks/usePrevious';
+import { PlaylistTracks } from '../../../utility/MusicServices/MusicService';
 
-export interface iSelectDefaultPlayListScreen {
+export interface iPreviewPlayListScreen {
   theme: any,
   navigation: any,
   getProviderInstance: () => any,
@@ -41,9 +42,8 @@ export interface iSelectDefaultPlayListScreen {
   route: any,
   createParty: (playlistDetails: PlaylistDetails, provider: any) => any,
   noHeader?: true,
-  setPlaylistTracks: (tracksToSet: Track[] | undefined) => void,
-  appendPlaylistTracks: (tracksToAppend: Track[]) => void,
-  playlistTracks: Track[] | undefined,
+  setPlaylistTracks: (tracksToAppend: PlaylistTracks | undefined) => void,
+  playlistTracks: PlaylistTracks | undefined,
   pageNumber: number,
   setPageNumber: (pageNumber: number) => void,
   setPlaylistDetails: (playlistDetails: PlaylistDetails | undefined) => void,
@@ -51,9 +51,8 @@ export interface iSelectDefaultPlayListScreen {
 
 export interface iTracksSectionProps {
   style: any,
-  tracks: Track[],
+  playlistTracks: PlaylistTracks,
   handleLoadMore: () => void,
-  totalTracks: number,
   pageNumber: number,
 };
 
@@ -66,7 +65,7 @@ export interface iPlayListDescription {
   readOnly: boolean
 };
 
-const PreviewPlayListScreen = (props: iSelectDefaultPlayListScreen) => {
+const PreviewPlayListScreen = (props: iPreviewPlayListScreen) => {
   const styles = jsx(props.theme);
   const buttonWidth = Dimensions.get('window').width * 0.5;
   const [isFinishPressed, setIsFinishPressed] = useState<boolean>(false);
@@ -87,9 +86,7 @@ const PreviewPlayListScreen = (props: iSelectDefaultPlayListScreen) => {
     if (
       props.pageNumber > 1 &&
       props.playlistDetails !== undefined &&
-      props.playlistTracks &&
-      props.pageNumber * 20 > props.playlistTracks?.length &&
-      props.playlistTracks?.length < props.playlistDetails?.totalTracks &&
+      props.playlistTracks?.tracksLeftToFetch !== 0 &&
       prevPageNumber !== props.pageNumber
     ) {
       console.warn('get more tracks: ', {
@@ -100,25 +97,19 @@ const PreviewPlayListScreen = (props: iSelectDefaultPlayListScreen) => {
     }
   }, [props.pageNumber, prevPageNumber]);
 
+  const handleLoadMore = () => {
+    props.setPageNumber(props.pageNumber + 1);
+  };
+
   const getTracks = async (pageNumber: number): Promise<void> => {
     try {
       const instance = props.getProviderInstance();
-      const newTracks: Track[] = await instance.getTracks(props.playlistDetails?.playlistId, pageNumber);
-      if (props.playlistTracks) {
-        console.warn('appending more tracks')
-        props.appendPlaylistTracks(newTracks);
-      }
-      else {
-        props.setPlaylistTracks(newTracks);
-      }
+      const newTracks: PlaylistTracks = await instance.getTracks(props.playlistDetails?.playlistId, pageNumber);
+      props.setPlaylistTracks(newTracks);
     }
     catch (error) {
       console.error(error);
     }
-  };
-
-  const handleLoadMore = () => {
-    props.setPageNumber(props.pageNumber + 1);
   };
 
   const onBeforeBack = async (): Promise<void> => {
@@ -162,7 +153,6 @@ const PreviewPlayListScreen = (props: iSelectDefaultPlayListScreen) => {
         <Text style={styles.headingText}>Preview PlayList</Text>
       }
     >
-
       {props.playlistDetails &&
         <PlayListDescription
           styles={styles}
@@ -176,9 +166,8 @@ const PreviewPlayListScreen = (props: iSelectDefaultPlayListScreen) => {
       {props.playlistTracks !== undefined && props.playlistDetails &&
         <Tracks
           style={styles.listContainer}
-          tracks={props.playlistTracks}
+          playlistTracks={props.playlistTracks}
           handleLoadMore={handleLoadMore}
-          totalTracks={props.playlistDetails?.totalTracks}
           pageNumber={props.pageNumber}
         />
       }
@@ -220,36 +209,35 @@ const PlayListDescription = ({ styles, playlistDetails, onPress, buttonWidth, di
       </View>
     </View>
     {playlistDetails.description &&
-        <>
-          <Divider />
-          <Text style={styles.description}>{playlistDetails.description}</Text>
-        </>
+      <>
+        <Divider />
+        <Text style={styles.description}>{playlistDetails.description}</Text>
+      </>
     }
   </View>
 );
 
-const Tracks = ({ style, tracks, handleLoadMore, totalTracks, pageNumber }: iTracksSectionProps) => {
-  return (
-    <View style={style}>
-      <Divider />
-      <FlatList
-        data={tracks}
-        renderItem={({ item }) => (
-          <PlayListItem
-            image={item.imageUri}
-            title={item.title}
-            description={`By: ${item.artists}`}
-            key={item.trackUri}
-          />
-        )}
-        keyExtractor={(item: Track) => item.trackUri}
-        ListFooterComponent={pageNumber * 20 <= totalTracks ? <LoadingIndicator /> : null}
-        onEndReached={() => pageNumber * 20 <= totalTracks ? handleLoadMore() : null}
-        onEndReachedThreshold={0}
-      />
-    </View>
-  )
-};
+const Tracks = ({ style, playlistTracks, handleLoadMore, pageNumber }: iTracksSectionProps) => (
+  <View style={style}>
+    <Divider />
+    <FlatList
+      data={playlistTracks.tracks}
+      renderItem={({ item }) => (
+        <PlayListItem
+          image={item.imageUri}
+          title={item.title}
+          description={`By: ${item.artists}`}
+          key={item.trackUri}
+        />
+      )}
+      keyExtractor={(item: Track) => item.trackUri}
+      ListFooterComponent={playlistTracks?.tracksLeftToFetch === 0 ? <LoadingIndicator /> : null}
+      onMomentumScrollEnd={() => playlistTracks?.tracksLeftToFetch === 0 && handleLoadMore()}
+      onEndReachedThreshold={0}
+      initialNumToRender={50}
+    />
+  </View>
+);
 
 const mapStateToProps = (state: any) => ({
   playlistDetails: state.partyReducer.playlistDetails,
@@ -262,8 +250,7 @@ const mapDispatchToProps = (dispatch: any) => {
     getProviderInstance: () => dispatch(getProviderInstance()),
     setProviderId: (providerId: string) => dispatch(setProviderId(providerId)),
     createParty: (playlistDetails: PlaylistDetails, provider: any) => dispatch(createParty(playlistDetails, provider)),
-    setPlaylistTracks: (tracksToSet: Track[] | undefined) => dispatch(setPlaylistTracks(tracksToSet)),
-    appendPlaylistTracks: (tracksToAppend: Track[]) => dispatch(appendPlaylistTracks(tracksToAppend)),
+    setPlaylistTracks: (tracksToAppend: PlaylistTracks | undefined) => dispatch(setPlaylistTracks(tracksToAppend)),
     setPageNumber: (pageNumber: number) => dispatch(setPageNumber(pageNumber)),
     setPlaylistDetails: (playlistDetails: PlaylistDetails | undefined) => dispatch(setPlaylistDetails(playlistDetails)),
   }

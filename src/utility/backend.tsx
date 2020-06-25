@@ -12,7 +12,7 @@ export const VOTES_COLLECTION = 'votes';
 export interface Party {
     id: string,
     hostName: string,
-    playlistDetails: PlaylistDetails,
+    playlistDetails: PlaylistDetails | undefined,
     token: string,
     created: Date
 }

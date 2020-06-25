@@ -19,6 +19,11 @@ export interface PlaylistDetails {
     totalTracks: number,
 }
 
+export interface PlaylistTracks {
+    tracks: Track[],
+    tracksLeftToFetch: number,
+}
+
 export interface UserProfile {
     displayName: string
 }

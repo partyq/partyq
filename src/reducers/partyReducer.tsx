@@ -7,7 +7,6 @@ import {
     SET_REQUEST_VOTES,
     SET_PARTY_MEMBERS,
     SET_PLAYLIST_DETAILS,
-    APPEND_PLAYLIST_TRACKS,
     SET_PAGE_NUMBER,
     SET_PLAYLIST_TRACKS,
     SET_REQUEST_THRESHOLD,
@@ -19,7 +18,6 @@ export const initialState: PartyState = {
     partyId: '',
     docId: '',
     hostName: '',
-    playlistId: '',
     token: '',
     created: null,
     requests: [],
@@ -50,7 +48,7 @@ const partyReducer = (state: PartyState = initialState, action: any) => {
             return Object.assign({}, state, {
                 partyId: party.id,
                 hostName: party.hostName,
-                playlistId: party.playlistId,
+                playlistDetails: party.playlistDetails,
                 token: party.token,
                 created: party.created.toDate()
             });
@@ -71,21 +69,19 @@ const partyReducer = (state: PartyState = initialState, action: any) => {
             });
         case SET_PLAYLIST_DETAILS:
             const { playlistDetails } = action;
+            console.warn("playlistDetails", playlistDetails)
             return Object.assign({}, state, {
                 playlistDetails
             });
-        case APPEND_PLAYLIST_TRACKS:
+        case SET_PLAYLIST_TRACKS:
             const { tracksToAppend } = action;
-            const newTracks = state.playlistTracks !== undefined ?
-                [...state.playlistTracks, ...tracksToAppend] :
-                tracksToAppend;
+            const {tracks, tracksLeftToFetch} = tracksToAppend;
+            const newTracks = tracksToAppend !== undefined ? {
+                tracks: state.playlistTracks?.tracks !== undefined ? [...state.playlistTracks.tracks, ...tracks] : tracks,
+                tracksLeftToFetch,
+            } : undefined;
             return Object.assign({}, state, {
                 playlistTracks: newTracks
-            });
-        case SET_PLAYLIST_TRACKS:
-            const { tracksToSet } = action;
-            return Object.assign({}, state, {
-                playlistTracks: tracksToSet
             });
         case SET_PAGE_NUMBER:
             const { pageNumber } = action;
