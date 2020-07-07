@@ -5,6 +5,8 @@ import {
 
 import { NavigationContainer } from '@react-navigation/native';
 import HomeScreen from './HomeScreen/HomeScreen';
+import FriendsScreen from './FriendsScreen/FriendsScreen';
+import AddFriendScreen from './AddFriendScreen/AddFriendScreen';
 
 const MainStack = createStackNavigator();
 
@@ -20,6 +22,14 @@ const MainNavigationContainer = () => {
                 <MainStack.Screen
                     name='Home'
                     component={HomeScreen}
+                />
+                <MainStack.Screen
+                    name='Friends'
+                    component={FriendsScreen}
+                />
+                <MainStack.Screen
+                    name='AddFriend'
+                    component={AddFriendScreen}
                 />
             </MainStack.Navigator>
         </NavigationContainer>

@@ -7,7 +7,9 @@ export const initialState: UserState = {
     user: {
         fullName: '',
         username: '',
-        email: ''
+        email: '',
+        uid: '',
+        friends: []
     }
 };
 

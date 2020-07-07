@@ -16,6 +16,7 @@ interface iTabItemProps {
     name: string,
     icon: string,
     route: string,
+    subroute?: string,
     navigation: any,
     styles?: {
         title?: {
@@ -34,6 +35,7 @@ const TabItem = (props: iTabItemProps) => {
         name,
         icon,
         route,
+        subroute,
         navigation,
         styles,
         isActive,
@@ -43,7 +45,13 @@ const TabItem = (props: iTabItemProps) => {
 
     const onPress = () => {
         if (!isActive) {
-            navigation.navigate(route);
+            if (subroute) {
+                navigation.navigate(route, {
+                    screen: subroute
+                });
+            } else {
+                navigation.navigate(route);
+            }
             onChange();
         }
     }
@@ -101,12 +109,18 @@ const MainTabBar = (props: iTabBarProps) => {
                     scrollEnabled={false}
                     contentContainerStyle={styles.tabList}
                     data={tabs}
-                    renderItem={({item, index}) => (
-                        <TabItem
+                    renderItem={({item, index}) => {
+                        const routeComponents = item.route.split('/');
+                        let subroute;
+                        if (routeComponents.length > 1) {
+                            subroute = routeComponents[1];
+                        }
+                        return <TabItem
                             key={index}
                             name={item.name}
                             icon={item.icon}
-                            route={item.route}
+                            route={routeComponents[0]}
+                            subroute={subroute}
                             navigation={navigation}
                             styles={{
                                 title: {
@@ -119,7 +133,7 @@ const MainTabBar = (props: iTabBarProps) => {
                             onChange={() => onChangeActive(item.name)}
                             theme={theme}
                         />
-                    )}
+                    }}
                 />
             </SafeAreaView>
         </Card>

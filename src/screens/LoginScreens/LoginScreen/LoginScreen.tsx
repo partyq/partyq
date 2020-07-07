@@ -76,7 +76,10 @@ const LoginScreen = (props: iLoginScreenProps) => {
             setLoading(false);
             return;
         }
-        setUser(user);
+        setUser({
+            ...user,
+            uid: firebaseUser.uid
+        });
         navigation.navigate('Main');
     }
 

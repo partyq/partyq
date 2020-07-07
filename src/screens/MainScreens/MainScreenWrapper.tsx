@@ -1,17 +1,20 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { IconButton, withTheme, Card, List } from 'react-native-paper';
+import firestore from '@react-native-firebase/firestore';
 
 import MainNavigationContainer from './MainNavigationContainer';
 import TabBar, { iTab } from '../../components/TabBar/TabBar';
 import { View, Text } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { iFriend, iUser } from '../../utility/types';
+import { setUser } from '../../actions';
+import { connect } from 'react-redux';
 
 const TABS: iTab[] = [
     {
         name: 'Home',
         icon: 'home',
-        route: 'Home'
+        route: 'Main/Home'
     },
     {
         name: 'Parties',
@@ -21,7 +24,7 @@ const TABS: iTab[] = [
     {
         name: 'Friends',
         icon: 'account-group',
-        route: ''
+        route: 'Main/Friends'
     },
     {
         name: 'Account',
@@ -127,7 +130,7 @@ const ManagePartyOverlay = (props: iManagePartyOverlayProps) => {
                     width: '80%',
                     // backgroundColor: 'red',
                     // opacity: 0.5,
-                    top: verticalPosition - 60,
+                    top: verticalPosition - 80,
                     flexDirection: 'row',
                     justifyContent: 'space-evenly'
                 }}
@@ -151,13 +154,16 @@ const ManagePartyOverlay = (props: iManagePartyOverlayProps) => {
 
 interface iMainScreenWrapperProps {
     navigation: any,
-    theme: any
+    theme: any,
+    setUser: (user: iUser) => void,
+    user: iUser
 }
 
 const MainScreenWrapper = (props: iMainScreenWrapperProps) => {
     const {
         navigation,
-        theme
+        theme,
+        user
     } = props;
 
     const [activeTab, setActiveTab] = useState('Home');
@@ -165,12 +171,32 @@ const MainScreenWrapper = (props: iMainScreenWrapperProps) => {
     
     const [partyButtonsY, setPartyButtonsY] = useState(0);
 
+    useEffect(() => {
+        const subscriber = firestore()
+            .collection('users')
+            .doc(user.uid)
+            .onSnapshot(
+                (snapshot) => {
+                    const friends = snapshot.docs.map(doc => (
+                        doc.data() as iFriend
+                    ));
+                    setFriends(friends);
+                }
+            )
+        return () => subscriber();
+    }, [])
+
     return (
         <>
             <MainNavigationContainer />
             <View
                 style={{
-                    zIndex: 1000
+                    zIndex: 1000,
+                    width: '100%',
+                    height: 0,
+                    borderRadius: 40,
+                    position: 'relative',
+                    bottom: 40
                 }}
                 onLayout={(layoutEvent) => {
                     const layout = layoutEvent.nativeEvent.layout;
@@ -179,7 +205,7 @@ const MainScreenWrapper = (props: iMainScreenWrapperProps) => {
             >
                 <Card
                     style={{
-                        alignItems: 'center'
+                        alignItems: 'center',
                     }}
                     elevation={3}
                 >
@@ -192,9 +218,7 @@ const MainScreenWrapper = (props: iMainScreenWrapperProps) => {
                             backgroundColor: theme.colors.primary,
                             width: 70,
                             height: 70,
-                            borderRadius: 35,
-                            position: 'relative',
-                            top: 35
+                            borderRadius: 35
                         }}
                         onPress={() => setManagePartyOverlayVisible(!managePartyOverlayVisible)}
                     />
@@ -216,4 +240,17 @@ const MainScreenWrapper = (props: iMainScreenWrapperProps) => {
     )
 }
 
-export default withTheme(MainScreenWrapper);
+const mapStateToProps = (state: any) => ({
+    user: state.userReducer.user
+});
+
+const mapDispatchToProps = (dispatch: Function) => ({
+    setUser: (user: iUser[]) => dispatch(setUser(user))
+});
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(
+    withTheme(MainScreenWrapper)
+);

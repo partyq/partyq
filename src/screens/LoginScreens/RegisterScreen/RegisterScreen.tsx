@@ -85,7 +85,8 @@ const RegisterScreen = (props: iRegisterScreenProps) => {
         setUser({
             email: email,
             username: username,
-            fullName: name
+            fullName: name,
+            uid: user.uid
         });
         navigation.navigate('VerifyEmail');
     }
