@@ -66,7 +66,6 @@ const SettingsPlaylistDetailsItem = (props: iSettingsPlaylistDetailsProps) => {
 
     const onPress = () => {
         navigation.navigate('PreviewPlayList', {
-            playlistDetails: data,
             readOnly: true
         });
     }
@@ -131,11 +130,11 @@ const SettingsMainScreen = (props: iSettingsMainScreenProps) => {
                     >
                         Current Playlist
                     </List.Subheader>
-                    <SettingsPlaylistDetailsItem
+                    { playlistDetails && <SettingsPlaylistDetailsItem
                         data={playlistDetails}
                         styles={styles}
                         navigation={navigation}
-                    />
+                    />}
                 </List.Section>
                 <List.Section>
                     <List.Subheader
@@ -193,12 +192,7 @@ const SettingsMainScreen = (props: iSettingsMainScreenProps) => {
 const mapStateToProps = (state: any) => ({
     partyCreated: state.partyReducer.created,
     playlistDetails: state.partyReducer.playlistDetails,
-    username: state.userReducer.username
+    username: state.userReducer.username,
 });
 
-export default connect(
-    mapStateToProps,
-    null
-)(
-    SettingsMainScreen
-);
+export default connect(mapStateToProps, null)(SettingsMainScreen);

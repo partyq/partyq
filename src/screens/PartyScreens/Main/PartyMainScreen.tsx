@@ -1,5 +1,7 @@
 import React, {
-  useState, useEffect
+  useState,
+  useEffect,
+  useRef,
 } from 'react';
 import {
   PlayerState,
@@ -285,6 +287,7 @@ interface PartyMainScreenProps {
 }
 
 const PartyMainScreen = (props: PartyMainScreenProps) => {
+  let carouselRef = useRef();
   const {
     partyState
   } = props;
@@ -323,7 +326,12 @@ const PartyMainScreen = (props: PartyMainScreenProps) => {
     }
   });
 
+  const [hostName, setHostName] = useState('');
+  const [currentPlayingTrackIndex, setCurrentPlayingTrackIndex] = useState<number | undefined>(undefined);
+  const [currentTrackInViewIndex, setcurrentTrackInViewIndex] = useState<number>(0);
   const [isReadyToQueue, setIsReadyToQueue] = useState<Boolean>(false);
+  const [tracks, setTracks] = useState<Track[] | undefined>(undefined);
+  const [pageNumber, setPageNumber] = useState<number>(0);
 
   const styles = jsx(props.theme);
   const isPartyHost = props.username === '';
@@ -339,94 +347,110 @@ const PartyMainScreen = (props: PartyMainScreenProps) => {
     item: Track,
     index: number
   }) => (
-    <View style={styles.carouselImageView}>
-      <Image
-        style={styles.carouselImage}
-        source={{ uri: item.item.imageUri }}
-      />
-    </View>
-  )
+      <View style={styles.carouselImageView}>
+        <Image
+          style={[
+            styles.carouselImage,
+            item.index === currentPlayingTrackIndex && styles.carouselImageActive,
+          ]}
+          source={{ uri: item.item.imageUri }}
+        />
+      </View>
+    );
 
   // useEffect(() => {
-  //   const providerInstance = props.getProviderInstance();
-
-  //   const query = firestore()
-  //     .collection(PARTIES_COLLECTION)
-  //     .where('id', '==', props.partyId)
-  //     .limit(1);
-  //   if (isPartyHost) {
-  //     query
-  //       .get()
-  //       .then(
-  //         async (documentSnapshot) => {
-  //           const partyData = documentSnapshot.docs[0].data();
-  //           if (partyData.previousSongId !== null) {
-  //             setPreviousSong(
-  //               await providerInstance.getTrack(partyData.previousSongId));
-  //           }
-  //           setCurrentSong(
-  //             await providerInstance.getTrack(partyData.currentSongId));
-  //           if (partyData.nextSongId !== null) {
-  //             setNextSong(
-  //               await providerInstance.getTrack(partyData.nextSongId));
-  //           }
-  //         }
-  //       )
-
-  //   } else {
-  //     const subscriber = query
-  //       .onSnapshot(
-  //         async (documentSnapshot) => {
-  //           const partyData = documentSnapshot.docs[0].data();
-  //           setHostName(partyData.hostName);
-  //           // setTimeElapsed(partyData.currentSongTimeElapsed);
-  //           providerInstance.setToken(partyData.token);
-  //           if (partyData.previousSongId !== null) {
-  //             setPreviousSong(
-  //               await providerInstance.getTrack(partyData.previousSongId));
-  //           }
-  //           setCurrentSong(
-  //             await providerInstance.getTrack(partyData.currentSongId));
-  //           if (partyData.nextSongId !== null) {
-  //             setNextSong(
-  //               await providerInstance.getTrack(partyData.nextSongId));
-  //           }
-  //         }
-  //       )
-  //     return () => subscriber()
+  //   if (partyState.playlistDetails) {
+  //     getTracks(pageNumber);
   //   }
-  // }, []);
+  // }, [pageNumber, partyState.playlistDetails]);
+  
+  // const onBeforeSnapToTrack = (index: number) => {
+  //   setcurrentTrackInViewIndex(index);
+  //   if (index + 1 === tracks?.length) {
+  //     setPageNumber(pageNumber + 1);
+  //   }
+  // };
 
-  useInterval(async() => {
-    const providerInstance = props.getProviderInstance();
-    if (providerInstance.playerIsReady()) {
-      const playerState = await providerInstance.getPlayerState();
-      const crossfadeState = await providerInstance.getCrossfadeState();
-      const crossfadeDuration = crossfadeState.enabled ? crossfadeState.duration : 0;
-      const durationLeft = Math.floor((playerState.track.duration - playerState.playbackPosition)/1000)*1000;
+  const getTracks = async (pageNumber: number): Promise<void> => {
+    try {
+      console.warn({
+        partyState,
+        pageNumber,
+      })
+      const instance = props.getProviderInstance();
+      const data: Track[] = await instance.getTracks(partyState.playlistDetails?.playlistId, pageNumber);
 
-      if (durationLeft <= (crossfadeDuration + 5000) && !isReadyToQueue) {
-        setIsReadyToQueue(true);
-      }
-      else if (durationLeft > (crossfadeDuration + 5000) && isReadyToQueue) {
-        setIsReadyToQueue(false);
-      }
+      const newTracks: Track[] | undefined = tracks !== undefined ?
+        [...tracks, ...data]:
+        [...data];
+
+      setTracks(newTracks);
     }
-  }, 2000);
+    catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    const providerInstance = props.getProviderInstance();
+
+    const query = firestore()
+      .collection(PARTIES_COLLECTION)
+      .where('id', '==', props.partyId)
+      .limit(1);
+    if (isPartyHost) {
+      query
+        .get()
+        .then(
+          async (documentSnapshot) => {
+            const partyData = documentSnapshot.docs[0].data();
+            setCurrentPlayingTrackIndex(partyData.currentPlayingTrackIndex);
+          }
+        )
+
+    } else {
+      const subscriber = query
+        .onSnapshot(
+          async (documentSnapshot) => {
+            const partyData = documentSnapshot.docs[0].data();
+            setHostName(partyData.hostName);
+            setCurrentPlayingTrackIndex(partyData.currentPlayingTrackIndex);
+            props.setPlaylistDetails(partyData.playlistDetails);
+
+            providerInstance.setToken(partyData.token);
+          }
+        )
+      return () => subscriber()
+    }
+  }, []);
+
+  // useInterval(async() => {
+  //   if (currentPlayingTrackIndex === undefined || !tracks) return;
+  //   const providerInstance = props.getProviderInstance();
+    
+  //   if (providerInstance.playerIsReady()) {
+  //     const playerState = await providerInstance.getPlayerState();
+  //     const crossfadeState = await providerInstance.getCrossfadeState();
+  //     const crossfadeDuration = crossfadeState.enabled ? crossfadeState.duration : 0;
+  //     const durationLeft = Math.floor((playerState.track.duration - playerState.playbackPosition)/1000)*1000;
+
+  //     if (durationLeft <= (crossfadeDuration + 5000) && !isReadyToQueue) {
+  //       setIsReadyToQueue(true);
+  //     }
+  //     else if (durationLeft > (crossfadeDuration + 5000) && isReadyToQueue) {
+  //       setIsReadyToQueue(false);
+  //     }
+  //   }
+  // }, 2000);
 
   // useEffect(() => {
   //   if (isReadyToQueue) {
   //     const providerInstance = props.getProviderInstance();
-  //     providerInstance.queueTrack(nextSong?.trackUri);
+  //     if (tracks && currentPlayingTrackIndex !== undefined && currentPlayingTrackIndex < tracks.length) {
+  //       providerInstance.queueTrack(tracks[currentPlayingTrackIndex + 1]?.trackUri);
+  //     }
   //   }
   // }, [isReadyToQueue]);
-
-  // let carouselTracks: Track[] = [];
-  // [previousSong, currentSong, nextSong].forEach(track => {
-  //   if (track !== null) {
-  //     carouselTracks.push(track);
-  //   }
-  // });
 
   return (
     <PartyNavigationContainer
@@ -438,14 +462,22 @@ const PartyMainScreen = (props: PartyMainScreenProps) => {
       getProviderInstance={props.getProviderInstance}
     >
       <View style={styles.main}>
-        {/* {currentSong !== null && (
+        {tracks !== undefined && (
           <>
             <Carousel
-              data={carouselTracks}
+              slideStyle={styles.slideStyle}
+              ref={(ref: any) => carouselRef = ref}
+              data={tracks}
               renderItem={renderTrackCarouselItem}
               sliderWidth={Dimensions.get('window').width}
-              itemWidth={300}
-              scrollEnabled={true}
+              itemWidth={Dimensions.get('window').width * .6}
+              scrollEnabled={false}
+              lockScrollWhileSnapping={true}
+              inactiveSlideScale={0.7}
+              // onBeforeSnapToItem={(index) => onBeforeSnapToTrack(index)}
+              // ListFooterComponent={props.playlistDetails.totalTracks !== tracks?.length ? <LoadingIndicator/> : null}
+              // onEndReached={() => props.playlistDetails.totalTracks !== tracks?.length ? handleLoadMore() : null}
+              // onEndReachedThreshold={0}
             />
             <View style={styles.songDetailsView}>
               <Text
@@ -453,38 +485,43 @@ const PartyMainScreen = (props: PartyMainScreenProps) => {
                 numberOfLines={2}
                 ellipsizeMode='tail'
               >
-                {currentSong.title}
+                {tracks[currentTrackInViewIndex].title}
               </Text>
               <Text
                 style={styles.songArtist}
               >
-                By: {currentSong.artists}
+                By: {tracks[currentTrackInViewIndex].artists}
               </Text>
-              <View style={styles.songProgressView}>
-                <View style={styles.edgeRow}>
-                  <Text>0:00</Text>
-                  <Text>{secondsToTime(currentSong.durationMs / 1000)}</Text>
+              {
+                currentTrackInViewIndex === currentPlayingTrackIndex && isPartyHost &&
+                  <View style={styles.songProgressView}>
+                  <View style={styles.edgeRow}>
+                    <Text>0:00</Text>
+                    <Text>{secondsToTime(tracks[currentTrackInViewIndex].durationMs / 1000)}</Text>
+                  </View>
+                  <ProgressBar
+                    style={styles.progressBar}
+                    progress={0}
+                  />
                 </View>
-                <ProgressBar
-                  style={styles.progressBar}
-                  progress={0}
-                />
-              </View>
+              }
             </View>
           </>
-        )} */}
+        )}
       </View>
     </PartyNavigationContainer>
   );
 }
 
 const mapStateToProps = (state: any) => ({
-  partyState: state.partyReducer,
-  username: state.userReducer.username
+  partyId: state.partyReducer.partyId,
+  username: state.userReducer.username,
+  partyState: state.partyReducer
 });
 
 const mapDispatchToProps = (dispatch: Function) => ({
-  getProviderInstance: () => dispatch(getProviderInstance())
+  getProviderInstance: () => dispatch(getProviderInstance()),
+  setPlaylistDetails: (playlistDetails: PlaylistDetails) => dispatch(setPlaylistDetails(playlistDetails))
 });
 
 export default connect(

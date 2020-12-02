@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
 
 export default (theme: any) => StyleSheet.create({
     // slider: {
@@ -62,14 +62,24 @@ export default (theme: any) => StyleSheet.create({
         borderRadius: 100
     },
     carouselImageView: {
-        width: 300,
-        height: 300,
-        padding: 10
+        width: Dimensions.get('window').width,
+        height: Dimensions.get('window').width * .6,
+        padding: 10,
+        display: 'flex',
+        alignItems: 'center',
+    },
+    slideStyle: {
+        display: 'flex',
+        alignItems: 'center',
     },
     carouselImage: {
-        width: 280,
-        height: 280,
-        borderRadius: 140
+        width: Dimensions.get('window').width * .55,
+        height: Dimensions.get('window').width * .55,
+        borderRadius: 140,
+    },
+    carouselImageActive: {
+        borderWidth: 5,
+        borderColor: theme.colors.primary,
     },
     songDetailsView: {
         padding: 20

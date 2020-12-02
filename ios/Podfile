@@ -53,14 +53,3 @@ target 'partyq' do
 
   use_native_modules!
 end
-
-
-target 'partyq-tvOS' do
-  # Pods for partyq-tvOS
-
-  target 'partyq-tvOSTests' do
-    inherit! :search_paths
-    # Pods for testing
-  end
-
-end

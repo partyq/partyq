@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React from 'react';
+import React, { memo } from 'react';
 import { Image } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { withTheme, List, Divider } from 'react-native-paper';
@@ -46,4 +46,4 @@ const PlayListItem = (props: iPlayListItem) => {
   );
 };
 
-export default withTheme(PlayListItem);
+export default memo(withTheme(PlayListItem));

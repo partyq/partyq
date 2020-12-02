@@ -1,5 +1,9 @@
 import firestore from '@react-native-firebase/firestore';
 
+import store from '../store/store';
+import { Alert } from 'react-native';
+import { PlaylistDetails } from './MusicServices/MusicService';
+
 export const PARTIES_COLLECTION = 'parties';
 export const SONG_REQUESTS_COLLECTION = 'songRequests';
 export const USERS_COLLECTION = 'users';
@@ -8,7 +12,7 @@ export const VOTES_COLLECTION = 'votes';
 export interface Party {
     id: string,
     hostName: string,
-    playlistId: string,
+    playlistDetails: PlaylistDetails | undefined,
     token: string,
     created: Date
 }
@@ -31,7 +35,7 @@ export interface SongVote {
     value: number
 }
 
-export const createParty = async (playlistId: string, provider: any): Promise<any> => {
+export const createParty = async (playlistDetails: PlaylistDetails, provider: any): Promise<any> => {
 
     const getPartyId = async (querySnapshot: any): Promise<any> => {
         let partyId;
@@ -71,7 +75,8 @@ export const createParty = async (playlistId: string, provider: any): Promise<an
             created: new Date(),
             hostName: userProfile.displayName,
             token: provider.getToken(),
-            playlistId: playlistId,
+            playlistDetails: playlistDetails,
+            currentPlayingTrackIndex: 0
         });
 
     const docId = await newParty.id;
@@ -79,12 +84,12 @@ export const createParty = async (playlistId: string, provider: any): Promise<an
     return {partyId, docId};
 };
 
-export const changeDefaultPlayList = async (playlistId: string, docId: string): Promise<void> => {
+export const changeDefaultPlayList = async (playlistDetails: PlaylistDetails, docId: string): Promise<void> => {
     await firestore()
         .collection(PARTIES_COLLECTION)
         .doc(docId)
         .update({
-            playlistId: playlistId,
+            playlistDetails
         });
 };
 

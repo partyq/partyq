@@ -141,7 +141,7 @@ const SelectProvider = (props: iSelectProvider) => {
     props.setProviderId(newProviderId);
   };
 
-  const onBeforeBack = () => {
+  const onBeforeBack = async () => {
     props.setProviderId('');
   };
 
@@ -178,13 +178,14 @@ const RenderProviders = ({ styles, providers, onPress }: iRenderProviders) => (
   <View style={styles.services}>
     <Divider style={styles.divider} />
     <ScrollView>
-      {providers.map(({ name, img, selected }: iProvider, i: string | number | undefined) => (
-        <>
+      {providers.map(({ name, img, selected, key }: iProvider) => (
+        <View key={key}>
           <TouchableOpacity
-            key={i}
+            key={`touchableOpacity${key}`}
             onPress={() => onPress(name)}
           >
             <List.Item
+              key={name}
               style={[
                 styles.button,
                 selected ? { backgroundColor: '#EDEDED' } : null
@@ -193,16 +194,19 @@ const RenderProviders = ({ styles, providers, onPress }: iRenderProviders) => (
               titleStyle={styles.buttonText}
               left={() =>
                 <Image
+                  key={`img${key}`}
                   source={img}
                   style={styles.image}
-                  key={i}
                 />
               }
             />
           </TouchableOpacity>
 
-          <Divider style={styles.divider} />
-        </>
+          <Divider
+            style={styles.divider}
+            key={`divider${key}`}
+          />
+        </View>
       ))}
       <List.Item
         title={Provider.moreComing}
