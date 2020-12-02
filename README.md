@@ -1,6 +1,6 @@
-Development:
+# PartyQ
 
-- Running on physical iOS Device:
-  - Make sure both the laptop and iOS device is on the same wifi/network
-  - build in release mode (manage schemes -> run -> release)
+#### (Project retired as Spotify built a very similar feature)
+
+This project allows people to create a party and allow others to join and decide what music plays in the party.
     
