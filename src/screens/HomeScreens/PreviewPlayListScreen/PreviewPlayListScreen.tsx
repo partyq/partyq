@@ -26,10 +26,8 @@ import {
   getProviderInstance,
   setProviderId,
 } from '../../../actions';
-import ThemedButton, { MODE } from '../../../components/Button/ThemedButton';
-import { createParty, setPlaylistTracks, setPageNumber, setPlaylistDetails } from '../../../actions/partyActions';
-import usePrevious from '../../../hooks/usePrevious';
-import { PlaylistTracks } from '../../../utility/MusicServices/MusicService';
+import ThemedButton, { MODE } from '../../../components/ThemedButton/ThemedButton';
+import { createParty, setPlaylistDetails } from '../../../actions/partyActions';
 
 export interface iPreviewPlayListScreen {
   theme: any,

@@ -1,6 +1,8 @@
-export const SET_USER_NAME = 'SET_USER_NAME';
+import { iUser } from "../utility/types";
 
-export const setUserName = (username: string) => ({
-    type: SET_USER_NAME,
-    username
+export const SET_USER = 'SET_USER';
+
+export const setUser = (user: iUser) => ({
+    type: SET_USER,
+    user
 });

@@ -24,28 +24,15 @@ import firestore from '@react-native-firebase/firestore';
 import { connect } from 'react-redux';
 
 import jsx from './PartyMainScreen.style';
-import {
-  PARTIES_COLLECTION
-} from '../../../utility/backend';
-import { Track, PlaylistDetails } from '../../../utility/MusicServices/MusicService';
-import { getProviderInstance, setPlaylistDetails } from '../../../actions';
-import ThemedButton, { MODE } from '../../../components/Button/ThemedButton';
+import { Track } from '../../../utility/MusicServices/MusicService';
+import { getProviderInstance } from '../../../actions';
+import ThemedButton, { MODE } from '../../../components/ThemedButton/ThemedButton';
 import PartyViewSlider from '../../../components/PartyViewSlider/PartyViewSlider';
 import SettingsNavigationContainer from '../SliderScreens/Settings/SettingsNavigationContainer';
 import PartyMembersScreen from '../SliderScreens/PartyMembersScreen/PartyMembersScreen';
 import SongRequestsScreen from '../SliderScreens/SongRequestsScreen/SongRequestsScreen';
 import RequestASongScreen from '../SliderScreens/RequestASongScreen/RequestASongScreen';
-import useInterval from '../../../utility/useInterval';
-import LoadingIndicator from '../../../components/LoadingIndicator/LoadingIndicator';
-
-interface PartyMainScreenProps {
-  theme: any,
-  partyId: string,
-  username: string,
-  getProviderInstance: () => any,
-  setPlaylistDetails: (playlistDetails: PlaylistDetails) => void,
-  playlistDetails: PlaylistDetails,
-}
+import { useInterval } from '../../../utility/hooks';
 import PartyState from '../../../states/partyState';
 
 interface iTopSliderProps {

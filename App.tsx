@@ -2,6 +2,30 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 
+// import {
+//   // @ts-ignore
+//   FIRESTORE_HOST,
+//   // @ts-ignore
+//   CLOUD_FUNCTIONSs_HOST,
+// } from 'react-native-dotenv';
+
+// import { firebase } from '@react-native-firebase/auth';
+// import firestore from '@react-native-firebase/firestore';
+// import functions from '@react-native-firebase/functions';
+
+// Use a local emulator in development
+// if (__DEV__) {
+//   firestore().settings({ 
+//     // host: FIRESTORE_HOST,
+//     host: 'https://partyq-ec976.firebaseio.com',
+//     persistence: false,
+//     cacheSizeBytes: 1048576,
+//     ssl: false
+//   });
+// }
+// if (__DEV__ && CLOUD_FUNCTIONS_HOST) {
+//   functions().useFunctionsEmulator(CLOUD_FUNCTIONS_HOST);
+// }
 
 // eslint-disable-next-line no-unused-vars
 import { AppContextProvider } from './src/config/AppContextProvider';

@@ -11,7 +11,7 @@ import { connect } from 'react-redux';
 
 import jsx from './EnterUserName.style';
 import BackgroundContainer from '../../../hoc/BackgroundContainer';
-import ThemedButton, { MODE } from '../../../components/Button/ThemedButton';
+import ThemedButton, { MODE } from '../../../components/ThemedButton/ThemedButton';
 import { joinParty } from '../../../actions/partyActions';
 import { setUserName } from '../../../actions/userActions';
 

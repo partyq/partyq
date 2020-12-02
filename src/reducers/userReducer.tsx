@@ -1,18 +1,24 @@
 import UserState from '../states/userState';
 import {
-    SET_USER_NAME
+    SET_USER
 } from '../actions/userActions';
 
 export const initialState: UserState = {
-    username: ''
+    user: {
+        fullName: '',
+        username: '',
+        email: '',
+        uid: '',
+        friends: []
+    }
 };
 
 const userReducer = (state: UserState = initialState, action: any) => {
     switch (action.type) {
-        case SET_USER_NAME:
-            const {username} = action;
+        case SET_USER:
+            const {user} = action;
             return Object.assign({}, state, {
-                username
+                user
             });
         default: 
             return state

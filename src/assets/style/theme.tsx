@@ -56,6 +56,7 @@ export const Light = {
     accent: '#F53F6A',
     disabled: Colors.grey400,
     placeHolder: Colors.grey500,
+    error: '#eb4034'
   },
   fonts: defaultFontConfig(Colors.black),
 };
@@ -72,6 +73,7 @@ export const Dark = {
     accent: '#F53F6A',
     disabled: Colors.grey600,
     placeHolder: Colors.grey500,
+    error: '#eb4034'
   },
   fonts: defaultFontConfig(Colors.white),
 };

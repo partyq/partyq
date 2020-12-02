@@ -3,7 +3,7 @@ import { List } from 'react-native-paper';
 import { ScrollView } from 'react-native-gesture-handler';
 
 import jsx from './SettingsMainScreen.style';
-import ThemedButton, { MODE } from '../../../../../components/Button/ThemedButton';
+import ThemedButton, { MODE } from '../../../../../components/ThemedButton/ThemedButton';
 import NavigationHeader from '../../../../../components/NavigationHeader/NavigationHeader';
 import { connect } from 'react-redux';
 import { Image } from 'react-native';

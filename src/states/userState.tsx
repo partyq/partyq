@@ -1,3 +1,5 @@
+import { iUser, iFriend } from "../utility/types";
+
 export default interface UserState {
-    username: string
+    user: iUser
 }

@@ -8,7 +8,7 @@ import jsx from './SongRequestsScreen.style';
 import NavigationHeader from '../../../../components/NavigationHeader/NavigationHeader';
 import { SongRequest, SongVote } from '../../../../utility/backend';
 import SongRequestItem from '../../../../components/SongRequestItem/SongRequestItem';
-import ThemedButton, { MODE } from '../../../../components/Button/ThemedButton';
+import ThemedButton, { MODE } from '../../../../components/ThemedButton/ThemedButton';
 
 interface iSongRequestsScreenProps {
     theme: any,

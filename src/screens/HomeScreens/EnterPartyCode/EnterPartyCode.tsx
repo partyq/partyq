@@ -11,7 +11,7 @@ import { connect } from 'react-redux';
 
 import jsx from './EnterPartyCode.style';
 import BackgroundContainer from '../../../hoc/BackgroundContainer';
-import ThemedButton, { MODE } from '../../../components/Button/ThemedButton';
+import ThemedButton, { MODE } from '../../../components/ThemedButton/ThemedButton';
 import { getPartyById } from '../../../utility/backend';
 import { setPartyId } from '../../../actions/partyActions';
 
